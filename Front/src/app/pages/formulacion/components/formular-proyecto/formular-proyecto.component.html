@@ -1,0 +1,28 @@
+<div class="container">
+  <mat-horizontal-stepper labelPosition="bottom" #stepper>
+    <mat-step>
+      <ng-template matStepLabel>Iniciar Proyecto</ng-template>
+      <app-informacion-general (textoCambiado)="textoHijo1 = $event"></app-informacion-general>
+    </mat-step>
+    <mat-step>
+      <ng-template matStepLabel>Componente Cientifico</ng-template>
+      <app-cientifico-tecnologico></app-cientifico-tecnologico>
+    </mat-step>
+    <mat-step>
+      <ng-template matStepLabel>Productos y Presupuesto</ng-template>
+      <app-presupuesto></app-presupuesto>
+    </mat-step>
+    <mat-step>
+      <ng-template matStepLabel>Composicíon</ng-template>
+      <app-detalles-generales [textoHijo2]="textoHijo1"></app-detalles-generales>
+    </mat-step>
+    <mat-step>
+      <ng-template matStepLabel>Documentos Anexos</ng-template>
+      <app-anexo></app-anexo>
+    </mat-step>
+    <mat-step>
+      <ng-template matStepLabel>Crear Proyecto</ng-template>
+      <app-create-proyect></app-create-proyect>
+    </mat-step>
+  </mat-horizontal-stepper>
+</div>

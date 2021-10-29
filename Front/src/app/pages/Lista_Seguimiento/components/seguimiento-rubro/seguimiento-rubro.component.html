@@ -1,0 +1,84 @@
+<mat-card class="card">
+  <mat-card-title>CUMPLIMIENTO PLAN DE INVERSIÓN DEL PROYECTO</mat-card-title>
+  <mat-card-subtitle>En esta sección podrá realizar el seguimiento del presupuesto ejecutado a la fecha de los rubros
+    del proyectos</mat-card-subtitle>
+  <div class="container">
+    <table mat-table [dataSource]="proyect" class="mat-elevation-z8">
+
+      <ng-container matColumnDef="Rubros">
+        <th mat-header-cell *matHeaderCellDef> Rubros </th>
+        <td mat-cell *matCellDef="let element"> {{element.NombreRubro}} </td>
+      </ng-container>
+
+
+      <ng-container matColumnDef="PresupuestoAsignado">
+        <th mat-header-cell *matHeaderCellDef> Presupuesto Asignado </th>
+        <td mat-cell *matCellDef="let element">{{element.TotalEfectivo}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="PresupuestoEjecutado">
+        <th mat-header-cell *matHeaderCellDef> Presupuesto Ejecutado </th>
+        <td mat-cell *matCellDef="let element">
+          <input matInput [ngModel]="element.PresupuestoEjecutado" (change)="SeguimientoRubro($event,element)"
+            type="number">
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="Cumplimiento">
+        <th scope="col" mat-header-cell *matHeaderCellDef>% Cumplimiento</th>
+        <td mat-cell *matCellDef="let element" step="0.01">{{element.Cumplimiento}} %</td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+    </table>
+
+
+  </div>
+  <mat-card-actions class="botonera">
+    <button mat-flat-button color="primary" (click)="GuardarSeguimiento()">Guardar Seguimiento</button>
+  </mat-card-actions>
+
+</mat-card>
+
+
+
+<!-- 
+<div class= "container">
+
+  <table class="table">
+
+  <thead>
+    <tr>
+
+      <th scope="col">Rubro</th>
+      <th scope="col">Presupuesto Asignado</th>
+      <th scope="col">Presupuesto Ejecutado</th>
+      <th scope="col">% Cumplimiento</th>
+
+
+      
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let proyecto of proyect">
+      <td> {{proyecto.NombreRubro}}</td>
+      <td> efectivo </td>
+      <td >PresupuestoEjecutado</td>
+      <td >%Cumplimiento</td>
+
+     
+
+
+  </tr >
+  </tbody>
+
+
+
+  </table>
+
+  </div>
+
+ 
+ -->

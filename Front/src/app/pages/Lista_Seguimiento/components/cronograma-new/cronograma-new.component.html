@@ -1,0 +1,60 @@
+<mat-card class="card">
+  <div class="container">
+    <mat-card-title>CUMPLIMIENTO PLAN DE INVERSIÓN DEL PROYECTO</mat-card-title>
+    <mat-card-content>
+      <table class="table">
+        <!-- [formGroup]="seguimiento" -->
+        <thead>
+          <tr>
+            <th scope="col">Actividad</th>
+            <th scope="col">Sub Actividad</th>
+            <th scope="col">Fecha planeada cumplimiento</th>
+            <th scope="col">Fecha real cumplimiento</th>
+            <th scope="col">Desfase</th>
+            <th scope="col">% Avance</th>
+          </tr>
+        </thead>
+        <tbody *ngFor="let cronogram of cronograma">
+          <td rowspan="1000" scope="row">{{ cronogram.nombreAct }} </td>
+
+          <tr *ngFor="let sub of cronogram.subActividad">
+            <td scope="row">{{ sub.nombreSub }}</td>
+            <td>{{ sub.fechaFinal | date: 'shortDate' }}</td>
+            <td>
+              <mat-form-field color="accent" appearance="fill">
+                <mat-label>Fecha real cumplimiento</mat-label>
+                <input matInput [matDatepicker]="picker" (dateChange)="SeguimientoCronograma($event,1,sub)">
+                <!-- formControlName="dateReal" -->
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker color="primary"></mat-datepicker>
+              </mat-form-field>
+
+            </td>
+            <td>
+              {{sub.Desface}}
+            </td>
+
+            <td>
+              <mat-form-field class="example-form-field">
+                <mat-label>% Avance</mat-label>
+                <input matInput type="number" [ngModel]="sub.avance" (change)="SeguimientoCronograma($event,2,sub)">
+
+
+              </mat-form-field>
+            </td>
+
+
+          </tr>
+
+        </tbody>
+      </table>
+
+
+    </mat-card-content>
+
+  </div>
+
+  <mat-card-actions class="botonera">
+    <button mat-flat-button color="primary" (click)="GuardarSeguimiento()">Guardar Seguimiento</button>
+  </mat-card-actions>
+</mat-card>

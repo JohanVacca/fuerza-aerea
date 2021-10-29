@@ -1,0 +1,452 @@
+<div class="container">
+  <mat-dialog-content class="mat-typography">
+    <!-- <div class="card">
+    <div class="card-body"> -->
+    <form [formGroup]="evaluacion">
+      <div class="card-header">
+        <h1 mat-dialog-title>Vista Previa</h1>
+      </div>
+      <div class="row">
+        <div class="col-lg-12 md-12 sm-3">
+          <div class="card">
+            <div id="Proyecto" class="card-body">
+              <h1 class="card-title"><strong> -- Proyecto -- </strong></h1>
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                  <strong>Proyecto:</strong> {{nombreProyecto}}
+                </li>
+                <li class="list-group-item"><strong>Linea: </strong>{{linea}}</li>
+                <li class="list-group-item"><strong>Programa: </strong>{{programa}}</li>
+                <li class="list-group-item"><strong>Subprograma: </strong>{{subprograma}}</li>
+                <li class="list-group-item"><strong>Tipo de Investigacion: </strong>{{tipoInvestigacion}}</li>
+                <li class="list-group-item"><strong>Quien Avala: </strong>{{avala}}</li>
+                <li class="list-group-item"><strong>Lugar de Ejecucion: </strong>{{lugar}}</li>
+                <li class="list-group-item"><strong>Duracion: </strong>{{duracion}} Meses</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <!--  -->
+        <div class="col-sm-6">
+          <div class="card">
+            <div class="card-body">
+              <ul id="GestorActi" class="list-group list-group-flush">
+                <h1 class="card-title"><strong> -- Gestor Acti -- </strong></h1>
+                <li class="list-group-item"><strong>Nombre: </strong>{{gestor}}</li>
+                <li class="list-group-item"><strong>Correo: </strong>{{email}}</li>
+                <li class="list-group-item"><strong>Telefono: </strong>{{telefonoGestor}}</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <div class="card">
+            <div class="card-body">
+              <ul id="Comandante" class="list-group list-group-flush">
+                <h1 class="card-title"><strong> -- Comandante Unidad/ Jefe Dependencía -- </strong></h1>
+                <li class="list-group-item"><strong>Nombre: </strong>{{comandante}}</li>
+                <li class="list-group-item"><strong>Correo: </strong>{{ComandanteCorreo}}</li>
+                <li class="list-group-item"><strong>Telefono: </strong>{{ComandanteNumber}}</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <!--  -->
+        <div class="col-sm-12">
+          <div class="card">
+            <div id="Unidad" class="card-body">
+              <p class="card-text"><strong>Unidad de Dependecnia: </strong> {{unidadDependencia}} </p>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-12 md-12 sm-3">
+          <div class="card">
+            <div id="Equipo" class="card-body">
+              <h1 class="card-title"><strong> -- Equipo de Investigacion -- </strong></h1>
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>Grado</th>
+                    <th>Nombres</th>
+                    <th>Apellidos</th>
+                    <th>Cargos</th>
+                    <th>Dedicacion</th>
+                    <th>Grupo</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let i of equipoInvestigacion">
+                    <th>{{i.grado}}</th>
+                    <th>{{i.nombres}}</th>
+                    <th>{{i.apellido}}</th>
+                    <th>{{i.cargo}}</th>
+                    <th>{{i.dedicacion}}</th>
+                    <th>{{i.grupos}}</th>
+                    <th>
+                    </th>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-12 md-12 sm-3">
+          <div class="card">
+            <div id="objetivoGeneral" class="card-body">
+              <h1 class="card-title"><strong> -- Objetivo General -- </strong></h1>
+              <p>{{objetivoGeneral}}</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-12 md-12 sm-3">
+          <div id="objetivoEspecifico" class="card">
+            <div id="objetivoEspecifico" class="card-body">
+              <h1 class="card-title"><strong> -- Objetivos Especificos -- </strong></h1>
+              <ul class="list-group list-group-flush">
+                <li *ngFor="let objetivo of objetivosEspecificos">
+                  {{objetivo.descr}}
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-12 md-12 sm-3">
+          <div class="card">
+            <div id="resumen" class="card-body">
+              <h1 class="card-title"><strong> -- Resumen -- </strong></h1>
+              <div [innerHTML]="resumen"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-12 md-12 sm-3">
+          <div class="card">
+            <div id="palabrasClave" class="card-body">
+              <h1 class="card-title"><strong> -- Palabras Clave -- </strong></h1>
+
+              <mat-chip-list class="example-chip" cdkDropList cdkDropListOrientation="horizontal">
+                <mat-chip class="example-box" cdkDrag *ngFor="let palabra of palabrasClave">
+                  {{palabra.palabra}}
+                </mat-chip>
+              </mat-chip-list>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-12 md-12 sm-3">
+          <div class="card">
+            <div id="marcoConceptual" class="card-body">
+              <h1 class="card-title"><strong> -- Marco conceptual -- </strong></h1>
+              <div [innerHTML]="marcoConceptual"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-12 md-12 sm-3">
+          <div class="card">
+            <div id="estadoArte" class="card-body">
+              <h1 class="card-title"><strong> --Estado del Arte -- </strong></h1>
+              <div [innerHTML]="estadoArte"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-12 md-12 sm-3">
+          <div class="card">
+            <div id="resultadosPrevios" class="card-body">
+              <h1 class="card-title"><strong> -- Resultados Previos -- </strong></h1>
+              <div [innerHTML]="resultadosPrevios"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-12 md-12 sm-3">
+          <div class="card">
+            <div id="resultadosEsperados" class="card-body">
+              <h1 class="card-title"><strong> -- Resultados Esperados -- </strong></h1>
+              <div [innerHTML]="resultadosEsperados"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-12 md-12 sm-3">
+          <div class="card">
+            <div id="metodologia" class="card-body">
+              <h1 class="card-title"><strong> -- Metodologia -- </strong></h1>
+              <div [innerHTML]="metodologia"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-12 md-12 sm-3">
+          <div class="card">
+            <div id="impactoAmbiental" class="card-body">
+              <h1 class="card-title"><strong> -- Impacto Ambiental -- </strong></h1>
+              <p>{{impactoAmbiental}}</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-12 md-12 sm-3">
+          <div class="card">
+            <div id="bibliografia" class="card-body">
+              <h1 class="card-title"><strong> -- Bibliografía -- </strong></h1>
+              <ul class="list-group list-group-flush">
+                <li *ngFor="let bibliografia of bibliografias">
+                  {{bibliografia.bibliografia}}
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-12 md-12 sm-3">
+          <div class="card">
+            <div class="card-body">
+              <h1 class="card-title"><strong> -- Productos y Presupuesto -- </strong></h1>
+              <div id="Table2" class="container">
+                <table class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th scope="col" rowspan="2">Rubro</th>
+                      <th *ngFor="let i of entid">{{i}}</th>
+                    </tr>
+                    <!-- <th *ngFor="let i of prueba"> -->
+                    <tr>
+                      <th *ngFor="let i of entid">
+                    <tr>
+                      <td>efectivo</td>
+                      <td>especie</td>
+                    </tr>
+                    </th>
+                    </tr>
+                    <!-- </th> -->
+
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let i of dataSourceRubro">
+                      <th>{{i.NombreRubro}}</th>
+                      <th *ngFor="let i of i.EntidadesCostos">
+                    <tr>
+                      <td>{{i.efectivo}}</td>
+                      <td>{{i.especie}}</td>
+                    </tr>
+                    </th>
+                    <th>
+                      <button mat-icon-button aria-label="Example icon-button with a heart icon"
+                        matTooltipClass="tooltip-white" (click)="Mostrar(i.idRubro)" matTooltip="Ver Detalle"
+                        matTooltipPosition="above">
+                        <mat-icon>preview</mat-icon>
+                      </button>
+                    </th>
+                    </tr>
+                  </tbody>
+
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ------------------------------------------------------------- Cambio ------------------------------------------------------------------- -->
+        <div class="container">
+          <div *ngIf="ValidarEvaluar">
+            <table class="table table-bordered">
+              <thead class="thead-dark">
+                <tr>
+                  <th>Criterio de Evaluacion</th>
+                  <th>Puntaje Evalucacion</th>
+                  <th colspan="3">tabla de puntuaciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="thead-light">
+                  <th>1. calidad del proyecto</th>
+                  <th>0 - 45 Total</th>
+                  <th>Deficiente</th>
+                  <th>Aceptable</th>
+                  <th>Sobresaliente</th>
+                </tr>
+                <tr>
+                  <th>Formulación y antecedentes de la pregunta de investigación. Contribución de la pregunta de
+                    investigación planteada a la generación de nuevo conocimiento. Claridad y sustento de los
+                    fundamentos científicos. Claridad de la o las preguntas de investigación e hipótesis planteadas
+                    (Cuando aplique).
+                    En caso de que sea más un proyecto de desarrollo tecnológico que de investigación, verificar en el
+                    planteamiento del problema, la formulación o los antecedentes, si efectivamente el proyecto está
+                    orientado a la creación, modificación o adaptación de un producto, servicio o proceso específico
+                    gracias al empleo de la tecnología y conocimientos, y si tiene como función satisfacer una
+                    necesidad, demanda o servicio.
+                    En caso de ser un proyecto de transferencia de tecnología verificar que obedece a una necesidad u
+                    oportunidad para trasnferir conocimientos, tecnologías, habilidades y destrezas para el desarrollo
+                    de nuevas aplicaciones, servicios o procesos y mejorar las capacidades científicas y tecnológicas de
+                    la FAC y del país mismo.
+                    En cualquier tipo de proyecto, verificar la claridad y sustento de la pregunta o problema definido.
+                  </th>
+                  <th>
+                    <mat-form-field class="full-width" appearance="outline">
+                      <mat-label>Calificación</mat-label>
+                      <input *ngIf="!Calificado" formControlName="vlrproyecto" type="number" matInput>
+                      <input *ngIf="Calificado" formControlName="vlrproyecto" type="number" readonly matInput>
+                      <mat-error *ngIf="evaluacion">la maxima calificacion es 20 y la minima es 0</mat-error>
+                    </mat-form-field>
+                  </th>
+                  <th>0-6 </th>
+                  <th>7-14</th>
+                  <th>15-20</th>
+                </tr>
+                <tr>
+                  <th>Coherencia en la estructura del proyecto. Articulación entre la pregunta de investigación, los
+                    objetivos, el diseño metodológico y el cronograma de actividades (que deben incorporar los
+                    componentes y actividades para alcanzar los objetivos planteados) y los productos esperados.</th>
+                  <th>
+                    <mat-form-field class="full-width" appearance="outline">
+                      <mat-label> Calificación</mat-label>
+                      <input *ngIf="!Calificado" formControlName="vlrunidadependencia" type="number" matInput>
+                      <input *ngIf="Calificado" formControlName="vlrunidadependencia" type="number" readonly matInput>
+
+                      <mat-error *ngIf="evaluacion">la maxima calificacion es 15 y la minima es 0</mat-error>
+                    </mat-form-field>
+                  </th>
+                  <th>0-4 </th>
+                  <th>5-10</th>
+                  <th>11-15</th>
+                </tr>
+                <tr>
+                  <th>Perspectiva de uso potencial de los resultados de la investigación. Potencial de aplicación y uso
+                    de los resultados en la poblacion objetivo. </th>
+                  <th>
+                    <mat-form-field class="full-width" appearance="outline">
+                      <mat-label>Calificación</mat-label>
+                      <input *ngIf="!Calificado" formControlName="vlrequipo" type="number" matInput>
+                      <input *ngIf="Calificado" formControlName="vlrequipo" type="number" readonly matInput>
+                      <mat-error *ngIf="evaluacion">la maxima calificacion es 5 y la minima es 0</mat-error>
+                    </mat-form-field>
+                  </th>
+                  <th>0-2 </th>
+                  <th>3-4</th>
+                  <th>5</th>
+                </tr>
+                <tr>
+                  <th>Presupuesto. Concordancia entre el presupuesto total, las actividades y los objetivos planteados
+                    del proyecto. Justificacion adecuada de los rubros, cantidad y montos solicitados con los objetivos,
+                    la metodología y la duración del proyecto. </th>
+                  <th>
+                    <mat-form-field class="full-width" appearance="outline">
+                      <mat-label>Calificación</mat-label>
+                      <input *ngIf="!Calificado" formControlName="vlrobjGeneral" type="number" matInput>
+                      <input *ngIf="Calificado" formControlName="vlrobjGeneral" type="number" readonly matInput>
+                      <mat-error *ngIf="evaluacion">la maxima calificacion es 5 y la minima es 0</mat-error>
+                    </mat-form-field>
+                  </th>
+                  <th>0-2 </th>
+                  <th>3-4</th>
+                  <th>5</th>
+                </tr>
+                <tr class="thead-light">
+                  <th>2. conformacion de la alianza y del equipo de investigacion</th>
+                  <th>0 - 15 Total</th>
+                </tr>
+                <tr>
+                  <th>Conformación del equipo para dar respuesta a la pregunta o problema de investigación planteado.
+                  </th>
+                  <th>
+                    <mat-form-field class="full-width" appearance="outline">
+                      <mat-label>Calificación</mat-label>
+                      <input *ngIf="!Calificado" formControlName="vlrobjEspecifico" type="number" matInput>
+                      <input *ngIf="Calificado" formControlName="vlrobjEspecifico" type="number" readonly matInput>
+                      <mat-error *ngIf="evaluacion">la maxima calificacion es 8 y la minima es 0</mat-error>
+                    </mat-form-field>
+                  </th>
+                  <th>0-2 </th>
+                  <th>3-5</th>
+                  <th>6-8</th>
+                </tr>
+                <tr>
+                  <th>Aporte y complementariedad de los grupos o entidades que conforman la alianza. </th>
+                  <th>
+                    <mat-form-field class="full-width" appearance="outline">
+                      <mat-label>Calificación</mat-label>
+                      <input *ngIf="!Calificado" formControlName="vlrresumen" type="number" matInput>
+                      <input *ngIf="Calificado" formControlName="vlrresumen" type="number" readonly matInput>
+                      <mat-error *ngIf="evaluacion">la maxima calificacion es 7 y la minima es 0</mat-error>
+                    </mat-form-field>
+                  </th>
+                  <th>0-2 </th>
+                  <th>3-4</th>
+                  <th>5-7</th>
+                </tr>
+                <tr class="thead-light">
+                  <th>3. productos esperados</th>
+                  <th>0 - 20 Total</th>
+                </tr>
+                <tr>
+                  <th>Generación de productos de nuevo conocimiento y/o de desarrollo tecnológico e innovación.</th>
+                  <th>
+                    <mat-form-field class="full-width" appearance="outline">
+                      <mat-label>Calificación</mat-label>
+                      <input *ngIf="!Calificado" formControlName="vlrpalabrasClaves" type="number" matInput>
+                      <input *ngIf="Calificado" formControlName="vlrpalabrasClaves" type="number" readonly matInput>
+                      <mat-error *ngIf="evaluacion">la maxima calificacion es 15 y la minima es 1</mat-error>
+                    </mat-form-field>
+                  </th>
+                  <th>1-4 </th>
+                  <th>5-10</th>
+                  <th>11-15</th>
+                </tr>
+                <tr>
+                  <th>Generación de productos de nuevo conocimiento y/o de desarrollo tecnológico e innovación.</th>
+                  <th>
+                    <mat-form-field class="full-width" appearance="outline">
+                      <mat-label>Calificación</mat-label>
+                      <input *ngIf="!Calificado" formControlName="vlrmarco" type="number" matInput>
+                      <input *ngIf="Calificado" formControlName="vlrmarco" type="number" readonly matInput>
+                      <mat-error *ngIf="evaluacion">la maxima calificacion es 5 y la minima es 1</mat-error>
+                    </mat-form-field>
+                  </th>
+                  <th>1-2 </th>
+                  <th>3-4</th>
+                  <th>5</th>
+                </tr>
+                <tr class="thead-light">
+                  <th>4. pertenencia</th>
+                  <th>0 - 20 Total</th>
+                </tr>
+                <tr>
+                  <th>Pertinencia con los Programas Estratégicos de la FAC. </th>
+                  <th>
+                    <mat-form-field class="full-width" appearance="outline">
+                      <mat-label>Calificación</mat-label>
+                      <input *ngIf="!Calificado" formControlName="vlrestado" type="number" matInput>
+                      <input *ngIf="Calificado" formControlName="vlrestado" type="number" readonly matInput>
+                      <mat-error *ngIf="evaluacion">la maxima calificacion es 20 y la minima es 0</mat-error>
+                    </mat-form-field>
+                  </th>
+                  <th>0-5 </th>
+                  <th>6-15</th>
+                  <th>16-20</th>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+
+        <!-- ---------------------------------------------------------Fin del cambio----------------------------------------------------------------- -->
+
+      </div>
+    </form>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <div *ngIf="ValidarEvaluar">
+      <button mat-button (click)="evaluar()" [disabled]="!evaluacion.valid" cdkFocusInitial>Evaluar</button>
+    </div>
+    <button (click)="GeneratePDF()" mat-button [mat-dialog-close]="true" cdkFocusInitial>Generar PDF</button>
+    <button mat-button mat-dialog-close [routerLink]="['/pages/formulacion']">Cancel</button>
+  </mat-dialog-actions>
+
+</div>
+<!--  </div>
+</div> -->

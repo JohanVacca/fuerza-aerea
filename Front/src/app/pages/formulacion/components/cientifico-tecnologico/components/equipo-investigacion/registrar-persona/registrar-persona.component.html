@@ -1,0 +1,65 @@
+<form [formGroup]="registroPersona" autocomplete="off">
+  <mat-card>
+    <mat-card-title>Registrar Persona</mat-card-title>
+    <div class="container">
+      <div class="row">
+        <div class="col-6 lg-6 md-6 sm-3">
+          <mat-card>
+            <mat-form-field class="full-width" appearance="fill">
+              <mat-label>Nombres</mat-label>
+              <input formControlName="nombres" matInput>
+            </mat-form-field>
+            <br>
+            <mat-form-field class="full-width" appearance="fill">
+              <mat-label>Apellidos</mat-label>
+              <input formControlName="apellido" matInput>
+            </mat-form-field>
+            <br>
+            <mat-form-field class="full-width" appearance="fill">
+              <mat-label>Documento de Identificación</mat-label>
+              <input formControlName="identificacion" type="number" matInput>
+            </mat-form-field>
+            <br>
+            <mat-form-field class="full-width" appearance="fill">
+              <mat-label>Grado</mat-label>
+              <input formControlName="grado" matInput>
+            </mat-form-field>
+          </mat-card>
+        </div>
+        <div class="col-6 lg-6 md-3 sm-3">
+          <mat-card>
+            <mat-form-field class="full-width" appearance="fill">
+              <mat-label>Rol-Funcion</mat-label>
+              <mat-select formControlName="cargo" [(ngModel)]="cargo" name="PersonPosis">
+                <!-- <option [value]="cargo"></option> -->
+                <mat-option *ngFor="let PersonPosi of PersonPosis" [value]="PersonPosi.descr">
+                  {{PersonPosi.descr}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <br>
+            <mat-form-field class="full-width" appearance="fill">
+              <mat-label>Dedicación (Horas semanales)</mat-label>
+              <input formControlName="dedicacion" type="number" matInput>
+            </mat-form-field>
+            <br>
+            <mat-form-field class="full-width" appearance="fill">
+              <mat-label>Grupo</mat-label>
+              <mat-select formControlName="grupos" [(value)]="vlrgrupo" name="Grupos">
+                <mat-option *ngFor="let Grupo of Grupos" [value]="Grupo.nombreGrupo">
+                  {{Grupo.nombreGrupo}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </mat-card>
+        </div>
+      </div>
+      <mat-card-actions class="btncrear">
+        <button *ngIf="!data.actualizar" [disabled]="!registroPersona.valid" (click)="guardarPersona()"
+          mat-raised-button color="primary" mat-dialog-close="false">Crear</button>
+        <button *ngIf="data.actualizar" [disabled]="!registroPersona.valid" (click)="updatePersona()" mat-raised-button
+          color="primary" mat-dialog-close="false">Actualizar</button>
+      </mat-card-actions>
+    </div>
+  </mat-card>
+</form>
