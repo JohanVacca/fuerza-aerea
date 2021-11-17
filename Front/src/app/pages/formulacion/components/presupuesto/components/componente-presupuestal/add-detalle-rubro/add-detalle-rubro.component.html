@@ -1,129 +1,236 @@
 <div class="container">
-  <mat-dialog-content class="mat-typography">
-  <div class="row">
-    <div class="col-12 -lg-12 md-6 sm-3">
-      <form [formGroup]="AddDettalle">
-        <mat-card>
-          <mat-form-field class="inputder" appearance="fill">
-            <mat-label>Numero de Item</mat-label>
-            <input [(value)]="sisNum" disabled matInput>
-          </mat-form-field>
-          <mat-form-field class="inputder" appearance="fill">
-            <mat-label>Nombre del Rubro</mat-label>
-            <input [(value)]="sisInfo" disabled matInput>
-          </mat-form-field>
+    <mat-dialog-content class="mat-typography">
+        <div class="row">
+            <div class="col-12 -lg-12 md-6 sm-3">
+                <form [formGroup]="AddDettalle">
+                    <mat-card>
+                        <mat-form-field class="inputder" appearance="fill">
+                            <mat-label>Numero de Item</mat-label>
+                            <input [(value)]="sisNum" disabled matInput>
+                        </mat-form-field>
+                        <mat-form-field class="inputder" appearance="fill">
+                            <mat-label>Nombre del Rubro</mat-label>
+                            <input [(value)]="sisInfo" disabled matInput>
+                        </mat-form-field>
 
 
-          <mat-card-title>Detalle del Rubro</mat-card-title>
-          <mat-card-subtitle>En este módulo se diligencia el detalle del rubro</mat-card-subtitle>
+                        <mat-card-title>Detalle del Rubro</mat-card-title>
+                        <mat-card-subtitle>En este módulo se diligencia el detalle del rubro</mat-card-subtitle>
 
-          <mat-horizontal-stepper>
-            <mat-step label="Detalles">
-              <mat-card-content>
-                <mat-card *ngIf="val">
-                  <mat-card class="tarjetaint">
-                    <mat-form-field class="short-width" appearance="fill">
-                      <mat-label>Perfil del Investigador</mat-label>
-                      <mat-select name="Perfil" formControlName="PerfilDelInvestigador" >
-                        <mat-option *ngFor="let Perfi of Perfil" (click)="cargar(Perfi.honorarioId)" (change)="cargar(Perfi.honorarioId)" [value]="Perfi.honorarioId">
-                          {{Perfi.honorarioId}}
-                        </mat-option>
-                      </mat-select>
-                    </mat-form-field>
+                        <mat-horizontal-stepper>
+                            <mat-step label="Detalles">
+                                <mat-card-content>
+                                    <mat-card *ngIf="val" class="tarjetaint card-rubro-form">
 
-                    <mat-form-field class="short-width" appearance="fill">
-                      <mat-label>Formación </mat-label>
-                      <input [(value)]="Formacion" matInput formControlName="Formacion" readonly>
-                    </mat-form-field>
+                                        <button
+                                                mat-raised-button
+                                                class="button-view-table"
+                                                (click)="verTabla()">Ver perfiles de investigadores
+                                        </button>
 
-                    <mat-form-field class="short-width" appearance="fill">
-                      <mat-label>Experiencia </mat-label>
-                      <input [(value)]="Experiencia" matInput formControlName="Experiencia" readonly>
-                    </mat-form-field>
-                    <button class="perfilinv" mat-stroked-button color="primary" (click)="verTabla()">Perfil de los
-                      investigadores</button>
-                    <mat-form-field class="short-width" appearance="fill">
-                      <mat-label>Nombre del Investigador</mat-label>
-                      <input [(value)]="NombreDelInvestigador" matInput formControlName="NombreDelInvestigador">
-                    </mat-form-field>
+                                        <mat-form-field class="short-width" appearance="fill">
+                                            <mat-label>Perfil del Investigador</mat-label>
+                                            <mat-select name="Perfil" formControlName="PerfilDelInvestigador">
+                                                <mat-option
+                                                        *ngFor="let perfilSeleccionado of Perfil"
+                                                        (change)="cargar(perfilSeleccionado)"
+                                                        (click)="cargar(perfilSeleccionado)"
+                                                        [value]="perfilSeleccionado">
+                                                    {{perfilSeleccionado.formacion}}
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
 
-                    <mat-form-field class="short-width" appearance="fill">
-                      <mat-label>Rol del Investigador</mat-label>
-                      <input [(value)]="RolDelInvestigador" matInput formControlName="RolDelInvestigador">
-                    </mat-form-field>
-                    <mat-form-field class="short-width" appearance="fill">
-                      <mat-label>Horas semanales</mat-label>
-                      <input [(value)]="HorasSemanales" matInput formControlName="HorasSemanales">
-                    </mat-form-field>
-                    <mat-form-field class="short-width" appearance="fill">
-                      <mat-label>Duración en meses</mat-label>
-                      <input [(value)]="DuracionEnMeses" matInput formControlName="DuracionEnMeses">
-                    </mat-form-field>
-                  </mat-card>
+                                        <mat-form-field class="short-width" appearance="fill">
+                                            <mat-label>Investigadores</mat-label>
+                                            <mat-select name="Perfil" formControlName="InvestigadorSeleccionado">
+                                                <mat-option
+                                                        *ngFor="let investigador of investigadores"
+                                                        (change)="seleccionarInvestigador(investigador)"
+                                                        (click)="seleccionarInvestigador(investigador)"
+                                                        [value]="investigador">
+                                                    {{investigador.nombre}} {{investigador.apellido}}
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
 
-                </mat-card>
-                <mat-card class="tarjetaint">
-                  <mat-form-field class="full-width" appearance="fill">
-                    <mat-label>Descripción</mat-label>
-                    <input [(value)]="Descripcion" matInput formControlName="Descripcion">
-                  </mat-form-field>
+                                        <mat-form-field class="short-width" appearance="fill">
+                                            <mat-label>Formación</mat-label>
+                                            <input [(value)]="Formacion" matInput formControlName="Formacion"
+                                                   readonly>
+                                        </mat-form-field>
 
-                  <mat-form-field class="full-width" appearance="fill">
-                    <mat-label>Justificación</mat-label>
-                    <input [(value)]="Justificacion" matInput formControlName="Justificacion">
-                  </mat-form-field>
-                  <br>
-                </mat-card>
-              </mat-card-content>
-            </mat-step>
-            <mat-step label="entidades">
-              <mat-card class="card">
-                <div class="container">
-                  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 table">
+                                        <mat-form-field class="short-width" appearance="fill">
+                                            <mat-label>Experiencia</mat-label>
+                                            <input [(value)]="Experiencia" matInput formControlName="Experiencia"
+                                                   readonly>
+                                        </mat-form-field>
+                                        <mat-form-field class="short-width" appearance="fill">
+                                            <mat-label>Nombre del Investigador</mat-label>
+                                            <input [(value)]="NombreDelInvestigador" matInput
+                                                   formControlName="NombreDelInvestigador" readonly>
+                                        </mat-form-field>
 
-                    <ng-container matColumnDef="Institucion">
-                      <th mat-header-cell *matHeaderCellDef> Institucion </th>
-                      <td mat-cell *matCellDef="let element"> {{element.institucion}} </td>
-                    </ng-container>
+                                        <mat-form-field class="short-width" appearance="fill">
+                                            <mat-label>Rol del Investigador</mat-label>
+                                            <input [(value)]="RolDelInvestigador" matInput
+                                                   formControlName="RolDelInvestigador" readonly>
+                                        </mat-form-field>
+                                        <mat-form-field class="short-width" appearance="fill">
+                                            <mat-label>Horas semanales</mat-label>
+                                            <input [(value)]="HorasSemanales" matInput formControlName="HorasSemanales" readonly>
+                                        </mat-form-field>
+                                        <mat-form-field class="short-width" appearance="fill">
+                                            <mat-label>Duración en meses</mat-label>
+                                            <input [(value)]="DuracionEnMeses" matInput formControlName="DuracionEnMeses" readonly>
+                                        </mat-form-field>
 
+                                        <div class="amounts-table" *ngIf="showMaxAmount">
+                                            <table>
+                                                <tbody>
+                                                <tr>
+                                                    <td colspan="2" class="center-row"><b>Calculos de topes</b></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><b>Tope máximo por hora</b></td>
+                                                    <td>{{topeMaximoPorHora | currency}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><b>Tope máximo por día (8 horas por día)</b></td>
+                                                    <td>{{topeMaximoPorDia | currency}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><b>Tope máximo por Semana (5 días por semana)</b></td>
+                                                    <td>{{topeMaximoPorSemana | currency}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><b>Tope máximo por Mes (4 semanas)</b></td>
+                                                    <td>{{topeMaximoPorMes | currency}}</td>
+                                                </tr>
+                                                <tr class="backgroud-calculate-row">
+                                                    <td><b>Valor por semana (Calculado)</b></td>
+                                                    <td>{{calculoSemana | currency}}</td>
+                                                </tr>
+                                                <tr class="backgroud-calculate-row">
+                                                    <td><b>Valor por mes (Calculado)</b></td>
+                                                    <td>{{calculoMes | currency}}</td>
+                                                </tr>
+                                                <tr class="backgroud-calculate-row">
+                                                    <td><b>Costo total</b></td>
+                                                    <td>{{costoTotal | currency}}</td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </mat-card>
 
-                    <ng-container matColumnDef="Efectivo">
-                      <th mat-header-cell *matHeaderCellDef> Efectivo </th>
-                      <td mat-cell *matCellDef="let element">
-                        <input [(value)]="element.efectivo" type="number" class="inputNumber" matInput (change)="Change(element.id,1,$event)">
-                      </td>
-                    </ng-container>
+                                    <mat-card class="tarjetaint">
+                                        <mat-form-field class="full-width" appearance="fill">
+                                            <mat-label>Descripción</mat-label>
+                                            <input [(value)]="Descripcion" matInput formControlName="Descripcion">
+                                        </mat-form-field>
 
-                    <ng-container matColumnDef="Especie">
-                      <th mat-header-cell *matHeaderCellDef> Especie </th>
-                      <td mat-cell *matCellDef="let element">
-                        <input [(value)]="element.especie" matInput type="number" class="inputNumber" (change)="Change(element.id,2,$event)">
-                      </td>
-                    </ng-container>
+                                        <mat-form-field class="full-width" appearance="fill">
+                                            <mat-label>Justificación</mat-label>
+                                            <input [(value)]="Justificacion" matInput formControlName="Justificacion">
+                                        </mat-form-field>
+                                        <br>
+                                    </mat-card>
+                                </mat-card-content>
+                            </mat-step>
 
+                            <mat-step label="Entidades">
+                                <mat-card class="card">
+                                    <div class="container">
+                                        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 table">
 
-                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                                            <ng-container matColumnDef="Institucion">
+                                                <th mat-header-cell *matHeaderCellDef> Institucion</th>
+                                                <td mat-cell *matCellDef="let element"> {{element.institucion}} </td>
+                                            </ng-container>
 
-                  </table>
+                                            <ng-container matColumnDef="Efectivo">
+                                                <th mat-header-cell *matHeaderCellDef> Efectivo</th>
+                                                <td mat-cell *matCellDef="let element">
+                                                    <input [(value)]="costoTotal" type="number"
+                                                           class="inputNumber" matInput readonly>
+                                                </td>
+                                            </ng-container>
 
-                </div>
-              </mat-card>
-            </mat-step>
-          </mat-horizontal-stepper>
-        </mat-card>
-      </form>
-      <mat-card-actions *ngIf="Complet">
-        <mat-card-actions *ngIf="!valButton">
-          <button mat-raised-button color="primary" mat-dialog-close="true" (click)="up()">Guardar</button>
-        </mat-card-actions>
-        <mat-card-actions *ngIf="valButton">
-          <button mat-raised-button color="primary" mat-dialog-close="true" (click)="upDate()">Editar</button>
-        </mat-card-actions>
+                                            <ng-container matColumnDef="Especie">
+                                                <th mat-header-cell *matHeaderCellDef> Especie</th>
+                                                <td mat-cell *matCellDef="let element">
+                                                    <input [(value)]="especieTotal" matInput type="number" readonly>
+                                                </td>
+                                            </ng-container>
 
-      </mat-card-actions>
-    </div>
-  </div>
-</mat-dialog-content>
+                                            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                                            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+                                        </table>
+
+                                        <div class="amounts-table" *ngIf="showMaxAmount">
+                                            <table>
+                                                <tbody>
+                                                <tr>
+                                                    <td colspan="2" class="center-row"><b>Calculos de topes</b></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><b>Tope máximo por hora</b></td>
+                                                    <td>{{topeMaximoPorHora | currency}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><b>Tope máximo por día (8 horas por día)</b></td>
+                                                    <td>{{topeMaximoPorDia | currency}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><b>Tope máximo por Semana (5 días por semana)</b></td>
+                                                    <td>{{topeMaximoPorSemana | currency}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><b>Tope máximo por Mes (4 semanas)</b></td>
+                                                    <td>{{topeMaximoPorMes | currency}}</td>
+                                                </tr>
+                                                <tr class="backgroud-calculate-row">
+                                                    <td><b>Valor por semana (Calculado)</b></td>
+                                                    <td>{{calculoSemana | currency}}</td>
+                                                </tr>
+                                                <tr class="backgroud-calculate-row">
+                                                    <td><b>Valor por mes (Calculado)</b></td>
+                                                    <td>{{calculoMes | currency}}</td>
+                                                </tr>
+                                                <tr class="backgroud-calculate-row">
+                                                    <td><b>Costo total</b></td>
+                                                    <td>{{costoTotal | currency}}</td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                    </div>
+                                </mat-card>
+                            </mat-step>
+                        </mat-horizontal-stepper>
+                    </mat-card>
+                </form>
+<!--                <mat-card-actions *ngIf="showMaxAmount">-->
+<!--                    <mat-card-actions *ngIf="!valButton">-->
+<!--                        <button mat-raised-button color="primary" mat-dialog-close="true" (click)="up()">Guardar-->
+<!--                        </button>-->
+<!--                    </mat-card-actions>-->
+<!--                    <mat-card-actions *ngIf="valButton">-->
+<!--                        <button mat-raised-button color="primary" mat-dialog-close="true" (click)="upDate()">Editar-->
+<!--                        </button>-->
+<!--                    </mat-card-actions>-->
+<!--                </mat-card-actions>-->
+                <mat-card-actions *ngIf="showMaxAmount">
+                    <mat-card-actions *ngIf="isCreate">
+                        <button mat-raised-button color="primary" mat-dialog-close="true" (click)="up()">Guardar
+                        </button>
+                    </mat-card-actions>
+                </mat-card-actions>
+            </div>
+        </div>
+    </mat-dialog-content>
 
 </div>

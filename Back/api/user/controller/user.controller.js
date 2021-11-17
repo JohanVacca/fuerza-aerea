@@ -204,6 +204,7 @@ function getCommanders(req, res) {
     RoleDao['getAll']()
       .then(async roles => {
         const commanderId = roles.find(r => r.name === 'Comandante')._id;
+        console.log('ID:::::::: ', commanderId);
 
         const query = {role: commanderId};
 

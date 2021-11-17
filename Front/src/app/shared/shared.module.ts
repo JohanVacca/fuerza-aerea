@@ -6,6 +6,7 @@ import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
 import { AllowedRolePipe } from '../shared/pipes/allowed-role/allowed-role.pipe';
 // import { EpocToDaysPipe } from 'app/pages/following/shared/pipes/epoc-to-days/epoc-to-days.pipe';
 import { UploadFileComponent } from './components/upload-file/upload-file.component';
+import { LoaderComponent } from './components/loader/loader.component';
 
 @NgModule({
   imports: [
@@ -17,11 +18,13 @@ import { UploadFileComponent } from './components/upload-file/upload-file.compon
   ],
   declarations: [
     UploadFileComponent,
-    AllowedRolePipe
+    AllowedRolePipe,
+    LoaderComponent
   ],
-  exports: [
-    UploadFileComponent,
-    AllowedRolePipe
-  ]
+    exports: [
+        UploadFileComponent,
+        AllowedRolePipe,
+        LoaderComponent
+    ]
 })
 export class SharedModule { }

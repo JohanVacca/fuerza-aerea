@@ -6,18 +6,32 @@
         <div class="col-6 lg-6 md-6 sm-3">
           <mat-card>
             <mat-form-field class="full-width" appearance="fill">
+              <mat-label>Number</mat-label>
+              <input type="text"
+                     placeholder="Seleccione un investigador"
+                     aria-label="Number"
+                     matInput
+                     [matAutocomplete]="auto">
+              <mat-autocomplete #auto="matAutocomplete" (optionSelected)="test($event.option.value)">
+                <mat-option *ngFor="let option of investigatorsNames " [value]="option">
+                  {{option}}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+            <br>
+            <mat-form-field class="full-width" appearance="fill">
               <mat-label>Nombres</mat-label>
-              <input formControlName="nombres" matInput>
+              <input formControlName="nombres" matInput readonly>
             </mat-form-field>
             <br>
             <mat-form-field class="full-width" appearance="fill">
               <mat-label>Apellidos</mat-label>
-              <input formControlName="apellido" matInput>
+              <input formControlName="apellido" matInput readonly>
             </mat-form-field>
             <br>
             <mat-form-field class="full-width" appearance="fill">
               <mat-label>Documento de Identificación</mat-label>
-              <input formControlName="identificacion" type="number" matInput>
+              <input formControlName="identificacion" matInput readonly>
             </mat-form-field>
             <br>
             <mat-form-field class="full-width" appearance="fill">
@@ -46,8 +60,8 @@
             <mat-form-field class="full-width" appearance="fill">
               <mat-label>Grupo</mat-label>
               <mat-select formControlName="grupos" [(value)]="vlrgrupo" name="Grupos">
-                <mat-option *ngFor="let Grupo of Grupos" [value]="Grupo.nombreGrupo">
-                  {{Grupo.nombreGrupo}}
+                <mat-option *ngFor="let grupo of grupos" [value]="grupo.nombreGrupo">
+                  {{grupo.nombreGrupo}}
                 </mat-option>
               </mat-select>
             </mat-form-field>

@@ -372,3 +372,21 @@ button {
   margin-top: 7rem;
   margin-bottom: 6.7rem;
 }
+
+.table-objetivos table {
+  width: 100%;
+}
+
+.objetivo-general-text {
+  text-align: center;
+
+  label {
+    text-align: center;
+    font-weight: bold;
+    font-size: 20px;
+
+    span {
+      color: #1d55cd;
+    }
+  }
+}

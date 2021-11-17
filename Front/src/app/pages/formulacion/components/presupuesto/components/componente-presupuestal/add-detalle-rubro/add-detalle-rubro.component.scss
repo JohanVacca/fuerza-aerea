@@ -385,3 +385,29 @@ button {
   margin-top: 7rem;
   margin-bottom: 6.7rem;
 }
+
+.amounts-table {
+  text-align: -webkit-center;
+
+  .center-row {
+    text-align: center
+  }
+
+  th, td {
+    border-color: darkblue;
+    border-style:solid;
+    padding: 5px;
+  }
+}
+
+.card-rubro-form {
+  display: grid;
+}
+
+.button-view-table {
+  width: fit-content;
+}
+
+.backgroud-calculate-row {
+  background: aliceblue
+}

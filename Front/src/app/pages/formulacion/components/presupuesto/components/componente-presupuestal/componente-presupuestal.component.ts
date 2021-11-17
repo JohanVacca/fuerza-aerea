@@ -1,12 +1,14 @@
-import { Component, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { AddDetalleRubroComponent } from './add-detalle-rubro/add-detalle-rubro.component';
-import { DetalleRubroComponent, DetalleRubroData } from './detalle-rubro/detalle-rubro.component';
-import { DialogAgregarComponent } from './dialog-agregar/dialog-agregar.component';
-import { ProjectEntryService } from '../../../../../../shared/services/project-entry/project-entry.service'
-import { CommonSimpleModel } from '../../../../../../shared/models/common-simple.model';
-import { AddDetalleRubroData } from './add-detalle-rubro/add-detalle-rubro.component';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import {Component, OnInit} from '@angular/core';
+import {MatDialog} from '@angular/material/dialog';
+import {AddDetalleRubroComponent, AddDetalleRubroData} from './add-detalle-rubro/add-detalle-rubro.component';
+import {DetalleRubroComponent, DetalleRubroData} from './detalle-rubro/detalle-rubro.component';
+import {DialogAgregarComponent} from './dialog-agregar/dialog-agregar.component';
+import {ProjectEntryService} from '../../../../../../shared/services/project-entry/project-entry.service';
+import {CommonSimpleModel} from '../../../../../../shared/models/common-simple.model';
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {ActivatedRoute} from '@angular/router';
+import {StateInterface} from '../../../../../../shared/services/saveStateService/StateInterface';
+import {SaveStateService} from '../../../../../../shared/services/saveStateService/save-state.service';
 
 export interface PeriodicElement {
   TipoProducto: string;
@@ -15,9 +17,6 @@ export interface PeriodicElement {
   Fuerza: number;
   Otro: number;
 }
-
-import { ActivatedRoute, Params } from '@angular/router';
-
 
 
 const ELEMENT_DATA: PeriodicElement[] = [
@@ -33,9 +32,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
 })
 export class ComponentePresupuestalComponent implements OnInit {
 
-
-  
-  dataSourceRubro = JSON.parse(localStorage.getItem("AgregarDetallesRubros"))
+  dataSourceRubro = [];
 
   // dataSourceRubro = ELEMENT_DATA;
   displayedColumnsRubro: string[] = ["NombreRubro",'Descripcion','rubros'];
@@ -51,13 +48,36 @@ export class ComponentePresupuestalComponent implements OnInit {
   subtotales = [];
   Total = 0;
 
-  constructor(public dialog: MatDialog,
-    private projectEntryService: ProjectEntryService,
-    private rutaActiva: ActivatedRoute,
-    private form: FormBuilder) { }
+  private state: StateInterface;
+
+  constructor(
+      public dialog: MatDialog,
+      private projectEntryService: ProjectEntryService,
+      private rutaActiva: ActivatedRoute,
+      private saveStateService: SaveStateService,
+      private form: FormBuilder) { }
 
   ngOnInit(): void {
     this.getAll();
+    this.initializeData();
+  }
+
+  private initializeData(): void {
+    const state = this.saveStateService.getState();
+    if (state?.tercerPaso) {
+      this.state = state;
+    } else {
+      this.state = {
+        ...state,
+        tercerPaso: {
+          componentePresupuestal: {
+            rubros: [],
+            entidades: [],
+            personalCientifico: []
+          }
+        }
+      };
+    }
   }
 
   deleteEntidades(Nit) {
@@ -72,16 +92,12 @@ export class ComponentePresupuestalComponent implements OnInit {
     this.dataSource = JSON.parse(localStorage.getItem("Entidades"));
   }
 
-  deleteRubroDet(idRubro) {
-    const RubroDetList = [];
-    let auto = JSON.parse(localStorage.getItem("AgregarDetallesRubros"));
-    auto.forEach(element => {
-      if (element.idRubro != idRubro) {
-        RubroDetList.push(element);
-      }
-    });
-    localStorage.setItem("AgregarDetallesRubros", JSON.stringify(RubroDetList));
-    this.dataSourceRubro = JSON.parse(localStorage.getItem("AgregarDetallesRubros"));
+  deleteRubroDet(idRubro): void {
+    const personalCientifico = this.state.tercerPaso.componentePresupuestal.personalCientifico;
+    this.state.tercerPaso.componentePresupuestal.personalCientifico =
+        [...personalCientifico.filter(personal => personal.idRubro !== idRubro)];
+    this.dataSourceRubro = this.state.tercerPaso.componentePresupuestal.personalCientifico;
+    this.updateState();
     this.ContarGeneral();
   }
 
@@ -92,7 +108,7 @@ export class ComponentePresupuestalComponent implements OnInit {
   builder() {
     this.iniciarProyecto = this.form.group({
       rubro: new FormControl('',[Validators.required]),
-    })
+    });
   }
 
   agregarEntidad() {
@@ -126,16 +142,23 @@ export class ComponentePresupuestalComponent implements OnInit {
       desc: desc,
       cons: cons,
       Val: false
-    }
+    };
 
     const dialogref = this.dialog.open(AddDetalleRubroComponent, {
       data: datos
-    })
+    });
     dialogref.afterClosed().subscribe( res => {
       this.getAll();
-      this.dataSourceRubro = JSON.parse(localStorage.getItem("AgregarDetallesRubros"))
+      this.updateDataSource();
       this.ContarGeneral();
     });
+  }
+
+  private updateDataSource(): void {
+    this.state = this.saveStateService.getState();
+    this.dataSourceRubro =
+    this.state.tercerPaso?.componentePresupuestal?.personalCientifico ?
+    this.state.tercerPaso?.componentePresupuestal?.personalCientifico : [];
   }
 
   ContarGeneral(){
@@ -144,13 +167,13 @@ export class ComponentePresupuestalComponent implements OnInit {
       element.especie = 0;
     });
     this.Total = 0;
-    let aux = 0
-    if(this.dataSourceRubro != null){
+    let aux = 0;
+    if (this.dataSourceRubro != null) {
       this.dataSourceRubro.forEach(element => {
         element.EntidadesCostos.forEach(Ent => {
           this.subtotales[aux].efectivo = parseInt(this.subtotales[aux].efectivo) + parseInt(Ent.efectivo);
           this.subtotales[aux].especie = parseInt(this.subtotales[aux].especie) + parseInt(Ent.especie);
-          this.Total = this.Total + parseInt(Ent.efectivo) + parseInt(Ent.especie);          
+          this.Total = this.Total + parseInt(Ent.efectivo) + parseInt(Ent.especie);
           aux = aux + 1;
         });
         aux = 0;
@@ -176,15 +199,16 @@ export class ComponentePresupuestalComponent implements OnInit {
       desc: desc,
       cons: cons,
       Val: true
-    }
+    };
 
     const dialogref = this.dialog.open(AddDetalleRubroComponent, {
       data: datos
-    })
+    });
     dialogref.afterClosed().subscribe( res => {
       this.getAll();
-      this.dataSourceRubro = JSON.parse(localStorage.getItem("AgregarDetallesRubros"))
-    })
+      this.updateDataSource();
+      // this.dataSourceRubro = JSON.parse(localStorage.getItem("AgregarDetallesRubros"))
+    });
   }
 
   getAll() {
@@ -192,16 +216,16 @@ export class ComponentePresupuestalComponent implements OnInit {
     this.Convocatoria = cv.id;
     let entidadesAux = [];
     let subTotalAux = [];
-    this.rubro = []; 
+    this.rubro = [];
     this.projectEntryService.getIdConv("123456789876543212345678").subscribe(r => {
       r.forEach(element => {
-        this.rubro.push(element)
+        this.rubro.push(element);
       });
     });
 
     this.projectEntryService.getIdConv(this.Convocatoria).subscribe(r => {
       r.forEach(element => {
-        this.rubro.push(element)
+        this.rubro.push(element);
       });
     });
     if(this.dataSource != null){
@@ -210,8 +234,8 @@ export class ComponentePresupuestalComponent implements OnInit {
         let Objet = {
           efectivo: 0,
           especie: 0
-        }
-        subTotalAux.push(Objet)
+        };
+        subTotalAux.push(Objet);
       });
     }
     this.entid = entidadesAux;
@@ -220,15 +244,19 @@ export class ComponentePresupuestalComponent implements OnInit {
   }
 
   Mostrar(idRubro){
-
     let datos: DetalleRubroData = {
       id: idRubro
-    }
+    };
 
     const dialogref = this.dialog.open(DetalleRubroComponent, {
       data: datos
-    })
+    });
+
     dialogref.afterClosed().subscribe( res => {
-    })
+    });
+  }
+
+  private updateState(): void {
+    this.saveStateService.setState(this.state);
   }
 }

@@ -67,3 +67,41 @@
   transition: all 0.2s;
   padding: 0.5rem;
 }
+
+::ng-deep {
+  mat-card {
+    .div-button-create-project {
+      text-align: center;
+      margin: 15px;
+    }
+  }
+}
+
+.error-label {
+  color: #f44336;
+  font-size: 11px;
+  top: -12 px;
+  position: relative;
+  padding-left: 10px;
+}
+
+::ng-deep {
+  mat-step-header {
+    cursor: auto !important;
+  }
+
+  .mat-step-label-selected {
+    label {
+      font-weight: bold;
+      text-decoration: underline;
+    }
+  }
+  .stepper-form-project {
+    .mat-step-text-label.ng-star-inserted {
+      label {
+        white-space: initial;
+        word-break: break-word;
+      }
+    }
+  }
+}

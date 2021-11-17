@@ -1,77 +1,94 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
-import { Objetivo } from '../../../../../../@core/old-models/objetivo';
-import { filter } from 'rxjs/operators';
+import {Component, Inject, OnInit} from '@angular/core';
+import {FormGroup, FormBuilder, FormControl, Validators} from '@angular/forms';
+import {Objetivo} from '../../../../../../@core/old-models/objetivo';
+import {filter} from 'rxjs/operators';
+import {SaveStateService} from '../../../../../../shared/services/saveStateService/save-state.service';
+import {StateInterface} from '../../../../../../shared/services/saveStateService/StateInterface';
 
 export interface PeriodicElement {
-  descripcion: string;
+    descripcion: string;
 }
 
 const ELEMENT_DATA: PeriodicElement[] = [
-  { descripcion: 'Hydrogen' },
-  { descripcion: 'Helium' },
-  { descripcion: 'Lithium' },
-  { descripcion: 'Beryllium' },
+    {descripcion: 'Hydrogen'},
+    {descripcion: 'Helium'},
+    {descripcion: 'Lithium'},
+    {descripcion: 'Beryllium'},
 ];
 
 @Component({
-  selector: 'app-objetivos',
-  templateUrl: './objetivos.component.html',
-  styleUrls: ['../../detalles-generales.component.scss']
+    selector: 'app-objetivos',
+    templateUrl: './objetivos.component.html',
+    styleUrls: ['../../detalles-generales.component.scss']
 })
 export class ObjetivosComponent implements OnInit {
-  objetivoGeneral: string;
-  objetivoEspecificos: FormGroup;
-  objEspecificoslist = []
-  displayedColumns: string[] = ['descripcion', 'acciones'];
-  dataSource;
+    objetivoGeneral: string;
+    objetivoEspecificos: FormGroup;
+    objEspecificoslist = [];
+    displayedColumns: string[] = ['descripcion', 'acciones'];
+    dataSource;
 
+    private state: StateInterface;
 
+    public showObjetivoGeneral = false;
 
-  constructor(public obj: FormBuilder,) { }
-
-  ngOnInit(): void {
-    this.builder();
-    this.getItem();
-
-  }
-
-  getItem() {
-    this.dataSource = JSON.parse(localStorage.getItem('objetivosEspecificos'));
-    this.objetivoGeneral = JSON.parse(localStorage.getItem('objetivoGeneral'));
-  }
-  builder() {
-    this.objetivoEspecificos = this.obj.group({
-      descr: new FormControl("", [Validators.required]),
-    })
-
-  }
-
-  agregarObjGnral() {
-    localStorage.setItem('objetivoGeneral', JSON.stringify(this.objetivoGeneral));
-  }
-
-  agregarObjEsp() {
-    this.objEspecificoslist = JSON.parse(localStorage.getItem('objetivosEspecificos'));
-    if (this.objEspecificoslist == null) {
-      this.objEspecificoslist = []
-      this.objEspecificoslist.push(this.objetivoEspecificos.value)
-
-    } else {
-      this.objEspecificoslist.push(this.objetivoEspecificos.value)
-
+    constructor(public obj: FormBuilder, private saveStateService: SaveStateService) {
     }
-    localStorage.setItem('objetivosEspecificos', JSON.stringify(this.objEspecificoslist));
-    this.getItem();
-    this.builder();
-    this.objEspecificoslist = []
-  }
 
-  deleteobj(obj) {
-    let objetivoStorage = JSON.parse(localStorage.getItem('objetivosEspecificos'));
-    let objfilter = objetivoStorage.filter(r => r.objetivoespecifico != obj)
-    localStorage.setItem('objetivosEspecificos', JSON.stringify(objfilter));
-    this.getItem();
-  }
+    ngOnInit(): void {
+        this.initializeData();
+        this.builder();
+        this.getItem();
+    }
+
+    private initializeData(): void {
+        const state = this.saveStateService.getState();
+        if (state?.cuartoPaso) {
+            this.state = state;
+        } else {
+            this.state = {
+                ...state,
+                cuartoPaso: {
+                    objetivo: {
+                        objetivosEspecificos: [],
+                        objetivoGeneral: ''
+                    }
+                }
+            };
+        }
+    }
+
+    getItem(): void {
+        this.objetivoGeneral = this.state.cuartoPaso.objetivo.objetivoGeneral;
+        this.dataSource = [...this.state.cuartoPaso.objetivo.objetivosEspecificos];
+    }
+
+    builder(): void {
+        this.objetivoEspecificos = this.obj.group({
+            descr: new FormControl('', [Validators.required]),
+        });
+    }
+
+    modificandoObjetivo(): void {
+        this.showObjetivoGeneral = false;
+    }
+
+    agregarObjGnral(): void {
+        this.state.cuartoPaso.objetivo.objetivoGeneral = this.objetivoGeneral;
+        this.showObjetivoGeneral = Boolean(this.objetivoGeneral);
+    }
+
+    agregarObjEsp(): void {
+        this.state.cuartoPaso.objetivo.objetivosEspecificos.push(this.objetivoEspecificos.value);
+        this.getItem();
+    }
+
+    deleteobj(obj): void {
+        console.log('obj:: ', obj);
+        console.log('this.state:: ', this.state);
+        this.state.cuartoPaso.objetivo.objetivosEspecificos =
+            this.state.cuartoPaso.objetivo.objetivosEspecificos.filter(objetivo => objetivo.descr !== obj.descr);
+        this.getItem();
+    }
 }
 

@@ -6,8 +6,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./formular-proyecto.component.scss']
 })
 export class FormularProyectoComponent implements OnInit {
-  
-  textoHijo1:string;
+
+  textoHijo1: string;
 
   constructor() { }
 

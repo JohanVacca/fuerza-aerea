@@ -103,7 +103,6 @@ export class SignUpComponent implements OnInit {
         _ => this.showSuccessAlert(),
         (err) => (err.status === 409) ? this.showUserExistsAlert() : this.showGeneralError()
       );
-    
     this.router.navigate(['home/sign-in']);
   }
 

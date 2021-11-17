@@ -11,12 +11,12 @@ import { Router } from '@angular/router';
 export class NavPerfilComponent implements OnInit {
 
   UserName = 'Cargando';
-  rol = 'NN'
+  rol = 'NN';
   constructor(
-      private authService: AuthService, 
-      private authStorageService : AuthStorageService,  
-      private router : Router
-      ) { 
+      private authService: AuthService,
+      private authStorageService: AuthStorageService,
+      private router: Router
+      ) {
         setTimeout(() => {
           this.UserName = this.authStorageService.getFullName();
           this.rol = localStorage.getItem("Role");
@@ -25,7 +25,7 @@ export class NavPerfilComponent implements OnInit {
       );
   }
 
-  
+
   ngOnInit(): void {
     this.UserName = this.authStorageService.getFullName();
     this.rol = localStorage.getItem("Role");
@@ -36,7 +36,7 @@ export class NavPerfilComponent implements OnInit {
     this.UserName = this.authStorageService.getFullName();
     this.rol = localStorage.getItem("Role");
   }
-  
+
   public Salir(){
   this.authService.signOut();
   this.router.navigate(['home/sign-in']);
