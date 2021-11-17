@@ -117,6 +117,7 @@ export class VistaFormulacionComponent implements OnInit {
     grupos = [];
     productosEsperados = [];
     Calificado = false;
+    pregunta;
 
     Cargar() {
         if (this.data.evaluar) {
@@ -185,8 +186,9 @@ export class VistaFormulacionComponent implements OnInit {
             this.resultadosEsperados = r.Proyecto.resultadosEsperados;
             this.metodologia = r.Proyecto.metodologia;
             this.impactoAmbiental = r.Proyecto.informaciones[0].impacto;
+            this.pregunta = r.Proyecto.informaciones[0].pregunta;
             this.bibliografias = r.Proyecto.bibliografias;
-            this.productosEsperados = r.Proyecto.productosEsperados;
+            this.productosEsperados = [...r.Proyecto.productosEsperados, ...r.Proyecto.productosEsperados];
             this.dataSourceRubro = r.Proyecto.AgregarDetallesRubros;
             r.Proyecto.Entidades.forEach(element => {
                 this.entid.push(element.Institucion);

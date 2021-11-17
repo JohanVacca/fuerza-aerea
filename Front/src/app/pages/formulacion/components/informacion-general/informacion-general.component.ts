@@ -14,7 +14,7 @@ import {UserModel} from '../../../../shared/models/user.model';
 import {stringify} from 'querystring';
 import {finalize} from 'rxjs/operators';
 import {SaveStateService} from '../../../../shared/services/saveStateService/save-state.service';
-import {StateInterface} from '../../../../shared/services/saveStateService/StateInterface';
+import {PrimerPaso, StateInterface} from '../../../../shared/services/saveStateService/StateInterface';
 
 @Component({
     selector: 'app-informacion-general',
@@ -110,7 +110,7 @@ export class InformacionGeneralComponent implements OnInit {
 
     guardar() {
         const datainiciar = this.iniciarProyecto.value;
-        this.setState();
+        this.updateState();
         localStorage.setItem('iniciarProyecto', JSON.stringify(datainiciar));
     }
 
@@ -168,10 +168,10 @@ export class InformacionGeneralComponent implements OnInit {
         this.state = this.saveStateService.getState() ? this.saveStateService.getState() : {};
     }
 
-    private setState(): void {
+    private updateState(): void {
         const {avala, comandante, dependencia, duracion, email, gestor, linea,
             lugar, modelo, nombreProyecto, programa, subprograma, telefonoGestor} = this.iniciarProyecto.value;
-        this.state.primerPaso = {
+        const primerPaso: PrimerPaso = {
             nombreProyecto,
             unidadDependencia: dependencia,
             correoGestor: email,
@@ -186,6 +186,12 @@ export class InformacionGeneralComponent implements OnInit {
             subProgramaDeInvestigacion: subprograma,
             quienAvalaInvestigacion: avala,
         };
-        this.saveStateService.setState(this.state);
+        this.state = {
+            ...this.saveStateService.getState(),
+            primerPaso
+        };
+        this.saveStateService.setState({primerPaso: this.state.primerPaso});
+        console.log('this.state::', this.state);
+        console.log('this.saveStateService.getState()', this.saveStateService.getState());
     }
 }

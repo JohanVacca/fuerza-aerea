@@ -6,6 +6,7 @@ import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {TablaHonoraiosService} from 'src/app/@core/services/tabla-honorarios/tabla-honoraios.service';
 import {SaveStateService} from '../../../../../../../shared/services/saveStateService/save-state.service';
 import {Investigador, PersonalCientifico, StateInterface} from '../../../../../../../shared/services/saveStateService/StateInterface';
+import {finalize} from 'rxjs/operators';
 
 export interface PeriodicElement {
     id: number;
@@ -196,7 +197,7 @@ export class AddDetalleRubroComponent implements OnInit {
     }
 
     valid() {
-        this.val = this.data.desc == 'Personal Cientifico';
+        this.val = this.data.desc === 'Personal Cientifico' || this.data.desc === 'Personal Científico';
     }
 
     public up(): void {
@@ -277,18 +278,11 @@ export class AddDetalleRubroComponent implements OnInit {
             };
         }
         this.setData();
+        this.investigadores = this.state.segundoPaso.equipoDeInvestigacion;
     }
 
     private setData(): void {
         this.AddDettalle.controls['DuracionEnMeses'].setValue(this.state.primerPaso.duracionEnMeses);
-    }
-
-    private buscarInvestigadoresPorPerfil(formacion): void {
-        this.investigadores = this.state.segundoPaso.equipoDeInvestigacion.filter(investigador => investigador.rol === formacion);
-    }
-
-    private updateState(): void {
-        this.saveStateService.setState(this.state);
     }
 
     public seleccionarInvestigador(investigador): void {
@@ -296,6 +290,7 @@ export class AddDetalleRubroComponent implements OnInit {
         this.NombreDelInvestigador = `${investigador.nombre} ${investigador.apellido}`;
         this.HorasSemanales = investigador.dedicacion;
         this.AddDettalle.controls['HorasSemanales'].setValue(investigador.dedicacion);
+        this.AddDettalle.controls['RolDelInvestigador'].setValue(investigador.rol);
         // this.state = {
         //   ...this.state,
         //   tercerPaso: {
@@ -309,18 +304,32 @@ export class AddDetalleRubroComponent implements OnInit {
     }
 
     public cargar(perfil): void {
-        const {honorarioId, formacion} = perfil;
-        this.tablaHonorariosService.getall().subscribe(response => {
-            this.honorarios = response['honorarios'];
-            response['honorarios'].forEach(element => {
-                if (element.honorarioId === honorarioId) {
-                    this.Formacion = element.formacion;
-                    this.RolDelInvestigador = element.formacion;
-                    this.Experiencia = element.experiencia;
-                    this.buscarInvestigadoresPorPerfil(formacion);
-                }
+        const {honorarioId} = perfil;
+        this.tablaHonorariosService.getall()
+            .pipe(finalize(() => this.validateAllFields()))
+            .subscribe(response => {
+                this.honorarios = response['honorarios'];
+                response['honorarios'].forEach(element => {
+                    if (element.honorarioId === honorarioId) {
+                        this.Formacion = element.formacion;
+                        this.RolDelInvestigador = element.formacion;
+                        this.Experiencia = element.experiencia;
+                    }
+                });
             });
-        });
+    }
+
+    private updateState(): void {
+        this.state = {
+            ...this.saveStateService.getState(),
+            tercerPaso: {
+                ...this.saveStateService.getState().tercerPaso,
+                componentePresupuestal: {
+                    personalCientifico: this.state.tercerPaso.componentePresupuestal.personalCientifico
+                }
+            }
+        };
+        this.saveStateService.setState(this.state);
     }
 }
 

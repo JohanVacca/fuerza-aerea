@@ -221,7 +221,11 @@
                     </tr>
                     <tr>
                         <td style="width: 25%">Palabras clave</td>
-                        <td style="width: 75%" colspan="3">{{palabrasClave}}</td>
+                        <td style="width: 75%" colspan="3">
+                            <ul>
+                                <li *ngFor="let palabra of palabrasClave">{{palabra.palabra}}</li>
+                            </ul>
+                        </td>
                     </tr>
                     <tr>
                         <td style="width: 25%">Planteamiento del Problema</td>
@@ -264,11 +268,11 @@
                     </tr>
                     <tr>
                         <td style="width: 25%">Marco Conceptual</td>
-                        <td style="width: 75%" colspan="3"></td>
+                        <td style="width: 75%" colspan="3">{{marcoConceptual}}</td>
                     </tr>
                     <tr>
                         <td style="width: 25%">Estado del Arte</td>
-                        <td style="width: 75%" colspan="3"></td>
+                        <td style="width: 75%" colspan="3">{{estadoArte}}</td>
                     </tr>
                     <tr>
                         <td style="width: 25%">Resultados Previos de la Investigación</td>
@@ -276,7 +280,7 @@
                     </tr>
                     <tr>
                         <td style="width: 25%">Pregunta de investigación</td>
-                        <td style="width: 75%" colspan="3"></td>
+                        <td style="width: 75%" colspan="3">{{pregunta}}</td>
                     </tr>
                     <tr>
                         <td style="width: 25%">Objetivo General del Proyecto</td>
@@ -316,7 +320,7 @@
                                     </thead>
                                     <tbody>
                                     <tr *ngFor="let productosEsperado of productosEsperados">
-                                        <td rowspan="3" class="title-table-productos">
+                                        <td class="title-table-productos">
                                             <label>{{productosEsperado.tipoProducto}}</label>
                                         </td>
                                         <td><b>{{productosEsperado.rubroRelacionado}}</b></td>
@@ -368,7 +372,7 @@
                     </tr>
                     <tr>
                         <td style="width: 25%">Implicaciones Éticas y Ambientales</td>
-                        <td style="width: 75%" colspan="3"></td>
+                        <td style="width: 75%" colspan="3">{{impactoAmbiental}}</td>
                     </tr>
                     <tr>
                         <td style="width: 25%">Riesgos del Proyecto</td>

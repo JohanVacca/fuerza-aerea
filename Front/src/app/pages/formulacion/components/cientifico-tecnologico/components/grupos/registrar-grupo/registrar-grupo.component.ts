@@ -107,6 +107,10 @@ export class RegistrarGrupoComponent implements OnInit {
   }
 
   private updateState(): void {
+    this.state = {
+      ...this.saveStateService.getState(),
+      segundoPaso: this.state.segundoPaso
+    };
     this.saveStateService.setState(this.state);
   }
 }

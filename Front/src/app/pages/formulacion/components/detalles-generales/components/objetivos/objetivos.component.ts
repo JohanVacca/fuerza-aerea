@@ -43,6 +43,7 @@ export class ObjetivosComponent implements OnInit {
 
     private initializeData(): void {
         const state = this.saveStateService.getState();
+        console.log('cuartooo pasooo obj', state)
         if (state?.cuartoPaso) {
             this.state = state;
         } else {
@@ -61,6 +62,7 @@ export class ObjetivosComponent implements OnInit {
     getItem(): void {
         this.objetivoGeneral = this.state.cuartoPaso.objetivo.objetivoGeneral;
         this.dataSource = [...this.state.cuartoPaso.objetivo.objetivosEspecificos];
+        this.updateState();
     }
 
     builder(): void {
@@ -76,6 +78,7 @@ export class ObjetivosComponent implements OnInit {
     agregarObjGnral(): void {
         this.state.cuartoPaso.objetivo.objetivoGeneral = this.objetivoGeneral;
         this.showObjetivoGeneral = Boolean(this.objetivoGeneral);
+        this.updateState();
     }
 
     agregarObjEsp(): void {
@@ -84,11 +87,18 @@ export class ObjetivosComponent implements OnInit {
     }
 
     deleteobj(obj): void {
-        console.log('obj:: ', obj);
-        console.log('this.state:: ', this.state);
         this.state.cuartoPaso.objetivo.objetivosEspecificos =
             this.state.cuartoPaso.objetivo.objetivosEspecificos.filter(objetivo => objetivo.descr !== obj.descr);
         this.getItem();
+    }
+
+    private updateState(): void {
+        this.state = {
+            ...this.saveStateService.getState(),
+            cuartoPaso: this.state.cuartoPaso
+        };
+        this.saveStateService.setState(this.state);
+        console.log('actual state:::', this.saveStateService.getState());
     }
 }
 

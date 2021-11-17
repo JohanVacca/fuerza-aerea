@@ -1,9 +1,11 @@
+import {ObjetivoEspecifico} from '../services/saveStateService/StateInterface';
+
 export interface Proyect {
   UserId?: String,
   Convocatoria?: String,
   ProyectoBloqueado?: boolean,
   Seguimiento?: boolean,
-  objetivosEspecificos?: objetivosEspecifico[],
+  objetivosEspecificos?: ObjetivoEspecifico[],
   Entidades?: Entidad[],
   EquipoInvestigaciones?: EquipoInvestigacion[], //Cambiar el modelo del back
   AgregarDetallesRubros?: AgregarDetallesRubros[], //Cambiar el modelo del back

@@ -157,11 +157,12 @@ export interface Grupo {
 
 export interface Investigador {
     investigador?: string;
-    nombre?: string;
+    nombres?: string;
     apellido?: string;
-    documentoDeIdentificacion?: string;
+    identificacion?: string;
     grado?: string;
     rol?: string;
     dedicacion?: string;
-    grupoId?: string;
+    cargo?: string;
+    grupos?: string;
 }

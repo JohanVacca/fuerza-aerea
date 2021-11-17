@@ -12,7 +12,7 @@
                      aria-label="Number"
                      matInput
                      [matAutocomplete]="auto">
-              <mat-autocomplete #auto="matAutocomplete" (optionSelected)="test($event.option.value)">
+              <mat-autocomplete #auto="matAutocomplete" (optionSelected)="seleccionarInvestigador($event.option.value)">
                 <mat-option *ngFor="let option of investigatorsNames " [value]="option">
                   {{option}}
                 </mat-option>

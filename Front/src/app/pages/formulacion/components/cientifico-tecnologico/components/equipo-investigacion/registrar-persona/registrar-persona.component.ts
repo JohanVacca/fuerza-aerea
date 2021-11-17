@@ -104,18 +104,15 @@ export class RegistrarPersonaComponent implements OnInit {
         const {apellido, cargo, dedicacion, grado, grupos, identificacion, nombres} = this.registroPersona.value;
         this.state.segundoPaso.equipoDeInvestigacion.push({
             investigador: '',
-            nombre: nombres,
+            nombres,
             apellido,
-            documentoDeIdentificacion: identificacion,
+            identificacion,
             grado,
-            rol: cargo,
+            cargo,
             dedicacion,
-            grupoId: grupos
+            grupos
         });
         this.updateState();
-
-
-
         let equipoInvestigacion = JSON.parse(localStorage.getItem('equipoInvestigacion'));
         if (equipoInvestigacion == null) {
             equipoInvestigacion = [];
@@ -129,8 +126,8 @@ export class RegistrarPersonaComponent implements OnInit {
     }
 
     updatePersona() {
-        let storagelist = JSON.parse(localStorage.getItem('equipoInvestigacion'));
-        let filtroEquipo = storagelist.filter(r => r.identificacion != this.data.identificacion);
+        const storagelist = JSON.parse(localStorage.getItem('equipoInvestigacion'));
+        const filtroEquipo = storagelist.filter(r => r.identificacion !== this.data.identificacion);
         filtroEquipo.push(this.registroPersona.value);
         localStorage.setItem('equipoInvestigacion', JSON.stringify(filtroEquipo));
         this.dialogRef.close(true);
@@ -150,10 +147,14 @@ export class RegistrarPersonaComponent implements OnInit {
     }
 
     private updateState(): void {
+        this.state = {
+            ...this.saveStateService.getState(),
+            segundoPaso: this.state.segundoPaso
+        };
         this.saveStateService.setState(this.state);
     }
 
-    test(event): void {
+    public seleccionarInvestigador(event): void {
         const selectedInvestigator = this.investigators
             .find(investigator => `${investigator.profile.names} ${investigator.profile.surname}` === event);
         this.selectedInvestigator = selectedInvestigator;
