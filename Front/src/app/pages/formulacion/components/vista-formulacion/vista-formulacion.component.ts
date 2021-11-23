@@ -21,6 +21,9 @@ import * as jsPDF from 'jspdf';
 
 import 'jspdf-autotable';
 import html2canvas from 'html2canvas';
+import {cronogramaService} from '../../../../shared/services/cronograma/cronograma.service';
+import {CronogramaResponse, MetodologiaObjetivo} from '../../../../shared/services/saveStateService/StateInterface';
+import {finalize} from 'rxjs/operators';
 
 require('jspdf-autotable');
 
@@ -47,6 +50,7 @@ export class VistaFormulacionComponent implements OnInit {
                 public form: FormBuilder,
                 public dialog: MatDialog,
                 private auto: AuthStorageService,
+                private cronogramaServic: cronogramaService,
                 public dialogRef: MatDialogRef<VistaFormulacionComponent>) {
     }
 
@@ -93,7 +97,6 @@ export class VistaFormulacionComponent implements OnInit {
 
     Valores = [];
 
-
     vlrproyectoC: number = 0;
 
     Rvlrproyecto = 0;
@@ -118,6 +121,9 @@ export class VistaFormulacionComponent implements OnInit {
     productosEsperados = [];
     Calificado = false;
     pregunta;
+    date;
+
+    public listaDeMetodologia: MetodologiaObjetivo[] = [];
 
     Cargar() {
         if (this.data.evaluar) {
@@ -156,44 +162,70 @@ export class VistaFormulacionComponent implements OnInit {
     }
 
     getAll() {
-        this.projectService.getById(this.data.idProyecto).subscribe(r => {
-            console.log('r::: ', r);
-            this.nombreProyecto = r.Proyecto.iniciarProyecto[0].nombreProyecto;
-            this.linea = r.Proyecto.iniciarProyecto[0].linea;
-            this.modelo = r.Proyecto.iniciarProyecto[0].modelo;
-            this.grupos = r.Proyecto.grupos;
-            this.programa = r.Proyecto.iniciarProyecto[0].programa;
-            this.subprograma = r.Proyecto.iniciarProyecto[0].subprograma;
-            this.tipoInvestigacion = 'N/A';
-            this.avala = r.Proyecto.iniciarProyecto[0].avala;
-            this.lugar = r.Proyecto.iniciarProyecto[0].lugar;
-            this.duracion = r.Proyecto.iniciarProyecto[0].duracion;
-            this.gestor = r.Proyecto.iniciarProyecto[0].gestor;
-            this.email = r.Proyecto.iniciarProyecto[0].email;
-            this.telefonoGestor = r.Proyecto.iniciarProyecto[0].telefonoGestor;
-            this.comandante = r.Proyecto.iniciarProyecto[0].comandante.profile.names + ' ' + r.Proyecto.iniciarProyecto[0].comandante.profile.surname;
-            this.ComandanteCorreo = r.Proyecto.iniciarProyecto[0].comandante.email;
-            this.ComandanteNumber = r.Proyecto.iniciarProyecto[0].comandante.phoneNumber;
-            this.unidadDependencia = r.Proyecto.iniciarProyecto[0].dependencia;
-            this.equipoInvestigacion = r.Proyecto.EquipoInvestigaciones;
-            this.objetivoGeneral = r.Proyecto.objetivoGeneral;
-            this.objetivosEspecificos = r.Proyecto.objetivosEspecificos;
-            this.resumen = r.Proyecto.resumen;
-            this.palabrasClave = r.Proyecto.palabraClaves;
-            this.marcoConceptual = r.Proyecto.marcoConceptual;
-            this.estadoArte = r.Proyecto.estadoArte;
-            this.resultadosPrevios = r.Proyecto.resultadosPrevios;
-            this.resultadosEsperados = r.Proyecto.resultadosEsperados;
-            this.metodologia = r.Proyecto.metodologia;
-            this.impactoAmbiental = r.Proyecto.informaciones[0].impacto;
-            this.pregunta = r.Proyecto.informaciones[0].pregunta;
-            this.bibliografias = r.Proyecto.bibliografias;
-            this.productosEsperados = [...r.Proyecto.productosEsperados, ...r.Proyecto.productosEsperados];
-            this.dataSourceRubro = r.Proyecto.AgregarDetallesRubros;
-            r.Proyecto.Entidades.forEach(element => {
-                this.entid.push(element.Institucion);
+        this.projectService.getById(this.data.idProyecto)
+            .pipe(finalize( () => this.getCronograma()))
+            .subscribe(r => {
+                console.log('r::: ', r);
+                this.nombreProyecto = r.Proyecto.iniciarProyecto[0].nombreProyecto;
+                this.linea = r.Proyecto.iniciarProyecto[0].linea;
+                this.modelo = r.Proyecto.iniciarProyecto[0].modelo;
+                this.grupos = r.Proyecto.grupos;
+                this.date = r.Proyecto.date;
+                this.programa = r.Proyecto.iniciarProyecto[0].programa;
+                this.subprograma = r.Proyecto.iniciarProyecto[0].subprograma;
+                this.tipoInvestigacion = 'N/A';
+                this.avala = r.Proyecto.iniciarProyecto[0].avala;
+                this.lugar = r.Proyecto.iniciarProyecto[0].lugar;
+                this.duracion = r.Proyecto.iniciarProyecto[0].duracion;
+                this.gestor = r.Proyecto.iniciarProyecto[0].gestor;
+                this.email = r.Proyecto.iniciarProyecto[0].email;
+                this.telefonoGestor = r.Proyecto.iniciarProyecto[0].telefonoGestor;
+                this.comandante = r.Proyecto.iniciarProyecto[0].comandante.profile.names + ' ' + r.Proyecto.iniciarProyecto[0].comandante.profile.surname;
+                this.ComandanteCorreo = r.Proyecto.iniciarProyecto[0].comandante.email;
+                this.ComandanteNumber = r.Proyecto.iniciarProyecto[0].comandante.phoneNumber;
+                this.unidadDependencia = r.Proyecto.iniciarProyecto[0].dependencia;
+                this.equipoInvestigacion = r.Proyecto.EquipoInvestigaciones;
+                this.objetivoGeneral = r.Proyecto.objetivoGeneral;
+                this.objetivosEspecificos = r.Proyecto.objetivosEspecificos;
+                this.resumen = r.Proyecto.resumen;
+                this.palabrasClave = r.Proyecto.palabraClaves;
+                this.marcoConceptual = r.Proyecto.marcoConceptual;
+                this.estadoArte = r.Proyecto.estadoArte;
+                this.resultadosPrevios = r.Proyecto.resultadosPrevios;
+                this.resultadosEsperados = r.Proyecto.resultadosEsperados;
+                this.metodologia = r.Proyecto.metodologia;
+                this.impactoAmbiental = r.Proyecto.informaciones[0].impacto;
+                this.pregunta = r.Proyecto.informaciones[0].pregunta;
+                this.bibliografias = r.Proyecto.bibliografias;
+                this.productosEsperados = [...r.Proyecto.productosEsperados, ...r.Proyecto.productosEsperados];
+                this.dataSourceRubro = r.Proyecto.AgregarDetallesRubros;
+                r.Proyecto.Entidades.forEach(element => {
+                    this.entid.push(element.Institucion);
+                });
+            });
+    }
+
+    private getCronograma(): void {
+        const listaDeMetodologia: MetodologiaObjetivo[] = [];
+        this.objetivosEspecificos.map(obj => {
+            const {descr: objetivo} = obj;
+            listaDeMetodologia.push({
+                objetivo,
+                actividades: []
             });
         });
+
+        this.cronogramaServic.getByProjectId(this.data.idProyecto)
+            .subscribe(response => {
+                response.cronogramas.actividades.map(actividad => {
+                    listaDeMetodologia.map(metodologia => {
+                       if (metodologia.objetivo === actividad.objetivo) {
+                           metodologia.actividades.push(actividad.nombreAct);
+                       }
+                    });
+                    this.listaDeMetodologia = listaDeMetodologia;
+                });
+            });
     }
 
     evaluar() {

@@ -21,6 +21,7 @@ export interface PrimerPaso {
     programaDeInvestigacion?: string;
     subProgramaDeInvestigacion?: string;
     quienAvalaInvestigacion?: string;
+    centroDeInvestigacion?: string;
 }
 
 export interface SegundoPaso {
@@ -153,6 +154,7 @@ export interface Grupo {
     categoria?: string;
     antiguedad?: string;
     entidad?: string;
+    lider?: string;
 }
 
 export interface Investigador {
@@ -165,4 +167,34 @@ export interface Investigador {
     dedicacion?: string;
     cargo?: string;
     grupos?: string;
+}
+
+export interface CentroDeInvestigacion {
+    _id?: string;
+    name?: string;
+}
+
+export interface MetodologiaObjetivo {
+    objetivo?: string;
+    actividades?: string[];
+}
+
+export interface CronogramaResponse {
+    cronogramas: CronogramaResponseObject;
+}
+
+export interface CronogramaResponseObject {
+    ConvocatoriaId: string;
+    actividades: ActividadResponse[];
+    proyectId: string;
+}
+
+export interface ActividadResponse {
+    nombreAct: string;
+    objetivo: string;
+}
+
+export interface ActividadObject {
+    nombreAct: string;
+    objetivo: string;
 }

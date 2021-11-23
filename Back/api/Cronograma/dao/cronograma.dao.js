@@ -33,6 +33,7 @@ CronogramaSchema.static("getAllId", async (id) => {
     throw err;
   }
 });
+
 CronogramaSchema.static("getByIdProject", async (id) => {
   try {
     return await CronogramaDao.findOne({ proyectId: id }).exec();

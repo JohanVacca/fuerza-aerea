@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { ApiService } from '../../../@core/services';
 import { map } from 'rxjs/operators';
 import { cronogramaObj } from '../../models/cronograma.model';
+import {CronogramaResponse} from '../saveStateService/StateInterface';
+import {Observable} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -77,4 +79,8 @@ export class cronogramaService {
         }),
       );
   }
+
+    getByProjectId(projectId: string): Observable<CronogramaResponse> {
+        return this.http.get(`${this.endpoint}/getIdProject/${projectId}`, null, true);
+    }
 }

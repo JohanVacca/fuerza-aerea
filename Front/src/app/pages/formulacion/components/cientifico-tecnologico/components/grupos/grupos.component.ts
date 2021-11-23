@@ -27,7 +27,24 @@ export class GruposComponent implements OnInit {
         private saveStateService: SaveStateService)
     {}
 
-    ngOnInit(): void {}
+    ngOnInit(): void {
+        this.initializeData();
+    }
+
+    private initializeData(): void {
+        const state = this.saveStateService.getState();
+        if (state?.segundoPaso) {
+            this.state = state;
+        } else {
+            this.state = {
+                ...state,
+                segundoPaso: {
+                    listaDeGrupos: [],
+                    equipoDeInvestigacion: []
+                }
+            };
+        }
+    }
 
     registrarGrupo() {
         let cv = this.rutaActiva.snapshot.params;
@@ -40,7 +57,11 @@ export class GruposComponent implements OnInit {
             data: datos
         });
         dialogRef.afterClosed().subscribe(result => {
-            this.dataSource = [...result.segundoPaso.listaDeGrupos];
+            if (result?.segundoPaso?.listaDeGrupos) {
+                this.dataSource = [...result.segundoPaso.listaDeGrupos];
+                this.state.segundoPaso.listaDeGrupos = this.dataSource;
+                this.updateState();
+            }
         });
     }
 
@@ -65,14 +86,23 @@ export class GruposComponent implements OnInit {
         });
     }
 
-    public deleteGrupo(grupo): void {
-        this.dataSource = [];
+    public deleteGrupo(codigo): void {
+        this.state.segundoPaso.listaDeGrupos = this.state.segundoPaso.listaDeGrupos.filter(group => group.codigo !== codigo);
+        this.dataSource = this.state.segundoPaso.listaDeGrupos;
+        this.updateState();
     }
 
     getGrupo(): void {
-        console.log('xxxx');
         this.state = this.saveStateService.getState();
         this.dataSource = this.state.segundoPaso.listaDeGrupos;
         this.changeDetectorRefs.detectChanges();
+    }
+
+    private updateState(): void {
+        this.state = {
+            ...this.saveStateService.getState(),
+            segundoPaso: this.state.segundoPaso
+        };
+        this.saveStateService.setState(this.state);
     }
 }

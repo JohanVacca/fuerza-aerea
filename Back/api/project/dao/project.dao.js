@@ -61,9 +61,19 @@ ProyectoSchema.static('getByEmail', async (email) => {
 /**
  * create User
  */
-ProyectoSchema.static('create', async (user) => {
-    if (typeof user !== 'object') {
+ProyectoSchema.static('create', async (project) => {
+    if (typeof project !== 'object') {
         throw new TypeError('User is not a valid object.');
+    }
+
+    const date = new Date();
+    const year = date.getFullYear();
+    const day = date.getDate();
+    const month = date.getMonth();
+
+    const user = {
+        ...project,
+        date: `${day}-${month + 1}-${year}`
     }
 
     let _user = new ProyectoDao(user);

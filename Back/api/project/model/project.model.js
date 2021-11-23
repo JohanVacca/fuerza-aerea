@@ -5,8 +5,12 @@ let Schema = mongoose.Schema;
 let UserSchema = require("../../user/model/user.model");
 
 const User = mongoose.model("user", UserSchema);
+const date = new Date();
+date.getMonth()
 
 let ProjectSchema = new Schema({
+
+  date: String,
   UserId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   Convocatoria: { type: mongoose.Schema.Types.ObjectId, ref: "Convocatoria" },
   objetivosEspecificos: [{ descr: String }],
@@ -27,6 +31,7 @@ let ProjectSchema = new Schema({
       apellido: String,
       identificacion: Number,
       grupos: String,
+      lider: String,
       grado: String,
       dedicacion: String,
       cargo: String,
@@ -83,6 +88,7 @@ let ProjectSchema = new Schema({
       dependencia: String,
       comandante: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
       avala: String,
+      centroDeInvestigacion: String,
     },
   ],
   metodologia: String,
@@ -115,6 +121,7 @@ let ProjectSchema = new Schema({
       antiguedad: String,
       codigo: String,
       categoria: String,
+      lider: String
     },
   ],
   ValorTotal: Number,

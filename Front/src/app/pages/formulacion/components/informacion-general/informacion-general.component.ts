@@ -14,7 +14,8 @@ import {UserModel} from '../../../../shared/models/user.model';
 import {stringify} from 'querystring';
 import {finalize} from 'rxjs/operators';
 import {SaveStateService} from '../../../../shared/services/saveStateService/save-state.service';
-import {PrimerPaso, StateInterface} from '../../../../shared/services/saveStateService/StateInterface';
+import {CentroDeInvestigacion, PrimerPaso, StateInterface} from '../../../../shared/services/saveStateService/StateInterface';
+import {InvCenterService} from '../../../../shared/services/inv-center2/inv-center.service';
 
 @Component({
     selector: 'app-informacion-general',
@@ -25,6 +26,7 @@ export class InformacionGeneralComponent implements OnInit {
 
     constructor(
         private invEndorsersService: InvEndorsersService,
+        private invCenterService: InvCenterService,
         private investigationLinesService: InvestigationLinesService,
         private investigationProgramService: InvestigationProgramService,
         private investigationSubProgramService: InvestigationSubProgramService,
@@ -37,6 +39,7 @@ export class InformacionGeneralComponent implements OnInit {
     }
 
     LinesIns: CommonSimpleModel[] = [];
+    invCenters: CentroDeInvestigacion[] = [];
     ProgamIns: CommonSimpleModel[] = [];
     typeIns: CommonSimpleModel[] = [];
     ProgamSubIns: CommonSimpleModel[] = [];
@@ -87,6 +90,7 @@ export class InformacionGeneralComponent implements OnInit {
                 programa: new FormControl('', [Validators.required,]),
                 subprograma: new FormControl('', [Validators.required,]),
                 avala: new FormControl('', [Validators.required,]),
+                centroDeInvestigacion: new FormControl('', [Validators.required,]),
             });
         } else {
             this.iniciarProyecto = this.form.group({
@@ -103,6 +107,7 @@ export class InformacionGeneralComponent implements OnInit {
                 programa: new FormControl(storage.programa),
                 subprograma: new FormControl(storage.subprograma),
                 avala: new FormControl(storage.avala),
+                centroDeInvestigacion: new FormControl(storage.centroDeInvestigacion),
             });
             this.UserIns = storage.gestor;
         }
@@ -139,6 +144,10 @@ export class InformacionGeneralComponent implements OnInit {
         this.invEndorsersService.getIdConv(this.Convocatoria).subscribe(r => {
             this.EndorIns = r;
         });
+        this.invCenterService.getAll().subscribe(r => {
+            // @ts-ignore
+            this.invCenters = r.invCenters;
+        });
     }
 
     Correo(e) {
@@ -169,7 +178,7 @@ export class InformacionGeneralComponent implements OnInit {
     }
 
     private updateState(): void {
-        const {avala, comandante, dependencia, duracion, email, gestor, linea,
+        const {avala, centroDeInvestigacion, comandante, dependencia, duracion, email, gestor, linea,
             lugar, modelo, nombreProyecto, programa, subprograma, telefonoGestor} = this.iniciarProyecto.value;
         const primerPaso: PrimerPaso = {
             nombreProyecto,
@@ -185,13 +194,12 @@ export class InformacionGeneralComponent implements OnInit {
             programaDeInvestigacion: programa,
             subProgramaDeInvestigacion: subprograma,
             quienAvalaInvestigacion: avala,
+            centroDeInvestigacion,
         };
         this.state = {
             ...this.saveStateService.getState(),
             primerPaso
         };
         this.saveStateService.setState({primerPaso: this.state.primerPaso});
-        console.log('this.state::', this.state);
-        console.log('this.saveStateService.getState()', this.saveStateService.getState());
     }
 }

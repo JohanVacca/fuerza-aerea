@@ -3,7 +3,6 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { GroupCategoryService } from '../../../../../../../shared/services/group-category/group-category.service'
 import { CommonSimpleModel } from '../../../../../../../shared/models/common-simple.model';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
-import { filter } from 'rxjs/operators';
 import {SaveStateService} from '../../../../../../../shared/services/saveStateService/save-state.service';
 import {Grupo, StateInterface} from '../../../../../../../shared/services/saveStateService/StateInterface';
 
@@ -18,6 +17,8 @@ export class RegistrarGrupoComponent implements OnInit {
   Convocatoria: string;
   registroGrupo: FormGroup;
   private state: StateInterface;
+  public showErrorGroupCode = false;
+  public errorMessageGroupCode = 'Ya existe un grupo con el código ingresado por favor cambielo';
 
   constructor(
       @Inject(MAT_DIALOG_DATA) public data: RegistrarGrupoData,
@@ -49,6 +50,7 @@ export class RegistrarGrupoComponent implements OnInit {
         nombreGrupo: new FormControl(this.data.nombreGrupo, [Validators.required]),
         codigo: new FormControl(this.data.codigoGrupo, [Validators.required]),
         categoria: new FormControl(this.data.categoria, [Validators.required]),
+        lider: new FormControl(this.data.categoria, [Validators.required]),
         antiguedad: new FormControl(this.data.antiguedad, [Validators.required]),
         entidad: new FormControl(this.data.entidad, [Validators.required])
       });
@@ -57,6 +59,7 @@ export class RegistrarGrupoComponent implements OnInit {
         nombreGrupo: new FormControl('', [Validators.required]),
         codigo: new FormControl('', [Validators.required]),
         categoria: new FormControl('', [Validators.required]),
+        lider: new FormControl('', [Validators.required]),
         antiguedad: new FormControl('', [Validators.required]),
         entidad: new FormControl('', [Validators.required])
       });
@@ -83,27 +86,30 @@ export class RegistrarGrupoComponent implements OnInit {
   }
 
   guardarGrupo() {
-    let listGroup = JSON.parse(localStorage.getItem('grupos'));
-    if (listGroup == null) { listGroup = []; }
-    listGroup.push(this.registroGrupo.value);
-    localStorage.setItem('grupos', JSON.stringify(listGroup));
+      let listGroup = JSON.parse(localStorage.getItem('grupos'));
+      if (listGroup == null) { listGroup = []; }
+      listGroup.push(this.registroGrupo.value);
+      localStorage.setItem('grupos', JSON.stringify(listGroup));
 
 
-    const {antiguedad, categoria, codigo, entidad, nombreGrupo} = this.registroGrupo.value;
-    const numero = this.state.segundoPaso.listaDeGrupos.length + 1;
-    const nuevoGrupo: Grupo = {
-      numero,
-      nombreGrupo,
-      codigo,
-      categoria,
-      antiguedad,
-      entidad
-    };
-    this.state.segundoPaso.listaDeGrupos.push(nuevoGrupo);
-    this.updateState();
+      const {antiguedad, categoria, codigo, entidad, nombreGrupo, lider} = this.registroGrupo.value;
+      const numero = this.state.segundoPaso.listaDeGrupos.length + 1;
+      const nuevoGrupo: Grupo = {
+        numero,
+        nombreGrupo,
+        lider,
+        codigo,
+        categoria,
+        antiguedad,
+        entidad
+      };
+      this.state.segundoPaso.listaDeGrupos.push(nuevoGrupo);
+      this.updateState();
+      this.dialogRef.close(this.state);
+  }
 
-
-    this.dialogRef.close(this.state);
+  public validateGroupCode(code): void {
+    this.showErrorGroupCode = Boolean(this.state.segundoPaso.listaDeGrupos.find( group => group.codigo.toString() === code));
   }
 
   private updateState(): void {
@@ -115,11 +121,11 @@ export class RegistrarGrupoComponent implements OnInit {
   }
 }
 export interface RegistrarGrupoData {
-  actualizar: boolean
-  idCon?: string
-  nombreGrupo?: string
-  codigoGrupo?: number
-  categoria?: string
-  antiguedad?: number
-  entidad?: string
+  actualizar: boolean;
+  idCon?: string;
+  nombreGrupo?: string;
+  codigoGrupo?: number;
+  categoria?: string;
+  antiguedad?: number;
+  entidad?: string;
 }

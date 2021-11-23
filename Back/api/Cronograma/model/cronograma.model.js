@@ -10,6 +10,7 @@ let CronogramaSchema = new Schema({
     {
       idUnicoTare: Number,
       nombreAct: String,
+      objetivo: String,
       subActividad: [
         {
           nombreSub: String,

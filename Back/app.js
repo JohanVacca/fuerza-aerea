@@ -55,19 +55,16 @@ const invEndorserRoutes = require("./api/inv-endorser/routes/inv-endorser.routes
 const invTypeRoutes = require("./api/inv-type/routes/inv-type.routes");
 const groupCategoryRoutes = require("./api/group-category/routes/group-category.routes");
 const followingRoutes = require("./api/following/routes/following.routes");
-
+const invCenterRoutes = require("./api/inv-center/routes/inv-center.routes");
 const useConvocatoria = require("./api/convocatoria/routes/convocatoria.routes");
-app.use(apiBaseUrl, useConvocatoria);
-
 const useHonorario = require("./api/honorario/routes/honorario.routes");
-app.use(apiBaseUrl, useHonorario);
-
 const proyecIns = require("./api/ProyectIns/routes/instructivo.routes");
-app.use(apiBaseUrl, proyecIns);
-
 const cronograma = require("./api/Cronograma/routes/cronograma.routes");
-app.use(apiBaseUrl, cronograma);
 
+app.use(apiBaseUrl, useHonorario);
+app.use(apiBaseUrl, proyecIns);
+app.use(apiBaseUrl, cronograma);
+app.use(apiBaseUrl, useConvocatoria);
 app.use(apiBaseUrl, instructivo);
 app.use(apiBaseUrl, authRoutes);
 app.use(apiBaseUrl, userRoutes);
@@ -87,6 +84,7 @@ app.use(apiBaseUrl, invEndorserRoutes);
 app.use(apiBaseUrl, invTypeRoutes);
 app.use(apiBaseUrl, groupCategoryRoutes);
 app.use(apiBaseUrl, followingRoutes);
+app.use(apiBaseUrl, invCenterRoutes);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

@@ -46,7 +46,7 @@
                         <td style="width: 25%">Unidad/Dependencia</td>
                         <td style="width: 25%">{{unidadDependencia}}</td>
                         <td style="width: 25%">Fecha</td>
-                        <td style="width: 25%"></td>
+                        <td style="width: 25%">{{date}}</td>
                     </tr>
                     <tr>
                         <td style="width: 25%">Gestor ACTI</td>
@@ -138,7 +138,7 @@
                     </tr>
                     <tr>
                         <td style="width: 25%">Lugar de ejecución</td>
-                        <td style="width: 75%" colspan="3">{{lugar}} Meses</td>
+                        <td style="width: 75%" colspan="3">{{lugar}}</td>
                     </tr>
                     <tr>
                         <td style="width: 25%">Centro(s) de Investigación</td>
@@ -152,38 +152,27 @@
                                     <thead>
                                     <tr>
                                         <td class="title-table-grupo" style="width: 25%"><label>Nombre Grupo</label></td>
-                                        <td style="width: 75%" colspan="3">
-                                            {{grupo.nombreGrupo}}
-                                        </td>
+                                        <td style="width: 75%" colspan="3">{{grupo.nombreGrupo}}</td>
                                     </tr>
                                     <tr>
                                         <td class="title-table-grupo" style="width: 25%"><label>Categoria</label></td>
-                                        <td style="width: 75%" colspan="3">
-                                            {{grupo.categoria}}
-                                        </td>
+                                        <td style="width: 75%" colspan="3">{{grupo.categoria}}</td>
                                     </tr>
                                     <tr>
                                         <td class="title-table-grupo" style="width: 25%"><label>Líder Grupo</label></td>
-                                        <td style="width: 75%" colspan="3">
-                                            -
-                                        </td>
+                                        <td style="width: 75%" colspan="3">{{grupo.lider}}</td>
                                     </tr>
                                     <tr>
                                         <td class="title-table-grupo" style="width: 25%"><label>Código GrupLAC</label></td>
-                                        <td style="width: 75%" colspan="3">
-                                            {{grupo.codigo}}
-                                        </td>
+                                        <td style="width: 75%" colspan="3">{{grupo.codigo}}</td>
                                     </tr>
                                     <tr>
                                         <td class="title-table-grupo" style="width: 25%"><label>Entidad</label></td>
-                                        <td style="width: 75%" colspan="3">
-                                            {{grupo.entidad}}
-                                        </td>
+                                        <td style="width: 75%" colspan="3">{{grupo.entidad}}</td>
                                     </tr>
                                     <tr>
                                         <td class="title-table-grupo" style="width: 25%"><label>VoBo Líder del Grupo</label></td>
-                                        <td style="width: 75%" colspan="3">
-                                        </td>
+                                        <td style="width: 75%" colspan="3">{{grupo.lider}}</td>
                                     </tr>
                                     </thead>
                                 </table>
@@ -296,7 +285,17 @@
                     </tr>
                     <tr>
                         <td style="width: 25%">Metodología</td>
-                        <td style="width: 75%" colspan="3">{{metodologia}}</td>
+                        <td style="width: 75%" colspan="3">
+                            {{metodologia}}
+                            <ul>
+                                <li *ngFor="let metodologiaObject of listaDeMetodologia">
+                                    {{metodologiaObject.objetivo}}
+                                    <ul>
+                                        <li *ngFor="let actividad of metodologiaObject.actividades">{{actividad}}</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </td>
                     </tr>
                     <tr>
                         <td style="width: 25%">Resultados Esperados</td>

@@ -40,7 +40,6 @@ api.get(
 api.get(
   `${endpoint}/getIdProject/:id`,
   [mdAuth.ensureAuth],
-  CronogramaController.getIdProject
-);
+  CronogramaController.getIdProject);
 
 module.exports = api;
