@@ -1,4 +1,4 @@
-import {ObjetivoEspecifico} from '../services/saveStateService/StateInterface';
+import {Entidad, Grupo, ObjetivoEspecifico} from '../services/saveStateService/StateInterface';
 
 export interface Proyect {
   UserId?: String,
@@ -45,14 +45,6 @@ export interface bibliografia {
   bibliografia: String,
 }
 // convocatoria y usuario crador
-
-export interface Grupo {
-  nombreGrupo: String,
-  entidad: String,
-  antiguedad: String,
-  codigo: String,
-  categoria: String
-}
 
 export interface informacion {
   impacto: String,
@@ -108,14 +100,6 @@ export interface EquipoInvestigacion {
   grado: String,
   dedicacion: String,
   cargo: String
-}
-
-export interface Entidad {
-  Institucion: String,
-  Nit: String,
-  Persona: String,
-  correo: String,
-  numero: String
 }
 
 export interface Calificaciones {

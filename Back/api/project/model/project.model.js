@@ -61,6 +61,8 @@ let ProjectSchema = new Schema({
       Descripcion: String,
       PresupuestoEjecutado: Number,
       Cumplimiento: Number,
+      tipoDeRubro: String,
+      entidad: String,
     },
   ],
   productosEsperados: [

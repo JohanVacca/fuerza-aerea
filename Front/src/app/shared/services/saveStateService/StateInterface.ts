@@ -198,3 +198,15 @@ export interface ActividadObject {
     nombreAct: string;
     objetivo: string;
 }
+
+export interface RubrosPDF {
+    tipo?: string;
+    entidad?: string;
+    especie?: number;
+    efectivo?: number;
+}
+
+export interface RubrosPorEntidades {
+    entidad?; string;
+    rubro?: RubrosPDF[];
+}

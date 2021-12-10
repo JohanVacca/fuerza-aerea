@@ -5,7 +5,12 @@ import {TablaHonorariosComponent} from '../tabla-honorarios/tabla-honorarios.com
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {TablaHonoraiosService} from 'src/app/@core/services/tabla-honorarios/tabla-honoraios.service';
 import {SaveStateService} from '../../../../../../../shared/services/saveStateService/save-state.service';
-import {Investigador, PersonalCientifico, StateInterface} from '../../../../../../../shared/services/saveStateService/StateInterface';
+import {
+    Entidad,
+    Investigador,
+    PersonalCientifico,
+    StateInterface
+} from '../../../../../../../shared/services/saveStateService/StateInterface';
 import {finalize} from 'rxjs/operators';
 
 export interface PeriodicElement {
@@ -48,6 +53,8 @@ export class AddDetalleRubroComponent implements OnInit {
 
     Complet = false;
     PerfilDelInvestigador = ' ';
+    tipoDeRubro = ' ';
+    entidad = ' ';
     InvestigadorSeleccionado = ' ';
     Formacion = ' ';
     Experiencia = ' ';
@@ -76,6 +83,8 @@ export class AddDetalleRubroComponent implements OnInit {
 
     public isCreate = true;
     public especieTotal = 0;
+    public tiposDeRubro = ['Efectivo', 'Especie'];
+    public entidades: Entidad[] = [];
 
     ngOnInit(): void {
         this.valButton = this.data.Val;
@@ -103,6 +112,8 @@ export class AddDetalleRubroComponent implements OnInit {
                 RolDelInvestigador: new FormControl(this.RolDelInvestigador, [Validators.required]),
                 HorasSemanales: new FormControl(this.HorasSemanales, [Validators.required]),
                 DuracionEnMeses: new FormControl(this.DuracionEnMeses, [Validators.required]),
+                tipoDeRubro: new FormControl(this.tipoDeRubro, [Validators.required]),
+                entidad: new FormControl(this.entidad, [Validators.required]),
                 Descripcion: new FormControl(this.Descripcion, [Validators.required]),
                 Justificacion: new FormControl(this.Justificacion, [Validators.required]),
                 EntidadesCostos: [this.dataSource],
@@ -117,6 +128,8 @@ export class AddDetalleRubroComponent implements OnInit {
                 Experiencia: ' ',
                 NombreDelInvestigador: ' ',
                 RolDelInvestigador: ' ',
+                tipoDeRubro: ' ',
+                entidad: ' ',
                 HorasSemanales: 0,
                 DuracionEnMeses: 0,
                 Descripcion: new FormControl(this.Descripcion, [Validators.required]),
@@ -142,9 +155,11 @@ export class AddDetalleRubroComponent implements OnInit {
         let auto = JSON.parse(localStorage.getItem('AgregarDetallesRubros'));
         if (auto != null) {
             auto.forEach(element => {
-                if (element.idRubro == this.data.id) {
+                if (element.idRubro === this.data.id) {
                     this.modificado = element.modificado;
                     this.PerfilDelInvestigador = element.PerfilDelInvestigador;
+                    this.tipoDeRubro = element.tipoDeRubro;
+                    this.entidad = element.entidad;
                     this.Formacion = element.Formacion;
                     this.Experiencia = element.Experiencia;
                     this.NombreDelInvestigador = element.NombreDelInvestigador;
@@ -180,22 +195,6 @@ export class AddDetalleRubroComponent implements OnInit {
         });
     }
 
-    Change(id, Post, e) {
-        // this.Complet = true;
-        // this.dataSource.forEach(element => {
-        //     if (id == element.id) {
-        //         if (Post == 1) {
-        //             element.efectivo = e.target.value;
-        //         } else {
-        //             element.especie = e.target.value;
-        //         }
-        //     }
-        //     this.aux.push(element);
-        // });
-        // this.dataSource = this.aux;
-        // this.aux = [];
-    }
-
     valid() {
         this.val = this.data.desc === 'Personal Cientifico' || this.data.desc === 'Personal Científico';
     }
@@ -205,9 +204,17 @@ export class AddDetalleRubroComponent implements OnInit {
         const auto = JSON.parse(localStorage.getItem('AgregarDetallesRubros'));
 
         const personalCientifico: PersonalCientifico = this.AddDettalle.value;
+
+        console.log('this.AddDettalle.value::: ', this.AddDettalle.value);
+        console.log('personalCientifico::: ', personalCientifico);
+
         personalCientifico.EntidadesCostos[0].efectivo = this.costoTotal;
         this.state.tercerPaso.componentePresupuestal.personalCientifico.push(this.AddDettalle.value);
         this.updateState();
+
+        console.log('State Detalle Rubros ::: ', this.state);
+
+
 
         if (auto == null) {
             AgregarDetarresRubros.push(this.AddDettalle.value);
@@ -240,10 +247,12 @@ export class AddDetalleRubroComponent implements OnInit {
     }
 
     private validateAllFields(): void {
-        const {HorasSemanales, DuracionEnMeses, PerfilDelInvestigador} = this.AddDettalle.controls;
+        const {HorasSemanales, DuracionEnMeses, PerfilDelInvestigador, tipoDeRubro, entidad} = this.AddDettalle.controls;
         if (HorasSemanales.value && DuracionEnMeses.value && PerfilDelInvestigador.value) {
             this.HorasSemanalesForm = HorasSemanales.value;
             this.DuracionEnMeses = DuracionEnMeses.value;
+            this.tipoDeRubro = tipoDeRubro.value;
+            this.entidad = entidad.value;
             this.topeMaximoPorMes
                 = this.honorarios.find(honorario => honorario.honorarioId.toString() === PerfilDelInvestigador.value.honorarioId.toString()).topeMaximo;
             this.topeMaximoPorDia = (Number(this.topeMaximoPorMes) / 20).toFixed(2);
@@ -253,7 +262,7 @@ export class AddDetalleRubroComponent implements OnInit {
             this.calculoMes = Number(this.calculoSemana) * 4;
             this.costoTotal = Number(this.calculoMes) * Number(DuracionEnMeses.value);
             this.showMaxAmount = true;
-            this.state.tercerPaso.componentePresupuestal.rubros.push(this.costoTotal);
+            // this.state.tercerPaso.componentePresupuestal.rubros.push(this.costoTotal);
             this.updateState();
 
         } else {
@@ -263,8 +272,10 @@ export class AddDetalleRubroComponent implements OnInit {
 
     private initializeData(): void {
         const state = this.saveStateService.getState();
+        console.log('ADD RUBRO ESTADO ;;', state);
         if (state?.tercerPaso) {
             this.state = state;
+            this.entidades = state.tercerPaso.componentePresupuestal.entidades;
         } else {
             this.state = {
                 ...state,
@@ -278,6 +289,7 @@ export class AddDetalleRubroComponent implements OnInit {
             };
         }
         this.setData();
+        console.log('ADD RUBRO ESTADO ;;', this.state);
         this.investigadores = this.state.segundoPaso.equipoDeInvestigacion;
     }
 
@@ -286,11 +298,13 @@ export class AddDetalleRubroComponent implements OnInit {
     }
 
     public seleccionarInvestigador(investigador): void {
+        console.log(investigador);
         this.investigadorSeleccionado = investigador;
-        this.NombreDelInvestigador = `${investigador.nombre} ${investigador.apellido}`;
+        this.NombreDelInvestigador = `${investigador.nombres} ${investigador.apellido}`;
         this.HorasSemanales = investigador.dedicacion;
         this.AddDettalle.controls['HorasSemanales'].setValue(investigador.dedicacion);
         this.AddDettalle.controls['RolDelInvestigador'].setValue(investigador.rol);
+        this.AddDettalle.controls['NombreDelInvestigador'].setValue(this.NombreDelInvestigador);
         // this.state = {
         //   ...this.state,
         //   tercerPaso: {
@@ -314,19 +328,27 @@ export class AddDetalleRubroComponent implements OnInit {
                         this.Formacion = element.formacion;
                         this.RolDelInvestigador = element.formacion;
                         this.Experiencia = element.experiencia;
+                        this.AddDettalle.controls['Experiencia'].setValue(element.experiencia);
+                        this.AddDettalle.controls['Formacion'].setValue(element.formacion);
+                        this.AddDettalle.controls['RolDelInvestigador'].setValue(element.formacion);
                     }
                 });
             });
+    }
+
+    public seleccionarTipoDeRubro(tipo): void {
+        this.tipoDeRubro = tipo;
+    }
+
+    public seleccionarEntidad(entidad): void {
+        this.entidad = entidad;
     }
 
     private updateState(): void {
         this.state = {
             ...this.saveStateService.getState(),
             tercerPaso: {
-                ...this.saveStateService.getState().tercerPaso,
-                componentePresupuestal: {
-                    personalCientifico: this.state.tercerPaso.componentePresupuestal.personalCientifico
-                }
+                ...this.state.tercerPaso,
             }
         };
         this.saveStateService.setState(this.state);

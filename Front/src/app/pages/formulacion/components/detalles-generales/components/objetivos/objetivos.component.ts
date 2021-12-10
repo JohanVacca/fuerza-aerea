@@ -43,7 +43,6 @@ export class ObjetivosComponent implements OnInit {
 
     private initializeData(): void {
         const state = this.saveStateService.getState();
-        console.log('cuartooo pasooo obj', state)
         if (state?.cuartoPaso) {
             this.state = state;
         } else {
@@ -98,7 +97,6 @@ export class ObjetivosComponent implements OnInit {
             cuartoPaso: this.state.cuartoPaso
         };
         this.saveStateService.setState(this.state);
-        console.log('actual state:::', this.saveStateService.getState());
     }
 }
 

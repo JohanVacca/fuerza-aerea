@@ -52,7 +52,6 @@ export class EquipoInvestigacionComponent implements OnInit {
         this.state = this.saveStateService.getState();
         if (this.state) {
             this.dataSource = [...this.state.segundoPaso.equipoDeInvestigacion];
-            console.log(this.dataSource);
         }
     }
 

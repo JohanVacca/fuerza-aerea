@@ -22,7 +22,12 @@ import * as jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import html2canvas from 'html2canvas';
 import {cronogramaService} from '../../../../shared/services/cronograma/cronograma.service';
-import {CronogramaResponse, MetodologiaObjetivo} from '../../../../shared/services/saveStateService/StateInterface';
+import {
+    CronogramaResponse,
+    MetodologiaObjetivo,
+    RubrosPDF,
+    RubrosPorEntidades
+} from '../../../../shared/services/saveStateService/StateInterface';
 import {finalize} from 'rxjs/operators';
 
 require('jspdf-autotable');
@@ -122,6 +127,40 @@ export class VistaFormulacionComponent implements OnInit {
     Calificado = false;
     pregunta;
     date;
+    centroDeInvestigacion;
+
+    personalCientifico: RubrosPDF = {especie: 0, efectivo: 0};
+    personalDeApoyo: RubrosPDF = {especie: 0, efectivo: 0};
+    serviciosTecnicos: RubrosPDF = {especie: 0, efectivo: 0};
+    equiposRubro: RubrosPDF = {especie: 0, efectivo: 0};
+    materialesEInsumos: RubrosPDF = {especie: 0, efectivo: 0};
+    software: RubrosPDF = {especie: 0, efectivo: 0};
+    salidasDeCampo: RubrosPDF = {especie: 0, efectivo: 0};
+    eventosAcademicos: RubrosPDF = {especie: 0, efectivo: 0};
+    publicacionesPatentesRubro: RubrosPDF = {especie: 0, efectivo: 0};
+    bibliografiaRubro: RubrosPDF = {especie: 0, efectivo: 0};
+    adecuacionDeInfraestructura: RubrosPDF = {especie: 0, efectivo: 0};
+    gastosOperativos: RubrosPDF = {especie: 0, efectivo: 0};
+
+    facPersonalCientifico: RubrosPDF = {especie: 0, efectivo: 0};
+    facPersonalDeApoyo: RubrosPDF = {especie: 0, efectivo: 0};
+    facServiciosTecnicos: RubrosPDF = {especie: 0, efectivo: 0};
+    facEquiposRubro: RubrosPDF = {especie: 0, efectivo: 0};
+    facMaterialesEInsumos: RubrosPDF = {especie: 0, efectivo: 0};
+    facSoftware: RubrosPDF = {especie: 0, efectivo: 0};
+    facSalidasDeCampo: RubrosPDF = {especie: 0, efectivo: 0};
+    facEventosAcademicos: RubrosPDF = {especie: 0, efectivo: 0};
+    facPublicacionesPatentesRubro: RubrosPDF = {especie: 0, efectivo: 0};
+    facBibliografiaRubro: RubrosPDF = {especie: 0, efectivo: 0};
+    facAdecuacionDeInfraestructura: RubrosPDF = {especie: 0, efectivo: 0};
+    facGastosOperativos: RubrosPDF = {especie: 0, efectivo: 0};
+
+    subTotalEfectivo;
+    subTotalEspecie;
+    facSubTotalEfectivo;
+    facSubTotalEspecie;
+    totalDelProyecto;
+    rubrosPorEntidades: RubrosPorEntidades[];
 
     public listaDeMetodologia: MetodologiaObjetivo[] = [];
 
@@ -163,10 +202,14 @@ export class VistaFormulacionComponent implements OnInit {
 
     getAll() {
         this.projectService.getById(this.data.idProyecto)
-            .pipe(finalize( () => this.getCronograma()))
+            .pipe(finalize( () => {
+                this.getCronograma();
+                this.calcularRubros();
+            }))
             .subscribe(r => {
                 console.log('r::: ', r);
                 this.nombreProyecto = r.Proyecto.iniciarProyecto[0].nombreProyecto;
+                this.centroDeInvestigacion = r.Proyecto.iniciarProyecto[0].centroDeInvestigacion;
                 this.linea = r.Proyecto.iniciarProyecto[0].linea;
                 this.modelo = r.Proyecto.iniciarProyecto[0].modelo;
                 this.grupos = r.Proyecto.grupos;
@@ -203,6 +246,58 @@ export class VistaFormulacionComponent implements OnInit {
                     this.entid.push(element.Institucion);
                 });
             });
+    }
+
+    private calcularRubros(): void {
+        this.dataSourceRubro?.map(rubro => {
+            if (rubro.NombreRubro === 'Personal Científico') {
+               this.personalCientifico.entidad = rubro.entidad;
+               if (rubro.tipoDeRubro === 'Efectivo') {
+                   this.personalCientifico.efectivo = Number(rubro.EntidadesCostos[0].efectivo);
+               } else {
+                   this.personalCientifico.especie = this.personalCientifico.especie = Number(rubro.EntidadesCostos[0].efectivo);
+               }
+            }
+        });
+        this.calcularTotales();
+    }
+
+    private calcularTotales(): void {
+        this.facSubTotalEfectivo = this.facPersonalCientifico.efectivo +
+            this.facPersonalDeApoyo.efectivo +
+            this.facServiciosTecnicos.efectivo +
+            this.facEquiposRubro.efectivo +
+            this.facMaterialesEInsumos.efectivo +
+            this.facSoftware.efectivo +
+            this.facSalidasDeCampo.efectivo +
+            this.facEventosAcademicos.efectivo +
+            this.facPublicacionesPatentesRubro.efectivo +
+            this.facBibliografiaRubro.efectivo +
+            this.facAdecuacionDeInfraestructura.efectivo +
+            this.facGastosOperativos.efectivo;
+
+        this.facSubTotalEspecie = this.facPersonalCientifico.especie +
+            this.facPersonalDeApoyo.especie +
+            this.facServiciosTecnicos.especie +
+            this.facEquiposRubro.especie +
+            this.facMaterialesEInsumos.especie +
+            this.facSoftware.especie +
+            this.facSalidasDeCampo.especie +
+            this.facEventosAcademicos.especie +
+            this.facPublicacionesPatentesRubro.especie +
+            this.facBibliografiaRubro.especie +
+            this.facAdecuacionDeInfraestructura.especie +
+            this.facGastosOperativos.especie;
+
+        console.log('this.personalCientifico:: ', this.personalCientifico);
+
+        this.subTotalEfectivo = this.personalCientifico.efectivo;
+
+        this.subTotalEspecie = this.personalCientifico.especie;
+
+        this.totalDelProyecto =
+            this.subTotalEfectivo + this.subTotalEspecie +
+            this.facSubTotalEspecie + this.facSubTotalEfectivo;
     }
 
     private getCronograma(): void {

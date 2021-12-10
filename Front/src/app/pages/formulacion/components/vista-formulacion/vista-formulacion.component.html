@@ -142,7 +142,7 @@
                     </tr>
                     <tr>
                         <td style="width: 25%">Centro(s) de Investigación</td>
-                        <td style="width: 75%" colspan="3"></td>
+                        <td style="width: 75%" colspan="3">{{centroDeInvestigacion}}</td>
                     </tr>
                     <tr>
                         <td style="width: 25%">Grupo(s) de investigación</td>
@@ -428,105 +428,106 @@
                                     <tbody>
                                     <tr>
                                         <td class="title-table-costos"><label>Personal Cientifico*</label></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
+                                        <td>{{facPersonalCientifico.efectivo | currency}}</td>
+                                        <td>{{facPersonalCientifico.especie | currency}}</td>
+                                        <td>{{personalCientifico.efectivo | currency}}</td>
+                                        <td>{{personalCientifico.especie | currency}}</td>
                                     </tr>
                                     <tr>
                                         <td class="title-table-costos"><label>Personal de apoyo**</label></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
+                                        <td>{{facPersonalDeApoyo.efectivo | currency}}</td>
+                                        <td>{{facPersonalDeApoyo.especie | currency}}</td>
+                                        <td>{{personalDeApoyo.efectivo | currency}}</td>
+                                        <td>{{personalDeApoyo.especie | currency}}</td>
                                     </tr>
                                     <tr>
                                         <td class="title-table-costos"><label>Servicios técnicos</label></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
+                                        <td>{{facServiciosTecnicos.efectivo | currency}}</td>
+                                        <td>{{facServiciosTecnicos.especie | currency}}</td>
+                                        <td>{{serviciosTecnicos.efectivo | currency}}</td>
+                                        <td>{{serviciosTecnicos.especie | currency}}</td>
                                     </tr>
                                     <tr>
                                         <td class="title-table-costos"><label>Equipos</label></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
+                                        <td>{{facEquiposRubro.efectivo | currency}}</td>
+                                        <td>{{facEquiposRubro.especie | currency}}</td>
+                                        <td>{{equiposRubro.efectivo | currency}}</td>
+                                        <td>{{equiposRubro.especie | currency}}</td>
                                     </tr>
                                     <tr>
                                         <td class="title-table-costos"><label>Materiales e insumos</label></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
+                                        <td>{{facMaterialesEInsumos.efectivo | currency}}</td>
+                                        <td>{{facMaterialesEInsumos.especie | currency}}</td>
+                                        <td>{{materialesEInsumos.efectivo | currency}}</td>
+                                        <td>{{materialesEInsumos.especie | currency}}</td>
                                     </tr>
                                     <tr>
                                         <td class="title-table-costos"><label>Software</label></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
+                                        <td>{{facSoftware.efectivo | currency}}</td>
+                                        <td>{{facSoftware.especie | currency}}</td>
+                                        <td>{{software.efectivo | currency}}</td>
+                                        <td>{{software.especie | currency}}</td>
                                     </tr>
                                     <tr>
                                         <td class="title-table-costos"><label>Salidas de campo</label></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
+                                        <td>{{facSalidasDeCampo.efectivo | currency}}</td>
+                                        <td>{{facSalidasDeCampo.especie | currency}}</td>
+                                        <td>{{salidasDeCampo.efectivo | currency}}</td>
+                                        <td>{{salidasDeCampo.especie | currency}}</td>
                                     </tr>
                                     <tr>
                                         <td class="title-table-costos">
                                             <label>Eventos académicos (organización y/o asistencia)</label>
                                         </td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
+                                        <td>{{facEventosAcademicos.efectivo | currency}}</td>
+                                        <td>{{facEventosAcademicos.especie | currency}}</td>
+                                        <td>{{eventosAcademicos.efectivo | currency}}</td>
+                                        <td>{{eventosAcademicos.especie | currency}}</td>
                                     </tr>
                                     <tr>
                                         <td class="title-table-costos"><label>Publicaciones y patentes</label></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
+                                        <td>{{facPublicacionesPatentesRubro.efectivo | currency}}</td>
+                                        <td>{{facPublicacionesPatentesRubro.especie | currency}}</td>
+                                        <td>{{publicacionesPatentesRubro.efectivo | currency}}</td>
+                                        <td>{{publicacionesPatentesRubro.especie | currency}}</td>
                                     </tr>
                                     <tr>
                                         <td class="title-table-costos"><label>Bibliografia</label></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
+                                        <td>{{facBibliografiaRubro.efectivo | currency}}</td>
+                                        <td>{{facBibliografiaRubro.especie | currency}}</td>
+                                        <td>{{bibliografiaRubro.efectivo | currency}}</td>
+                                        <td>{{bibliografiaRubro.especie | currency}}</td>
                                     </tr>
                                     <tr>
-                                        <td class="title-table-costos"><label>Adecuación de ingraestructura</label></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
+                                        <td class="title-table-costos"><label>Adecuación de infraestructura</label></td>
+                                        <td>{{facAdecuacionDeInfraestructura.efectivo | currency}}</td>
+                                        <td>{{facAdecuacionDeInfraestructura.especie | currency}}</td>
+                                        <td>{{adecuacionDeInfraestructura.efectivo | currency}}</td>
+                                        <td>{{adecuacionDeInfraestructura.especie | currency}}</td>
                                     </tr>
                                     <tr>
                                         <td class="title-table-costos">
                                             <label>Gastos operativos*** (Incluye seguimiento por DICTI)</label>
                                         </td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
+                                        <td>{{facGastosOperativos.efectivo | currency}}</td>
+                                        <td>{{facGastosOperativos.especie | currency}}</td>
+                                        <td>{{gastosOperativos.efectivo | currency}}</td>
+                                        <td>{{gastosOperativos.especie | currency}}</td>
                                     </tr>
                                     <tr>
                                         <td class="title-table-costos">
                                             <label> <b>Subtotal por Tipo de Recurso</b></label>
                                         </td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
+                                        <td>{{facSubTotalEfectivo | currency}}</td>
+                                        <td>{{facSubTotalEspecie | currency}}</td>
+                                        <td>{{subTotalEfectivo | currency}}</td>
+                                        <td>{{subTotalEspecie | currency}}</td>
                                     </tr>
                                     <tr>
                                         <td class="title-table-costos" colspan="1">
                                             <label><b>Total Proyecto</b></label>
                                         </td>
-                                        <td colspan="4"></td>
+                                        <td colspan="4">{{totalDelProyecto | currency}}</td>
                                     </tr>
                                     </tbody>
                                 </table>

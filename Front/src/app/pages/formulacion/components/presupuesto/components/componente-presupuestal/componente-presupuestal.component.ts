@@ -38,7 +38,7 @@ export class ComponentePresupuestalComponent implements OnInit {
     // dataSourceRubro = ELEMENT_DATA;
     displayedColumnsRubro: string[] = ['NombreRubro', 'Descripcion', 'rubros'];
 
-    dataSource = JSON.parse(localStorage.getItem('Entidades'));
+    dataSource = [];
     rubro: CommonSimpleModel[] = [];
     Convocatoria: string;
     iniciarProyecto: FormGroup;
@@ -68,6 +68,7 @@ export class ComponentePresupuestalComponent implements OnInit {
         const state = this.saveStateService.getState();
         if (state?.tercerPaso) {
             this.state = state;
+            this.dataSource = this.state.tercerPaso.componentePresupuestal.entidades;
         } else {
             this.state = {
                 ...state,
