@@ -1,14 +1,6 @@
 {
   "ExpandedNodes": [
-    "",
-    "\\Front\\src",
-    "\\Front\\src\\app",
-    "\\Front\\src\\app\\pages",
-    "\\Front\\src\\app\\pages\\dashboard",
-    "\\Front\\src\\app\\pages\\formulacion",
-    "\\Front\\src\\app\\pages\\instructional",
-    "\\Front\\src\\app\\pages\\Lista_Seguimiento",
-    "\\Front\\src\\app\\pages\\Lista_Seguimiento\\lista-seguimiento"
+    ""
   ],
   "PreviewInSolutionExplorer": false
 }
