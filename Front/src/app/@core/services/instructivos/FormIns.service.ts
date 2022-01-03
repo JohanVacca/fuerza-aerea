@@ -17,7 +17,7 @@ export class InstructivosService {
     private http: ApiService) {
   }
   uploadFile(formData) {
-    return this.http.postForFile(`${this.endpoint}`, formData)
+    return this.http.postForFile(`${this.endpoint}`, formData);
   }
   getall() {
     return this.http.get(`${this.endpoint}`, null, true);

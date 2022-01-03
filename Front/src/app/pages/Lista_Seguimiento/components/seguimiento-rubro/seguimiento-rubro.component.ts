@@ -31,11 +31,11 @@ export class SeguimientoRubroComponent implements OnInit {
     this.projectService.getById(projectid).subscribe(r => {
       this.proyect = r.Proyecto.AgregarDetallesRubros
       this.proyect.forEach(element => {
-        element.EntidadesCostos.forEach(ent => {
-          let aux
-          aux = ent.efectivo
-          this.Total = parseInt(aux) + this.Total
-        });
+        // element.EntidadesCostos.forEach(ent => {
+        //   let aux
+        //   aux = ent.efectivo
+        //   this.Total = parseInt(aux) + this.Total
+        // });
         element.TotalEfectivo = this.Total
         this.Total = 0
       });

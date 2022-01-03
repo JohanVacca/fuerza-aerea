@@ -43,7 +43,7 @@
             </mat-form-field>
             <div *ngIf="valid" class="alert alert-danger alert-dismissible fade show" role="alert">
               <strong>Error!</strong> El correo no coincide!
-              <button (click)="CloseAlert()" type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <button (click)="closeAlert()" type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
@@ -52,7 +52,7 @@
       </form>
 
       <mat-card-actions>
-        <button mat-raised-button [disabled]="!Entidad.valid" color="primary" (click)="Register()"
+        <button mat-raised-button [disabled]="!Entidad.valid" color="primary" (click)="agregarEntidad()"
           >Guardar</button>
       </mat-card-actions>
     </div>

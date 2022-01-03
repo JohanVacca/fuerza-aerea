@@ -1,3 +1,4 @@
+import {FormControl, Validators} from '@angular/forms';
 
 export interface StateInterface {
     primerPaso?: PrimerPaso;
@@ -8,20 +9,21 @@ export interface StateInterface {
 }
 
 export interface PrimerPaso {
-    nombreProyecto?: string;
-    unidadDependencia?: string;
-    correoGestor?: string;
-    telefonoGestor?: string;
-    nombreGestor?: string;
-    comandante?: string;
-    lugarDeEjecucion?: string;
-    duracionEnMeses?: string;
-    lineaDeInvestigacion?: string;
-    modeloDeInvestigacion?: string;
-    programaDeInvestigacion?: string;
-    subProgramaDeInvestigacion?: string;
-    quienAvalaInvestigacion?: string;
+    comandante: string;
+    nombreProyecto: string;
+    telefonoGestor: number;
+    dependencia: string;
+    email: string;
+    gestor: string;
+    lugar: string;
+    duracion: number;
+    linea: string;
+    modelo: string;
+    programa: string;
+    subprograma: string;
+    avala: string;
     centroDeInvestigacion?: string;
+    gestorId?: string;
 }
 
 export interface SegundoPaso {
@@ -38,6 +40,7 @@ export interface TercerPaso {
 export interface CuartoPaso {
     objetivo?: Objetivo;
     informacion?: Informacion;
+    planteamiento?: Planteamiento;
     resumen?: string;
     marcoConceptual?: string;
     estadoDelArte?: string;
@@ -108,24 +111,18 @@ export interface ComponentePresupuestal {
 export interface PersonalCientifico {
     Descripcion: string;
     DuracionEnMeses: number;
-    EntidadesCostos: EntidadCosto[];
+    EntidadesCostos: number;
     Experiencia: string;
     Formacion: string;
     HorasSemanales: number;
-    InvestigadorSeleccionado: Investigador;
     Justificacion: string;
     NombreDelInvestigador: string;
     NombreRubro: string;
     PerfilDelInvestigador: PerfilInvestigador;
     RolDelInvestigador: string;
     idRubro: string;
-}
-
-export interface EntidadCosto {
-    efectivo: number;
-    especie: number;
-    id: number;
-    institucion: string;
+    entidad: string;
+    tipoDeRubro: string;
 }
 
 export interface PerfilInvestigador {
@@ -167,6 +164,7 @@ export interface Investigador {
     dedicacion?: string;
     cargo?: string;
     grupos?: string;
+    investigadorId?: string;
 }
 
 export interface CentroDeInvestigacion {
@@ -209,4 +207,26 @@ export interface RubrosPDF {
 export interface RubrosPorEntidades {
     entidad?; string;
     rubro?: RubrosPDF[];
+}
+
+export interface FirmasProyecto {
+    liderInvestigacion?: Firma;
+    gestorActi?: Firma;
+    ComandanteJefe?: Firma;
+}
+
+export interface Firma {
+    id: string;
+    name: string;
+    status: boolean;
+}
+
+export interface Planteamiento {
+    planteamiento: string;
+    enQueConsiste: string;
+    porQueSeRequiere: string;
+    paraQueDesarrollarlo: string;
+    beneficiosFAC: string;
+    utilidad: number;
+    inversion: number;
 }

@@ -31,5 +31,17 @@ InvCenterSchema.static('create', async (invCenter) => {
     return (__obj);
 });
 
+
+/**
+ * remove a InvCenter
+ */
+InvCenterSchema.static('remove', async (id) =>{
+    try{
+        return await InvCenterDao.findOneAndRemove({_id: id}).exec();
+    }catch (err){
+        throw err;
+    }
+});
+
 let InvCenterDao = mongoose.model('invCenter', InvCenterSchema);
 module.exports = InvCenterDao;

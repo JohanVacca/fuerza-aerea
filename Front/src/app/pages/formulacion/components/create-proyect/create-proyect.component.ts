@@ -5,7 +5,7 @@ import {
     informacion,
     EquipoInvestigacion,
     iniciarProyecto,
-    bibliografia
+    bibliografia, FirmasInterface
 } from '../../../../shared/models/project.model';
 import {ProjectService} from '../../../../shared/services/Proyect/project.service';
 import {AuthStorageService} from '../../../../@core/services/storage/auth-storage/auth-storage.service';
@@ -18,9 +18,11 @@ import {cronogramaObj, actividad} from '../../../../shared/models/cronograma.mod
 import {cronogramaService} from '../../../../shared/services/cronograma/cronograma.service';
 import {SaveStateService} from '../../../../shared/services/saveStateService/save-state.service';
 import {Entidad, Grupo, StateInterface} from '../../../../shared/services/saveStateService/StateInterface';
+import {finalize} from 'rxjs/operators';
 
+// tslint:disable-next-line:class-name
 export interface file {
-    NombreArchivo: String,
+    NombreArchivo: string;
     suma: number[];
 }
 
@@ -30,7 +32,23 @@ export interface file {
     styleUrls: ['./create-proyect.component.scss']
 })
 export class CreateProyectComponent implements OnInit {
-    aceptoTerminos = false;
+    public aceptoTerminos = false;
+    public ProyectoNuevo: Proyect;
+    public IdProyec;
+    public Val = false;
+    public AgregarDetalles: AgregarDetallesRubros[];
+    public informaciones: informacion[];
+    public Entidades: Entidad[];
+    public EquipoInvestigaciones: EquipoInvestigacion[];
+    public Grupos: Grupo[];
+    public iniciarProyecto: iniciarProyecto;
+    public bibliografia: bibliografia[];
+    public UserId;
+    public Actividades: actividad[];
+    public hasError = false;
+    public messageError = '';
+    public firmas: FirmasInterface[];
+
     private state: StateInterface;
 
     constructor(
@@ -52,53 +70,25 @@ export class CreateProyectComponent implements OnInit {
         }
     }
 
-    ProyectoNuevo: Proyect;
-    IdProyec;
-    Val = false;
-    AgregarDetalles: AgregarDetallesRubros[];
-    informaciones: informacion[];
-    Entidades: Entidad[];
-    EquipoInvestigaciones: EquipoInvestigacion[];
-    Grupos: Grupo[];
-    iniciarProyecto: iniciarProyecto;
-    bibliografia: bibliografia[];
-    UserId;
-    Actividades: actividad[];
-
-    ValiniciarProyecto;
-    ValComponenteCient;
-    ValProductos;
-    ValComposicion;
-    ValiniciarObjeGeneral;
-
-    up() {
-        this.state = this.saveStateService.getState();
-        console.log('estado ultimo paso:: ', this.state);
-        let cv = this.rutaActiva.snapshot.params;
-        let Convocatoria = cv.id;
-        this.AgregarDetalles = JSON.parse(localStorage.getItem('AgregarDetallesRubros'));
-        this.Entidades = this.state.tercerPaso.componentePresupuestal.entidades;
-        this.informaciones = JSON.parse(localStorage.getItem('informacion'));
-        this.EquipoInvestigaciones = JSON.parse(localStorage.getItem('equipoInvestigacion'));
-        this.Grupos = this.state.segundoPaso.listaDeGrupos;
-        this.iniciarProyecto = JSON.parse(localStorage.getItem('iniciarProyecto'));
-        this.bibliografia = JSON.parse(localStorage.getItem('bibliografia'));
-        this.UserId = this.auth.getUserId();
+    private crearObjetoProyectoNuevo(): Proyect {
+        const {id} = this.rutaActiva.snapshot.params;
+        const {primerPaso, segundoPaso, tercerPaso, cuartoPaso} = this.state;
+        const UserId = this.auth.getUserId();
         this.Actividades = JSON.parse(localStorage.getItem('cronograma'));
 
-        this.ProyectoNuevo = {
-            UserId: this.UserId,
-            Convocatoria,
+        return {
+            Convocatoria: id,
+            UserId,
             ProyectoBloqueado: false,
             Seguimiento: false,
-            AgregarDetallesRubros: this.AgregarDetalles,
-            Entidades: this.Entidades,
-            EquipoInvestigaciones: this.EquipoInvestigaciones,
-            bibliografias: this.bibliografia,
+            AgregarDetallesRubros: tercerPaso.componentePresupuestal.personalCientifico,
+            Entidades: tercerPaso.componentePresupuestal.entidades,
+            EquipoInvestigaciones: JSON.parse(localStorage.getItem('equipoInvestigacion')),
+            bibliografias: JSON.parse(localStorage.getItem('bibliografia')),
             estadoArte: localStorage.getItem('estadoArte'),
-            grupos: this.Grupos,
-            informaciones: this.informaciones,
-            iniciarProyecto: this.iniciarProyecto,
+            grupos: segundoPaso.listaDeGrupos,
+            informaciones: JSON.parse(localStorage.getItem('informacion')),
+            iniciarProyecto: primerPaso,
             marcoConceptual: localStorage.getItem('marcoConceptual'),
             metodologia: localStorage.getItem('metodologia'),
             objetivoGeneral: this.state.cuartoPaso.objetivo.objetivoGeneral,
@@ -108,74 +98,93 @@ export class CreateProyectComponent implements OnInit {
             productosEsperados: JSON.parse(localStorage.getItem('productosEsperados')),
             resultadosPrevios: localStorage.getItem('resultadosPrevios'),
             resumen: localStorage.getItem('resumen'),
-            ValorTotal: 0
+            ValorTotal: 0,
+            firmas: this.createFirmasInterface(UserId, this.getInvestigadorId(), primerPaso.comandante, primerPaso.gestorId),
+            planteamiento: cuartoPaso.planteamiento
         };
-        if (this.iniciarProyecto != null) {
-            if (this.ProyectoNuevo.objetivoGeneral !== null) {
-                if (this.Grupos != null && this.EquipoInvestigaciones != null) {
-                    if (this.Entidades != null && this.AgregarDetalles != null && this.ProyectoNuevo.productosEsperados != null) {
-                        if (this.informaciones != null) {
-                            this.projectService.add(this.ProyectoNuevo).subscribe(r => {
-                                let idProject = r.Proyecto._id;
-                                let cronograma: cronogramaObj = {
-                                    ConvocatoriaId: Convocatoria,
-                                    proyectId: idProject,
-                                    actividades: this.Actividades
-                                };
-                                this.cronogramaService.add(cronograma).subscribe(r => {
-                                    console.log(r);
-                                });
-                                this.auth.getFile().forEach(element => {
-                                    let formData = new FormData();
-                                    formData.append('CodigoPr', idProject);
-                                    formData.append('NombreTipo', element.name);
-                                    let file = element.file;
-                                    formData.append('file', file, element.name);
-                                    formData.append('NombreDoc', element.NombreDoc);
-                                    formData.append('NombreArchivo', Api.api + element.name + idProject + '.' + file.type.split('/')[1]);
-
-                                    this.instructivosService.uploadFile(formData).subscribe((res) => {
-                                    });
-                                });
-
-                                let datos: VistaFormulacionData = {
-                                    idProyecto: idProject,
-                                    evaluar: false
-                                };
-                                const dialogRef = this.dialog.open(VistaFormulacionComponent, {
-                                    data: datos
-                                });
-                            });
-                            let token = localStorage.getItem('token');
-                            let role = localStorage.getItem('Role');
-                            localStorage.clear();
-                            localStorage.setItem('token', token);
-                            localStorage.setItem('Role', role);
-                        }
-                    } else {
-                        console.log('Falla por Entidades o AgregarDetalles o productosEsperados');
-                        this.ValProductos = true;
-                    }
-                } else {
-                    console.log('Falla por EquipoInvestigaciones');
-                    this.ValComponenteCient = true;
-                }
-            } else {
-                console.log('Falla por objetivoGeneral');
-                this.ValiniciarObjeGeneral = true;
-            }
-        } else {
-            console.log('Falla por this.iniciarProyecto');
-            this.ValiniciarProyecto = true;
-        }
     }
 
+    private cleanLocalStorage(): void {
+        const token = localStorage.getItem('token');
+        const role = localStorage.getItem('Role');
+        localStorage.clear();
+        localStorage.setItem('token', token);
+        localStorage.setItem('Role', role);
+    }
 
-    upDate() {
+    public crearProyecto(): void {
+        try {
+            this.state = this.saveStateService.getState();
+            const {primerPaso, segundoPaso, tercerPaso, cuartoPaso, quintoPaso} = this.state;
+            const actividades = JSON.parse(localStorage.getItem('cronograma'));
+            const proyectoNuevo = this.crearObjetoProyectoNuevo();
+
+            if (!primerPaso) {
+                this.messageError = 'Falta información en el primer paso';
+                this.hasError = true;
+            }
+            if (!segundoPaso) {
+                this.messageError = 'Falta información en el segundo paso';
+                this.hasError = true;
+            }
+            if (!tercerPaso) {
+                this.messageError = 'Falta información en el cuarto paso';
+                this.hasError = true;
+            }
+            if (!cuartoPaso) {
+                this.messageError = 'Falta información en el tercer paso';
+                this.hasError = true;
+            }
+            if (!quintoPaso) {
+            }
+            if (!this.informaciones) {
+            }
+
+            if (!this.hasError) {
+                this.projectService.add(proyectoNuevo)
+                    .pipe(finalize(() => this.cleanLocalStorage()))
+                    .subscribe(responseCreateProject => {
+                        const proyectId = responseCreateProject.Proyecto._id;
+                        const {Convocatoria: ConvocatoriaId} = proyectoNuevo;
+                        const cronograma: cronogramaObj = {ConvocatoriaId, proyectId, actividades};
+
+                        this.cronogramaService.add(cronograma)
+                            .subscribe(responseCronograma => console.log('responseCronograma: ', responseCronograma));
+
+                        this.auth.getFile().forEach(element => {
+                            const formData = new FormData();
+                            const fileSelected = element.file;
+                            formData.append('CodigoPr', proyectId);
+                            formData.append('NombreTipo', element.name);
+                            formData.append('file', fileSelected, element.name);
+                            formData.append('NombreDoc', element.NombreDoc);
+                            formData.append('NombreArchivo', Api.api + element.name + proyectId + '.' + fileSelected.type.split('/')[1]);
+
+                            this.instructivosService.uploadFile(formData)
+                                .subscribe(responseUpdateFile => console.log('responseUpdateFile: ', responseUpdateFile));
+                        });
+
+                        const datos: VistaFormulacionData = {
+                            idProyecto: proyectId,
+                            evaluar: false
+                        };
+                        const dialogRef = this.dialog.open(VistaFormulacionComponent, {
+                            data: datos
+                        });
+                    });
+            }
+        }
+         catch (error) {
+             this.messageError = 'Falta información, revisa el formulario';
+             this.hasError = true;
+         }
+    }
+
+    public upDate(): void {
         this.state = this.saveStateService.getState();
         console.log('estado ultimo paso:: ', this.state);
-        let cv = this.rutaActiva.snapshot.params;
-        let Convocatoria = cv.id;
+        const cv = this.rutaActiva.snapshot.params;
+        const Convocatoria = cv.id;
         this.AgregarDetalles = JSON.parse(localStorage.getItem('AgregarDetallesRubros'));
         this.Entidades = JSON.parse(localStorage.getItem('Entidades'));
         this.informaciones = JSON.parse(localStorage.getItem('informacion'));
@@ -187,7 +196,7 @@ export class CreateProyectComponent implements OnInit {
 
         this.ProyectoNuevo = {
             UserId: this.UserId,
-            Convocatoria: Convocatoria,
+            Convocatoria,
             ProyectoBloqueado: false,
             AgregarDetallesRubros: this.AgregarDetalles,
             Entidades: this.Entidades,
@@ -209,62 +218,71 @@ export class CreateProyectComponent implements OnInit {
             ValorTotal: 0
         };
 
-        if (this.iniciarProyecto != null) {
-            if (this.ProyectoNuevo.objetivoGeneral != null) {
-                if (this.Grupos != null && this.EquipoInvestigaciones != null) {
-                    if (this.Entidades != null && this.AgregarDetalles != null && this.ProyectoNuevo.productosEsperados != null) {
-                        if (this.informaciones != null) {
-                            this.projectService.update(localStorage.getItem('IdProyec'), this.ProyectoNuevo).subscribe(r => {
-                                const idProject = r.Proyecto._id;
-                                this.auth.getFile().forEach(element => {
-                                    let formData = new FormData();
-                                    formData.append('CodigoPr', idProject);
-                                    formData.append('NombreTipo', element.name);
-                                    let file = element.file;
-                                    formData.append('file', file, element.name);
-                                    formData.append('NombreDoc', element.NombreDoc);
-                                    formData.append('NombreArchivo', Api.api + element.name + idProject + '.' + file.type.split('/')[1]);
+        if (this.informaciones != null) {
+            this.projectService.update(localStorage.getItem('IdProyec'), this.ProyectoNuevo).subscribe(r => {
+                const idProject = r.Proyecto._id;
+                this.auth.getFile().forEach(element => {
+                    const formData = new FormData();
+                    formData.append('CodigoPr', idProject);
+                    formData.append('NombreTipo', element.name);
+                    const file = element.file;
+                    formData.append('file', file, element.name);
+                    formData.append('NombreDoc', element.NombreDoc);
+                    formData.append('NombreArchivo', Api.api + element.name + idProject + '.' + file.type.split('/')[1]);
 
-                                    this.instructivosService.uploadFile(formData).subscribe((res) => {
-                                    });
-                                });
+                    this.instructivosService.uploadFile(formData).subscribe((res) => {
+                    });
+                });
 
-                                this.auth.setFileC();
-                                let datos: VistaFormulacionData = {
-                                    idProyecto: idProject,
-                                    evaluar: false
-                                };
-                                const dialogRef = this.dialog.open(VistaFormulacionComponent, {
-                                    data: datos
-                                });
-                            });
-                            let token = localStorage.getItem('token');
-                            let role = localStorage.getItem('Role');
-                            localStorage.clear();
-                            localStorage.setItem('token', token);
-                            localStorage.setItem('Role', role);
-                        } else {
-                            this.ValComposicion = true;
-                        }
-                    } else {
-                        this.ValProductos = true;
-                    }
-                } else {
-                    this.ValComponenteCient = true;
-                }
-            } else {
-                this.ValiniciarObjeGeneral = true;
-            }
-        } else {
-            this.ValiniciarProyecto = true;
+                this.auth.setFileC();
+                const datos: VistaFormulacionData = {
+                    idProyecto: idProject,
+                    evaluar: false
+                };
+                const dialogRef = this.dialog.open(VistaFormulacionComponent, {
+                    data: datos
+                });
+            });
+            const token = localStorage.getItem('token');
+            const role = localStorage.getItem('Role');
+            localStorage.clear();
+            localStorage.setItem('token', token);
+            localStorage.setItem('Role', role);
         }
     }
 
-    CloseAlert() {
-        this.ValiniciarProyecto = false;
-        this.ValComponenteCient = false;
-        this.ValProductos = false;
-        this.ValComposicion = false;
-        this.ValiniciarObjeGeneral = false;
+    public closeAlert(): void {
+        this.hasError = false;
+        this.messageError = '';
+    }
+
+    createFirmasInterface(investigador: string, investigadorPrincipal: string, comandante: string, gestor: string): FirmasInterface[] {
+        return [
+            {
+                name: 'Investigador',
+                idQuienFirma: investigador,
+                status: false,
+            },
+            {
+                name: 'Investigador Principal',
+                idQuienFirma: investigadorPrincipal,
+                status: false,
+            },
+            {
+                name: 'Comandante',
+                idQuienFirma: comandante,
+                status: false,
+            },
+            {
+                name: 'GestorACTI',
+                idQuienFirma: gestor,
+                status: false,
+            }
+        ];
+    }
+
+    private getInvestigadorId(): string {
+        return this.state.segundoPaso.equipoDeInvestigacion
+            .find(investigador => investigador.cargo === 'Investigador principal').investigadorId;
     }
 }

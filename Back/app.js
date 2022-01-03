@@ -60,6 +60,7 @@ const useConvocatoria = require("./api/convocatoria/routes/convocatoria.routes")
 const useHonorario = require("./api/honorario/routes/honorario.routes");
 const proyecIns = require("./api/ProyectIns/routes/instructivo.routes");
 const cronograma = require("./api/Cronograma/routes/cronograma.routes");
+const firma = require("./api/firma/routes/firma.routes");
 
 app.use(apiBaseUrl, useHonorario);
 app.use(apiBaseUrl, proyecIns);
@@ -85,6 +86,7 @@ app.use(apiBaseUrl, invTypeRoutes);
 app.use(apiBaseUrl, groupCategoryRoutes);
 app.use(apiBaseUrl, followingRoutes);
 app.use(apiBaseUrl, invCenterRoutes);
+app.use(apiBaseUrl, firma);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

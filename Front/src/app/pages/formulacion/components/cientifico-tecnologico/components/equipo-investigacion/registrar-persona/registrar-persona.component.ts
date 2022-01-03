@@ -19,19 +19,19 @@ let ELEMENT_DATA = {
 })
 export class RegistrarPersonaComponent implements OnInit {
 
-    SinGrup: CommonSimpleModel;
-    PersonPosis: CommonSimpleModel[] = [];
-    Grupos = [];
-    registroPersona: FormGroup;
-    cargo = [];
-    dedicacion: string;
-    vlrgrupo: string;
-    investigators = [];
-    investigatorsNames = [];
+    public SinGrup: CommonSimpleModel;
+    public RolFuncion: CommonSimpleModel[] = [];
+    public Grupos = [];
+    public registroPersona: FormGroup;
+    public cargo = [];
+    public dedicacion: string;
+    public vlrgrupo: string;
+    public investigators = [];
+    public investigatorsNames = [];
+    public grupos: Grupo[];
+
     private state: StateInterface;
     private selectedInvestigator;
-
-    public grupos: Grupo[];
 
     constructor(
         @Inject(MAT_DIALOG_DATA) public data: EquipoInvestigacion,
@@ -72,18 +72,22 @@ export class RegistrarPersonaComponent implements OnInit {
                 grupos: new FormControl('', [Validators.required]),
             });
             this.cargo = this.data.cargo;
-
-            // para implementar se debe cambiar el array por el dato para obtener
-            // this.vlrgrupo = this.data.grupos;
         }
-
     }
 
     getAll() {
         let val = false;
-        this.invTeamPersonPositionService.getIdConv(this.data.idCon).subscribe(r => {
-            this.PersonPosis = r;
-        });
+        console.log('this.state>>> ', this.state);
+        let showPrincipal = true;
+        if (this.state?.segundoPaso?.equipoDeInvestigacion) {
+            const hasPrincipal = this.state.segundoPaso.equipoDeInvestigacion
+                .filter(investigador => investigador.cargo === 'Investigador principal');
+            showPrincipal = hasPrincipal.length === 0;
+        }
+        this.invTeamPersonPositionService.getIdConv(this.data.idCon)
+            .subscribe(response => {
+                this.RolFuncion = showPrincipal ? response : response.filter(role => role.descr !== 'Investigador principal');
+            });
         let auto = JSON.parse(localStorage.getItem('grupos'));
         if (auto == null) {
             this.Grupos.push(ELEMENT_DATA);
@@ -102,6 +106,7 @@ export class RegistrarPersonaComponent implements OnInit {
 
     public guardarPersona(): void {
         const {apellido, cargo, dedicacion, grado, grupos, identificacion, nombres} = this.registroPersona.value;
+        const investigadorId = this.getInvestigatorId(`${nombres} ${apellido}`);
         this.state.segundoPaso.equipoDeInvestigacion.push({
             investigador: '',
             nombres,
@@ -110,9 +115,11 @@ export class RegistrarPersonaComponent implements OnInit {
             grado,
             cargo,
             dedicacion,
-            grupos
+            grupos,
+            investigadorId
         });
         this.updateState();
+        console.log('this.state::: ', this.state);
         let equipoInvestigacion = JSON.parse(localStorage.getItem('equipoInvestigacion'));
         if (equipoInvestigacion == null) {
             equipoInvestigacion = [];
@@ -125,7 +132,11 @@ export class RegistrarPersonaComponent implements OnInit {
         this.dialogRef.close(true);
     }
 
-    updatePersona() {
+    private getInvestigatorId(name): string {
+        return this.investigators.find(investigador => `${investigador.profile.names} ${investigador.profile.surname}` === name)._id;
+    }
+
+    updatePersona(): void {
         const storagelist = JSON.parse(localStorage.getItem('equipoInvestigacion'));
         const filtroEquipo = storagelist.filter(r => r.identificacion !== this.data.identificacion);
         filtroEquipo.push(this.registroPersona.value);

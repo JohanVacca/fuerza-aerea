@@ -1,120 +1,133 @@
-import {Entidad, Grupo, ObjetivoEspecifico} from '../services/saveStateService/StateInterface';
+import {
+    Entidad,
+    Grupo,
+    ObjetivoEspecifico,
+    PerfilInvestigador,
+    Planteamiento
+} from '../services/saveStateService/StateInterface';
 
 export interface Proyect {
-  UserId?: String,
-  Convocatoria?: String,
-  ProyectoBloqueado?: boolean,
-  Seguimiento?: boolean,
-  objetivosEspecificos?: ObjetivoEspecifico[],
-  Entidades?: Entidad[],
-  EquipoInvestigaciones?: EquipoInvestigacion[], //Cambiar el modelo del back
-  AgregarDetallesRubros?: AgregarDetallesRubros[], //Cambiar el modelo del back
-  resultadosPrevios?: String,
-  iniciarProyecto?: iniciarProyecto, //Cambiar el modelo del back
-  metodologia?: String,
-  marcoConceptual?: String,
-  resumen?: String,
-  productosEsperados?: productosEsperados[],
-  informaciones?: informacion[], //Cambiar el modelo del back
-  estadoArte?: String,
-  bibliografias?: bibliografia[], //Cambiar el modelo del back
-  palabraClaves?: palabraClaves[], //Cambiar el modelo del back
-  resultadosEsperados?: String,
-  objetivoGeneral?: String,
-  grupos?: Grupo[],
-  ValorTotal?: number,
-  calificaciones?: Calificaciones
-};
+    AgregarDetallesRubros?: AgregarDetallesRubros[];
+    Convocatoria?: string;
+    Entidades?: Entidad[];
+    EquipoInvestigaciones?: EquipoInvestigacion[];
+    ProyectoBloqueado?: boolean;
+    Seguimiento?: boolean;
+    UserId?: string;
+    ValorTotal?: number;
+    bibliografias?: bibliografia[];
+    calificaciones?: Calificaciones;
+    date?: string;
+    estadoArte?: string;
+    firmas?: FirmasInterface[];
+    grupos?: Grupo[];
+    informaciones?: informacion[];
+    iniciarProyecto?: iniciarProyecto;
+    marcoConceptual?: string;
+    metodologia?: string;
+    objetivoGeneral?: string;
+    objetivosEspecificos?: ObjetivoEspecifico[];
+    palabraClaves?: palabraClaves[];
+    planteamiento?: Planteamiento;
+    productosEsperados?: productosEsperados[];
+    resultadosEsperados?: string;
+    resultadosPrevios?: string;
+    resumen?: string;
+}
 
 export interface productosEsperados {
-  descripcion: String,
-  partFuerza: Number,
-  partOtros: Number,
-  rubroRelacionado: String,
-  tipoProducto: String
+    descripcion: string;
+    partFuerza: number;
+    partOtros: number;
+    rubroRelacionado: string;
+    tipoProducto: string;
 }
 
 export interface palabraClaves {
-  palabra: String
+    palabra: string;
 }
+
 export interface objetivosEspecifico {
-  descr: String,
+    descr: string;
 }
 
 export interface bibliografia {
-  bibliografia: String,
+    bibliografia: string;
 }
-// convocatoria y usuario crador
 
 export interface informacion {
-  impacto: String,
-  nInvestigacion: String,
-  pregunta: String
+    impacto: string;
+    nInvestigacion: string;
+    pregunta: string;
 }
 
 export interface iniciarProyecto {
-  telefonoGestor: Number,
-  subprograma: String,
-  programa: String,
-  nombreProyecto: String,
-  modelo: String,
-  lugar: String,
-  linea: String,
-  gestor: String,
-  email: String,
-  duracion: Number,
-  dependencia: String,
-  comandante: String,
-  avala: String
+    comandante: string;
+    nombreProyecto: string;
+    telefonoGestor: number;
+    dependencia: string;
+    email: string;
+    gestor: string;
+    lugar: string;
+    duracion: number;
+    linea: string;
+    modelo: string;
+    programa: string;
+    subprograma: string;
+    avala: string;
+    centroDeInvestigacion?: string;
+    gestorId?: string;
 }
 
 export interface AgregarDetallesRubros {
-  idRubro?: String,
-  RolDelInvestigador?: String,
-  PerfilDelInvestigador?: String,
-  NombreRubro?: String,
-  NombreDelInvestigador?: String,
-  Justificacion?: String,
-  HorasSemanales?: String,
-  Formacion?: String,
-  Experiencia?: String,
-  EntidadesCostos?: [{
-    institucion: String,
-    id: Number,
-    especie: String,
-    efectivo: String
-  },
-  ],
-  TotalEfectivo?: number,
-  DuracionEnMeses?: String,
-  Descripcion?: String
-  PresupuestoEjecutado?: Number,
-  Cumplimiento?: number,
+    Descripcion?: string;
+    DuracionEnMeses?: number;
+    EntidadesCostos?: number;
+    Experiencia?: string;
+    Formacion?: string;
+    HorasSemanales?: number;
+    Justificacion?: string;
+    NombreDelInvestigador?: string;
+    NombreRubro?: string;
+    PerfilDelInvestigador?: PerfilInvestigador;
+    RolDelInvestigador?: string;
+    idRubro?: string;
+    entidad?: string;
+    tipoDeRubro?: string;
+    TotalEfectivo?: number;
+    Cumplimiento?: number;
+    PresupuestoEjecutado?: number;
 }
 
 export interface EquipoInvestigacion {
-  nombres: String,
-  apellido: String,
-  identificacion: Number,
-  grupos: String,
-  grado: String,
-  dedicacion: String,
-  cargo: String
+    nombres: string;
+    apellido: string;
+    identificacion: number;
+    grupos: string;
+    grado: string;
+    dedicacion: string;
+    cargo: string;
 }
 
 export interface Calificaciones {
-  idEv?: String,
-  ValorParcial?: number,
-  Evaluado?: boolean,
-  Valores?: {
-    vlrequipo: number,
-    vlrestado: number,
-    vlrmarco: number,
-    vlrobjEspecifico: number,
-    vlrobjGeneral: number,
-    vlrpalabrasClaves: number,
-    vlrproyecto: number,
-    vlrresumen: number,
-    vlrunidadependencia: number
-  }
+    idEv?: string;
+    ValorParcial?: number;
+    Evaluado?: boolean;
+    Valores?: {
+        vlrequipo: number;
+        vlrestado: number;
+        vlrmarco: number;
+        vlrobjEspecifico: number;
+        vlrobjGeneral: number;
+        vlrpalabrasClaves: number;
+        vlrproyecto: number;
+        vlrresumen: number;
+        vlrunidadependencia: number;
+    };
+}
+
+export interface FirmasInterface {
+    name: string;
+    idQuienFirma: string;
+    status: boolean;
 }

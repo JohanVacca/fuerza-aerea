@@ -1,6 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { ChangeEvent } from '@ckeditor/ckeditor5-angular';
-import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 @Component({
   selector: 'app-metodologia',
@@ -8,20 +6,17 @@ import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
   styleUrls: ['../../detalles-generales.component.scss']
 })
 export class MetodologiaComponent implements OnInit {
-  dataResumen: string;
-  public Editor = ClassicEditor;
-
-  constructor() { }
+  public dataResumen: string;
 
   ngOnInit(): void {
     this.cargarData();
   }
-  cargarData() {
-    this.dataResumen = localStorage.getItem("metodologia")
-  }
-  public onChange({ editor }: ChangeEvent) {
-    const data = editor.getData();
 
-    localStorage.setItem("metodologia", data);
+  public onChange(value): void {
+    localStorage.setItem("metodologia", value);
+  }
+
+  private cargarData(): void {
+    this.dataResumen = localStorage.getItem("metodologia");
   }
 }

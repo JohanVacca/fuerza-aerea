@@ -131,10 +131,6 @@ td {
       padding: .5rem !important;
       text-align: center;
 
-      &:first-child {
-        padding-left: 2.4rem !important;
-      }
-
       &:last-child {
         padding-right: 2.4rem !important;
       }
@@ -146,10 +142,6 @@ td {
       padding: 1rem .5rem;
       text-align: left;
       vertical-align: top;
-
-      &:first-child {
-        padding-left: 2.4rem;
-      }
 
       &:last-child {
         padding-right: 2.4rem;
@@ -381,4 +373,25 @@ button {
 
 .table-entidades table {
   width: 100%;
+}
+
+.table-rubros {
+  table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  td, th {
+    border: 1px solid black;
+    width: fit-content;
+    padding: 5px !important;
+  }
+}
+
+.font-title {
+  font-size: 17px;
+}
+
+.center-title {
+  text-align: center;
 }

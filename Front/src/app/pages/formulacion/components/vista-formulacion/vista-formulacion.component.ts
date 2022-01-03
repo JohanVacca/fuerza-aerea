@@ -11,37 +11,21 @@ import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {AuthStorageService} from './../../../../@core/services/storage/auth-storage/auth-storage.service';
 import {ConfirmDialogComponent, ConfirmacionDialogData} from '../../../admin/Dialog/confirm-dialog/confirm-dialog.component';
 import {SucessDialogComponent, SucessDialogData} from '../../../admin/Dialog/sucess-dialog/sucess-dialog.component';
-
-// import * as jspdf from 'jspdf';
-// import 'jspdf-autotable'
-// require('jspdf-autotable');
-// import { UserOptions } from 'jspdf-autotable';
-
 import * as jsPDF from 'jspdf';
-
 import 'jspdf-autotable';
 import html2canvas from 'html2canvas';
 import {cronogramaService} from '../../../../shared/services/cronograma/cronograma.service';
 import {
-    CronogramaResponse,
-    MetodologiaObjetivo,
-    RubrosPDF,
+    Entidad,
+    MetodologiaObjetivo, Planteamiento,
     RubrosPorEntidades
 } from '../../../../shared/services/saveStateService/StateInterface';
 import {finalize} from 'rxjs/operators';
+import {FirmaService} from '../../../../shared/services/firma/firma.service';
+import {CommonSimpleModel} from '../../../../shared/models/common-simple.model';
+import {ProjectEntryService} from '../../../../shared/services/project-entry/project-entry.service';
 
 require('jspdf-autotable');
-
-// import 'jspdf-autotable'
-// import { defaultColors } from 'ng2-charts';
-
-// interface jsPDFWithPlugin extends jsPDF {
-//   autotable: (options: UserOptions) => jsPDF;
-// }
-
-export interface Vegetable {
-    name: string;
-}
 
 @Component({
     selector: 'app-vista-formulacion',
@@ -50,121 +34,82 @@ export interface Vegetable {
 })
 export class VistaFormulacionComponent implements OnInit {
 
-    constructor(@Inject(MAT_DIALOG_DATA) public data: VistaFormulacionData,
-                private projectService: ProjectService,
-                public form: FormBuilder,
-                public dialog: MatDialog,
-                private auto: AuthStorageService,
-                private cronogramaServic: cronogramaService,
-                public dialogRef: MatDialogRef<VistaFormulacionComponent>) {
+    constructor(
+        @Inject(MAT_DIALOG_DATA) public data: VistaFormulacionData,
+        private projectService: ProjectService,
+        public form: FormBuilder,
+        public dialog: MatDialog,
+        private auto: AuthStorageService,
+        private cronogramaServic: cronogramaService,
+        private firmaService: FirmaService,
+        private projectEntryService: ProjectEntryService,
+        public dialogRef: MatDialogRef<VistaFormulacionComponent>) {
     }
 
-    evaluacion: FormGroup;
-    //
-    nombreProyecto: string;
-    linea: string;
-    programa: string;
-    subprograma: string;
-    tipoInvestigacion: string;
-    avala: string;
-    lugar: string;
-    duracion: number;
-    //
-    gestor: string;
-    email: string;
-    telefonoGestor: number;
-    comandante: string;
-    ComandanteCorreo: String;
-    ComandanteNumber: String;
-    //
-
-    dataSourceRubro = [];
-    entid = [];
-    objetivoGeneral: string;
-
-    //
-    equipoInvestigacion;
-    //
-    unidadDependencia: string;
-
-    ValidarEvaluar = this.data.evaluar;
-
-    objetivosEspecificos: [];
-    resumen: string;
-    palabrasClave: [];
-    marcoConceptual: string;
-    estadoArte: string;
-    resultadosPrevios: string;
-    resultadosEsperados: string;
-    metodologia: string;
-    impactoAmbiental: string;
-    bibliografias: [];
-
-    Valores = [];
-
-    vlrproyectoC: number = 0;
-
-    Rvlrproyecto = 0;
-    Rvlrunidadependencia = 0;
-    Rvlrequipo = 0;
-    RvlrobjGeneral = 0;
-    RvlrobjEspecifico = 0;
-    Rvlrresumen = 0;
-    RvlrpalabrasClaves = 0;
-    Rvlrmarco = 0;
-    Rvlrestado = 0;
-    RvlrresultPrevios = 0;
-    RvlrresultEsperados = 0;
-    Rvlrmetodologia = 0;
-    Rvlrimpacto = 0;
-    Rvlrbibliografia = 0;
-    RvlrproductosPresupuesto = 0;
-    displayedColumns: string[] = ['Grado', 'Nombres', 'Apellidos', 'Cargo', 'Dedicacion', 'Grupo'];
-    dataSource;
-    modelo;
-    grupos = [];
-    productosEsperados = [];
-    Calificado = false;
-    pregunta;
-    date;
-    centroDeInvestigacion;
-
-    personalCientifico: RubrosPDF = {especie: 0, efectivo: 0};
-    personalDeApoyo: RubrosPDF = {especie: 0, efectivo: 0};
-    serviciosTecnicos: RubrosPDF = {especie: 0, efectivo: 0};
-    equiposRubro: RubrosPDF = {especie: 0, efectivo: 0};
-    materialesEInsumos: RubrosPDF = {especie: 0, efectivo: 0};
-    software: RubrosPDF = {especie: 0, efectivo: 0};
-    salidasDeCampo: RubrosPDF = {especie: 0, efectivo: 0};
-    eventosAcademicos: RubrosPDF = {especie: 0, efectivo: 0};
-    publicacionesPatentesRubro: RubrosPDF = {especie: 0, efectivo: 0};
-    bibliografiaRubro: RubrosPDF = {especie: 0, efectivo: 0};
-    adecuacionDeInfraestructura: RubrosPDF = {especie: 0, efectivo: 0};
-    gastosOperativos: RubrosPDF = {especie: 0, efectivo: 0};
-
-    facPersonalCientifico: RubrosPDF = {especie: 0, efectivo: 0};
-    facPersonalDeApoyo: RubrosPDF = {especie: 0, efectivo: 0};
-    facServiciosTecnicos: RubrosPDF = {especie: 0, efectivo: 0};
-    facEquiposRubro: RubrosPDF = {especie: 0, efectivo: 0};
-    facMaterialesEInsumos: RubrosPDF = {especie: 0, efectivo: 0};
-    facSoftware: RubrosPDF = {especie: 0, efectivo: 0};
-    facSalidasDeCampo: RubrosPDF = {especie: 0, efectivo: 0};
-    facEventosAcademicos: RubrosPDF = {especie: 0, efectivo: 0};
-    facPublicacionesPatentesRubro: RubrosPDF = {especie: 0, efectivo: 0};
-    facBibliografiaRubro: RubrosPDF = {especie: 0, efectivo: 0};
-    facAdecuacionDeInfraestructura: RubrosPDF = {especie: 0, efectivo: 0};
-    facGastosOperativos: RubrosPDF = {especie: 0, efectivo: 0};
-
-    subTotalEfectivo;
-    subTotalEspecie;
-    facSubTotalEfectivo;
-    facSubTotalEspecie;
-    totalDelProyecto;
-    rubrosPorEntidades: RubrosPorEntidades[];
-
+    public evaluacion: FormGroup;
+    public nombreProyecto: string;
+    public linea: string;
+    public programa: string;
+    public subprograma: string;
+    public tipoInvestigacion: string;
+    public avala: string;
+    public lugar: string;
+    public duracion: number;
+    public gestor: string;
+    public email: string;
+    public telefonoGestor: number;
+    public comandante: string;
+    public ComandanteCorreo: string;
+    public ComandanteNumber: string;
+    public dataSourceRubro = [];
+    public entidades: Entidad[];
+    public planteamiento: Planteamiento;
+    public objetivoGeneral: string;
+    public equipoInvestigacion;
+    public unidadDependencia: string;
+    public ValidarEvaluar = this.data.evaluar;
+    public objetivosEspecificos: [];
+    public resumen: string;
+    public palabrasClave: [];
+    public marcoConceptual: string;
+    public estadoArte: string;
+    public resultadosPrevios: string;
+    public resultadosEsperados: string;
+    public metodologia: string;
+    public impactoAmbiental: string;
+    public bibliografias: [];
+    public Valores = [];
+    public Rvlrproyecto = 0;
+    public Rvlrunidadependencia = 0;
+    public Rvlrequipo = 0;
+    public RvlrobjGeneral = 0;
+    public RvlrobjEspecifico = 0;
+    public Rvlrresumen = 0;
+    public RvlrpalabrasClaves = 0;
+    public Rvlrmarco = 0;
+    public Rvlrestado = 0;
+    public RvlrresultPrevios = 0;
+    public displayedColumns: string[] = ['Grado', 'Nombres', 'Apellidos', 'Cargo', 'Dedicacion', 'Grupo'];
+    public dataSource;
+    public modelo;
+    public grupos = [];
+    public productosEsperados = [];
+    public Calificado = false;
+    public pregunta;
+    public date;
+    public centroDeInvestigacion;
+    public convocatoriaId;
+    public rubroOpcion: CommonSimpleModel[] = [];
+    public totalDelProyecto = 0;
+    public rubrosPorEntidades: RubrosPorEntidades[];
     public listaDeMetodologia: MetodologiaObjetivo[] = [];
+    public firmaInvestigador;
+    public firmaInvestigadorPrincipal;
+    public firmaGestorActi;
+    public firmaComandante;
+    public firmas = [];
 
-    Cargar() {
+    public Cargar(): void {
         if (this.data.evaluar) {
             this.Rvlrproyecto = this.data.valor.vlrproyecto || 0;
             this.Rvlrunidadependencia = this.data.valor.vlrunidadependencia || 0;
@@ -185,7 +130,7 @@ export class VistaFormulacionComponent implements OnInit {
         this.builder();
     }
 
-    builder() {
+    public builder(): void {
         this.evaluacion = this.form.group({
             vlrproyecto: new FormControl(this.Rvlrproyecto, [Validators.max(20), Validators.min(0)]),
             vlrunidadependencia: new FormControl(this.Rvlrunidadependencia, [Validators.max(15), Validators.min(0)]),
@@ -200,21 +145,24 @@ export class VistaFormulacionComponent implements OnInit {
 
     }
 
-    getAll() {
+    public getAll(): void {
         this.projectService.getById(this.data.idProyecto)
-            .pipe(finalize( () => {
+            .pipe(finalize(() => {
                 this.getCronograma();
-                this.calcularRubros();
+                this.getRubroOpcion();
+                this.getTotalAmount();
+                this.getFirmas();
             }))
             .subscribe(r => {
-                console.log('r::: ', r);
-                this.nombreProyecto = r.Proyecto.iniciarProyecto[0].nombreProyecto;
+                this.convocatoriaId = r.Proyecto.Convocatoria._id,
+                    this.nombreProyecto = r.Proyecto.iniciarProyecto[0].nombreProyecto;
                 this.centroDeInvestigacion = r.Proyecto.iniciarProyecto[0].centroDeInvestigacion;
                 this.linea = r.Proyecto.iniciarProyecto[0].linea;
                 this.modelo = r.Proyecto.iniciarProyecto[0].modelo;
                 this.grupos = r.Proyecto.grupos;
                 this.date = r.Proyecto.date;
-                this.programa = r.Proyecto.iniciarProyecto[0].programa;
+                this.firmas = r.Proyecto.firmas,
+                    this.programa = r.Proyecto.iniciarProyecto[0].programa;
                 this.subprograma = r.Proyecto.iniciarProyecto[0].subprograma;
                 this.tipoInvestigacion = 'N/A';
                 this.avala = r.Proyecto.iniciarProyecto[0].avala;
@@ -240,64 +188,86 @@ export class VistaFormulacionComponent implements OnInit {
                 this.impactoAmbiental = r.Proyecto.informaciones[0].impacto;
                 this.pregunta = r.Proyecto.informaciones[0].pregunta;
                 this.bibliografias = r.Proyecto.bibliografias;
-                this.productosEsperados = [...r.Proyecto.productosEsperados, ...r.Proyecto.productosEsperados];
+                this.productosEsperados = [...r.Proyecto.productosEsperados];
                 this.dataSourceRubro = r.Proyecto.AgregarDetallesRubros;
-                r.Proyecto.Entidades.forEach(element => {
-                    this.entid.push(element.Institucion);
+                this.entidades = r.Proyecto.Entidades;
+                this.planteamiento = r.Proyecto.planteamiento;
+            });
+    }
+
+    private getRubroOpcion(): void {
+        this.projectEntryService.getIdConv(this.convocatoriaId)
+            .subscribe(response => {
+                response.forEach(element => {
+                    this.rubroOpcion.push(element);
                 });
             });
     }
 
-    private calcularRubros(): void {
-        this.dataSourceRubro?.map(rubro => {
-            if (rubro.NombreRubro === 'Personal Científico') {
-               this.personalCientifico.entidad = rubro.entidad;
-               if (rubro.tipoDeRubro === 'Efectivo') {
-                   this.personalCientifico.efectivo = Number(rubro.EntidadesCostos[0].efectivo);
-               } else {
-                   this.personalCientifico.especie = this.personalCientifico.especie = Number(rubro.EntidadesCostos[0].efectivo);
-               }
-            }
-        });
-        this.calcularTotales();
+    public getAmount(entidad: string, tipoDeRubro: string, nombreDeRubro: string): number {
+        const rubroActual = this.dataSourceRubro
+            .find(rubro => rubro.entidad === entidad && rubro.tipoDeRubro === tipoDeRubro && rubro.NombreRubro === nombreDeRubro);
+        if (rubroActual) {
+            return rubroActual.EntidadesCostos;
+        } else {
+            return 0;
+        }
     }
 
-    private calcularTotales(): void {
-        this.facSubTotalEfectivo = this.facPersonalCientifico.efectivo +
-            this.facPersonalDeApoyo.efectivo +
-            this.facServiciosTecnicos.efectivo +
-            this.facEquiposRubro.efectivo +
-            this.facMaterialesEInsumos.efectivo +
-            this.facSoftware.efectivo +
-            this.facSalidasDeCampo.efectivo +
-            this.facEventosAcademicos.efectivo +
-            this.facPublicacionesPatentesRubro.efectivo +
-            this.facBibliografiaRubro.efectivo +
-            this.facAdecuacionDeInfraestructura.efectivo +
-            this.facGastosOperativos.efectivo;
+    public getTotalSubTypeAmount(entidad: string, tipoDeRubro: string): number {
+        let total = 0;
+        this.dataSourceRubro.map(rubro => {
+            if (rubro.tipoDeRubro === tipoDeRubro && rubro.entidad === entidad) {
+                total = total + rubro.EntidadesCostos;
+            }
+        });
+        return total;
+    }
 
-        this.facSubTotalEspecie = this.facPersonalCientifico.especie +
-            this.facPersonalDeApoyo.especie +
-            this.facServiciosTecnicos.especie +
-            this.facEquiposRubro.especie +
-            this.facMaterialesEInsumos.especie +
-            this.facSoftware.especie +
-            this.facSalidasDeCampo.especie +
-            this.facEventosAcademicos.especie +
-            this.facPublicacionesPatentesRubro.especie +
-            this.facBibliografiaRubro.especie +
-            this.facAdecuacionDeInfraestructura.especie +
-            this.facGastosOperativos.especie;
+    public getTotalAmount(): void {
+        this.dataSourceRubro.map(rubro => this.totalDelProyecto = this.totalDelProyecto + rubro.EntidadesCostos);
+    }
 
-        console.log('this.personalCientifico:: ', this.personalCientifico);
+    private getFirmas(): void {
+        this.firmas.map(firma => {
+            if (firma.name === 'Investigador' && firma.status) {
+                this.getFirma(firma.idQuienFirma, 'Investigador');
+            }
+            if (firma.name === 'Investigador Principal' && firma.status) {
+                this.getFirma(firma.idQuienFirma, 'Investigador Principal');
+            }
+            if (firma.name === 'Comandante' && firma.status) {
+                this.getFirma(firma.idQuienFirma, 'Comandante');
+            }
+            if (firma.name === 'GestorACTI' && firma.status) {
+                this.getFirma(firma.idQuienFirma, 'GestorACTI');
+            }
+        });
+    }
 
-        this.subTotalEfectivo = this.personalCientifico.efectivo;
-
-        this.subTotalEspecie = this.personalCientifico.especie;
-
-        this.totalDelProyecto =
-            this.subTotalEfectivo + this.subTotalEspecie +
-            this.facSubTotalEspecie + this.facSubTotalEfectivo;
+    private getFirma(userId: string, tipo: string): void {
+        this.firmaService.getFirma(userId)
+            .subscribe(
+                response => {
+                    if (tipo === 'Investigador') {
+                        this.firmaInvestigador = response.firma;
+                        console.log('this.firmaInvestigador ', this.firmaInvestigador);
+                    }
+                    if (tipo === 'Investigador Principal') {
+                        this.firmaInvestigadorPrincipal = response.firma;
+                        console.log('this.firmaInvestigadorPrincipal ', this.firmaInvestigadorPrincipal);
+                    }
+                    if (tipo === 'Comandante') {
+                        this.firmaComandante = response.firma;
+                        console.log('this.firmaComandante ', this.firmaComandante);
+                    }
+                    if (tipo === 'GestorACTI') {
+                        this.firmaGestorActi = response.firma;
+                        console.log('this.firmaGestorActi ', this.firmaGestorActi);
+                    }
+                },
+                error => console.log('error>>> ', error)
+            );
     }
 
     private getCronograma(): void {
@@ -314,9 +284,9 @@ export class VistaFormulacionComponent implements OnInit {
             .subscribe(response => {
                 response.cronogramas.actividades.map(actividad => {
                     listaDeMetodologia.map(metodologia => {
-                       if (metodologia.objetivo === actividad.objetivo) {
-                           metodologia.actividades.push(actividad.nombreAct);
-                       }
+                        if (metodologia.objetivo === actividad.objetivo) {
+                            metodologia.actividades.push(actividad.nombreAct);
+                        }
                     });
                     this.listaDeMetodologia = listaDeMetodologia;
                 });
@@ -452,6 +422,10 @@ export class VistaFormulacionComponent implements OnInit {
             }
             pdf.save('FormulacionDeProyecto.pdf'); // Generated PDF
         });
+    }
+
+    public closeModal(): void {
+        this.dialogRef.close(false);
     }
 }
 

@@ -6,7 +6,6 @@
         <mat-icon>notes</mat-icon>
       </button>
       <a href="/">
-        <!-- <img class="logo" width="200px" height="auto" src="../../assets/images/logoBn.png"> -->
         <img class="logo" width="200px" height="auto"
           src="https://cdn979857.fac.mil.co/sites/default/files/marca%20fac%20gris%20fn.png">
       </a>
@@ -19,9 +18,6 @@
 
       <mat-nav-list>
         <app-nav-perfil></app-nav-perfil>
-        <a mat-list-item class="LetraBlanca">
-          <mat-icon>home</mat-icon>Inicio
-        </a>
         <a class="LetraBlanca" mat-list-item [routerLink]="nav.route" *ngFor="let nav of fillerNav">
           <mat-icon>{{nav.icon}}</mat-icon> {{nav.name}}
         </a>

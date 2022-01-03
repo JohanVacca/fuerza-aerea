@@ -24,54 +24,20 @@
         autorización del dato por cuenta de su Titular y, las garantías e instrumentos para asegurar la vigencia de los
         derechos fundamentales protegidos por las mencionadas disposiciones.</p>
 
-      <!-- <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Dicta dolorem error eos. Fugit quis fugiat nobis
-        explicabo saepe ratione, in numquam laudantium mollitia laborum, nemo minus omnis iusto quidem obcaecati! Lorem
-        ipsum dolor sit amet, consectetur adipisicing elit. Numquam earum temporibus voluptates ipsa porro iure unde
-        est! Fugiat blanditiis eum ea. Ullam veniam iusto magnam in explicabo consequuntur accusamus inventore.</p>
-
-      <p> Lorem ipsum, dolor sit amet consectetur adipisicing elit. Dicta dolorem error eos. Fugit quis fugiat nobis
-        explicabo saepe ratione, in numquam laudantium mollitia laborum, nemo minus omnis iusto quidem obcaecati! Lorem
-        ipsum dolor sit amet, consectetur adipisicing elit. Numquam earum temporibus voluptates ipsa porro iure unde
-        est! Fugiat blanditiis eum ea. Ullam veniam iusto magnam in explicabo consequuntur accusamus inventore.</p> -->
-
     </mat-card-subtitle>
     <mat-slide-toggle color="primary" [(ngModel)]="aceptoTerminos">Acepto terminos</mat-slide-toggle>
     <mat-card-actions>
       <div mat-dialog-actions class="botonera-dialogo">
         <div *ngIf="!Val">
-          <button [disabled]="!aceptoTerminos" mat-button mat-stroked-button (click)="up()">Crear Proyectos</button>
+          <button [disabled]="!aceptoTerminos" mat-button mat-stroked-button (click)="crearProyecto()">Crear Proyectos</button>
         </div>
         <div *ngIf="Val">
           <button [disabled]="!aceptoTerminos" mat-button mat-stroked-button (click)="upDate()">Actualizar</button>
         </div>
       </div>
-      <div *ngIf="ValiniciarProyecto" class="alert alert-danger alert-dismissible fade show" role="alert">
-        <strong>Esta Incompleto!</strong> El componente "Iniciar Proyecto" no esta completo!
-        <button (click)="CloseAlert()" type="button" class="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div *ngIf="ValComponenteCient" class="alert alert-danger alert-dismissible fade show" role="alert">
-        <strong>Esta Incompleto!</strong> El "Componente Cientifico" no esta completo!
-        <button (click)="CloseAlert()" type="button" class="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div *ngIf="ValProductos" class="alert alert-danger alert-dismissible fade show" role="alert">
-        <strong>Esta Incompleto!</strong> El componente "Producto y Presupuesto" no esta completo!
-        <button (click)="CloseAlert()" type="button" class="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div *ngIf="ValComposicion" class="alert alert-danger alert-dismissible fade show" role="alert">
-        <strong>Esta Incompleto!</strong> El componente "Producto y Presupuesto" no esta completo!
-        <button (click)="CloseAlert()" type="button" class="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div *ngIf="ValiniciarObjeGeneral" class="alert alert-danger alert-dismissible fade show" role="alert">
-        <strong>Esta Incompleto!</strong> El "Objetivo general" no se a creado!
-        <button (click)="CloseAlert()" type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <div *ngIf="hasError" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>Esta Incompleto!</strong> {{messageError}}
+        <button (click)="closeAlert()" type="button" class="close" data-dismiss="alert" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>

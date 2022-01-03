@@ -1,27 +1,22 @@
-import { Component, OnInit } from '@angular/core';
-import { ChangeEvent } from '@ckeditor/ckeditor5-angular';
-import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import {Component, OnInit} from '@angular/core';
 
 @Component({
-  selector: 'app-marco-conceptual',
-  templateUrl: './marco-conceptual.component.html',
-  styleUrls: ['../../detalles-generales.component.scss']
+    selector: 'app-marco-conceptual',
+    templateUrl: './marco-conceptual.component.html',
+    styleUrls: ['../../detalles-generales.component.scss']
 })
 export class MarcoConceptualComponent implements OnInit {
-  dataResumen: string;
-  public Editor = ClassicEditor;
+    public dataResumen: string;
 
-  constructor() { }
+    ngOnInit(): void {
+        this.cargarData();
+    }
 
-  ngOnInit(): void {
-    this.cargarData();
-  }
-  cargarData() {
-    this.dataResumen = localStorage.getItem("marcoConceptual")
-  }
-  public onChange({ editor }: ChangeEvent) {
-    const data = editor.getData();
+    public onChange(value): void {
+        localStorage.setItem('marcoConceptual', value);
+    }
 
-    localStorage.setItem("marcoConceptual", data);
-  }
+    private cargarData(): void {
+        this.dataResumen = localStorage.getItem('marcoConceptual');
+    }
 }

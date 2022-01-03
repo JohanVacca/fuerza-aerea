@@ -1,1 +1,8 @@
-<ckeditor [editor]="Editor" [data]="dataResumen" (change)="onChange($event)"></ckeditor>
+<div class="text-area-generico">
+    <div class="text-area-generico__title">
+        <label>Resumen del proyecto</label>
+    </div>
+    <div class="text-area-generico__input">
+        <textarea [value]="dataResumen" (keyup)="onChange($event.target.value)"></textarea>
+    </div>
+</div>

@@ -18,11 +18,11 @@ let ProjectSchema = new Schema({
   Seguimiento: Boolean,
   Entidades: [
     {
-      Institucion: String,
-      Nit: String,
-      Persona: String,
-      correo: String,
-      numero: String,
+      nombre: String,
+      nit: String,
+      personaACargo: String,
+      numeroDeContacto: String,
+      email: String,
     },
   ],
   EquipoInvestigaciones: [
@@ -48,19 +48,9 @@ let ProjectSchema = new Schema({
       HorasSemanales: String,
       Formacion: String,
       Experiencia: String,
-      EntidadesCostos: [
-        {
-          institucion: String,
-          id: Number,
-          especie: String,
-          efectivo: String,
-        },
-      ],
-      TotalEfectivo: Number,
+      EntidadesCostos: Number,
       DuracionEnMeses: String,
       Descripcion: String,
-      PresupuestoEjecutado: Number,
-      Cumplimiento: Number,
       tipoDeRubro: String,
       entidad: String,
     },
@@ -146,6 +136,20 @@ let ProjectSchema = new Schema({
       },
     },
   ],
+  firmas: [{
+    name: String,
+    idQuienFirma: String,
+    status: Boolean,
+  }],
+  planteamiento: {
+    planteamiento: String,
+    enQueConsiste: String,
+    porQueSeRequiere: String,
+    paraQueDesarrollarlo: String,
+    beneficiosFAC: String,
+    utilidad: Number,
+    inversion: Number,
+  }
 });
 
 module.exports = ProjectSchema;

@@ -1,27 +1,22 @@
-import { Component, OnInit } from '@angular/core';
-import { ChangeEvent } from '@ckeditor/ckeditor5-angular';
-import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import {Component, OnInit} from '@angular/core';
 
 @Component({
-  selector: 'app-resultados-previos',
-  templateUrl: './resultados-previos.component.html',
-  styleUrls: ['./resultados-previos.component.scss']
+    selector: 'app-resultados-previos',
+    templateUrl: './resultados-previos.component.html',
+    styleUrls: ['./resultados-previos.component.scss']
 })
 export class ResultadosPreviosComponent implements OnInit {
-  dataResumen: string;
-  public Editor = ClassicEditor;
+    public dataResumen: string;
 
-  constructor() { }
+    ngOnInit(): void {
+        this.cargarData();
+    }
 
-  ngOnInit(): void {
-    this.cargarData();
-  }
-  cargarData() {
-    this.dataResumen = localStorage.getItem("resultadosPrevios")
-  }
-  public onChange({ editor }: ChangeEvent) {
-    const data = editor.getData();
+    public onChange(value): void {
+        localStorage.setItem('resultadosPrevios', value);
+    }
 
-    localStorage.setItem("resultadosPrevios", data);
-  }
+    private cargarData(): void {
+        this.dataResumen = localStorage.getItem('resultadosPrevios');
+    }
 }

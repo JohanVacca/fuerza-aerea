@@ -3,13 +3,10 @@ import { NgModule } from '@angular/core';
 
 import { PagesComponent } from './pages.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
-import { RoleGuardService } from '../@core/services/guards/role-guard.service';
 import { InstructionalComponent } from './instructional/instructional.component';
 import { HonorariosColcienciasComponent } from './admin/honorarios-colciencias/honorarios-colciencias.component';
 import { EvaluacionComponent } from './evaluacion/evaluacion.component';
-import { FormularProyectoComponent } from './formulacion/components/formular-proyecto/formular-proyecto.component'
 import { UsersComponent } from './admin/users/users.component';
-import { ConvocatoryAdminComponent } from './admin/convocatory/convocatory.component';
 import { AuthGuardService } from './../@core/services/guards/auth-guard.service';
 import { ListaSeguimientoComponent } from './Lista_Seguimiento/lista-seguimiento/lista-seguimiento.component';
 import { SeguimientoComponent } from './Lista_Seguimiento/components/seguimiento/seguimiento.component';
@@ -71,6 +68,16 @@ const routes: Routes = [
       {
         path: 'seguimientoproject/:id',
         component: SeguimientoComponent,
+        canActivate: [AuthGuardService]
+      },
+      {
+        path: 'firmas',
+        loadChildren: () => import('./firmas/firmas.module').then(m => m.FirmasModule),
+        canActivate: [AuthGuardService]
+      },
+      {
+        path: 'centros-de-investigacion',
+        loadChildren: () => import('./centros-de-investigacion/centros-de-investigacion.module').then(m => m.CentrosDeInvestigacionModule),
         canActivate: [AuthGuardService]
       },
       {

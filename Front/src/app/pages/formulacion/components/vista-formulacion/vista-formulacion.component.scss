@@ -1,4 +1,14 @@
 ::ng-deep {
+  .firma-imagen {
+    &-center {
+      text-align: center;
+    }
+    &-pdf {
+      height: 200px;
+      width: 200px;
+    }
+  }
+
   .cdk-overlay-pane {
     overflow-y: auto;
   }

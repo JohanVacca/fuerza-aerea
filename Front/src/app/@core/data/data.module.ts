@@ -17,7 +17,6 @@ import { SubprogramService } from './subprogram.service';
 import { LineService } from './line.service';
 import { TypeInvestigationService } from './type-investigation.service';
 import { EndorsementInvestigationService } from './endorsement-investigation.service';
-import { ProyectService } from './proyect.service';
 import { RubroService } from './rubro.service';
 import { InvestigationService } from './investigation.service';
 import { ObjetiveGeneralService } from './objetive.service';
@@ -46,7 +45,6 @@ const SERVICES = [
   LineService,
   TypeInvestigationService,
   EndorsementInvestigationService,
-  ProyectService,
   RubroService,
   InvestigationService,
   ObjetiveGeneralService,
@@ -68,12 +66,12 @@ const SERVICES = [
   ],
 })
 export class DataModule {
-  static forRoot(): ModuleWithProviders {
-    return <ModuleWithProviders>{
+  static forRoot(): ModuleWithProviders<any> {
+    return {
       ngModule: DataModule,
       providers: [
         ...SERVICES,
       ],
-    };
+    } as ModuleWithProviders<any>;
   }
 }

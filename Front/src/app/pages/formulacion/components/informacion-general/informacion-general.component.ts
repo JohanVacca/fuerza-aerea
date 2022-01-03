@@ -5,16 +5,17 @@ import {InvestigationSubProgramService} from '../../../../shared/services/invest
 import {InvestigationTypesService} from '../../../../shared/services/investigation-types/investigation-types.service';
 import {InvestigationLinesService} from '../../../../shared/services/investigation-lines/investigation-lines.service';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
-
 import {UsersService} from '../../../../@core/services/users/users.service';
-
-import {ActivatedRoute, Params} from '@angular/router';
+import {ActivatedRoute} from '@angular/router';
 import {CommonSimpleModel} from '../../../../shared/models/common-simple.model';
 import {UserModel} from '../../../../shared/models/user.model';
-import {stringify} from 'querystring';
 import {finalize} from 'rxjs/operators';
 import {SaveStateService} from '../../../../shared/services/saveStateService/save-state.service';
-import {CentroDeInvestigacion, PrimerPaso, StateInterface} from '../../../../shared/services/saveStateService/StateInterface';
+import {
+    CentroDeInvestigacion,
+    PrimerPaso,
+    StateInterface
+} from '../../../../shared/services/saveStateService/StateInterface';
 import {InvCenterService} from '../../../../shared/services/inv-center2/inv-center.service';
 
 @Component({
@@ -38,20 +39,23 @@ export class InformacionGeneralComponent implements OnInit {
     ) {
     }
 
-    LinesIns: CommonSimpleModel[] = [];
-    invCenters: CentroDeInvestigacion[] = [];
-    ProgamIns: CommonSimpleModel[] = [];
-    typeIns: CommonSimpleModel[] = [];
-    ProgamSubIns: CommonSimpleModel[] = [];
-    EndorIns: CommonSimpleModel[] = [];
-    ComandIns: UserModel[] = [];
-    validador = true;
-    UserIns = ' ';
-    Convocatoria: string;
-    iniciarProyecto: FormGroup;
-    hasErrorACTI = false;
-    messageErrorACTI = 'No se encuentra un usuario con el email ingresado';
-    isLoadingEmail = false;
+    public LinesIns: CommonSimpleModel[] = [];
+    public invCenters: CentroDeInvestigacion[] = [];
+    public ProgamIns: CommonSimpleModel[] = [];
+    public typeIns: CommonSimpleModel[] = [];
+    public ProgamSubIns: CommonSimpleModel[] = [];
+    public EndorIns: CommonSimpleModel[] = [];
+    public ComandIns: UserModel[] = [];
+    public validador = true;
+    public UserIns = ' ';
+    public Convocatoria: string;
+    public iniciarProyecto: FormGroup;
+    public hasErrorACTI = false;
+    public messageErrorACTI = 'No se encuentra un usuario con el email ingresado';
+    public isLoadingEmail = false;
+    public gestorActiId;
+    public comandanteId;
+
     private state: StateInterface;
 
     @Output()
@@ -65,92 +69,65 @@ export class InformacionGeneralComponent implements OnInit {
         this.builder();
     }
 
-    getErrorMessage() {
-        if (!this.validador) {
-            return 'No es un email valido';
-        }
-
-        return this.email.hasError('email') ? 'Not a valid email' : '';
+    public getErrorMessage(): string {
+        return !this.validador ? 'No es un email valido' : this.email.hasError('email') ? 'Not a valid email' : '';
     }
 
-    builder() {
-        let storage = JSON.parse(localStorage.getItem('iniciarProyecto'));
-        if (storage == null) {
-            this.iniciarProyecto = this.form.group({
-                nombreProyecto: new FormControl('', [Validators.required,]),
-                dependencia: new FormControl('', [Validators.required,]),
-                email: new FormControl('', [Validators.required, Validators.email]),
-                telefonoGestor: new FormControl('', [Validators.required,]),
-                gestor: new FormControl('', [Validators.required,]),
-                comandante: new FormControl('', [Validators.required,]),
-                lugar: new FormControl('', [Validators.required,]),
-                duracion: new FormControl('', [Validators.required,]),
-                linea: new FormControl('', [Validators.required,]),
-                modelo: new FormControl('', [Validators.required,]),
-                programa: new FormControl('', [Validators.required,]),
-                subprograma: new FormControl('', [Validators.required,]),
-                avala: new FormControl('', [Validators.required,]),
-                centroDeInvestigacion: new FormControl('', [Validators.required,]),
-            });
-        } else {
-            this.iniciarProyecto = this.form.group({
-                nombreProyecto: new FormControl(storage.nombreProyecto, [Validators.required,]),
-                dependencia: new FormControl(storage.dependencia, [Validators.required,]),
-                email: new FormControl(storage.email, [Validators.required, Validators.email]),
-                telefonoGestor: new FormControl(storage.telefonoGestor, [Validators.required,]),
-                gestor: new FormControl(''),
-                comandante: new FormControl(storage.comandante),
-                lugar: new FormControl(storage.lugar),
-                duracion: new FormControl(storage.duracion),
-                linea: new FormControl(storage.linea),
-                modelo: new FormControl(storage.modelo),
-                programa: new FormControl(storage.programa),
-                subprograma: new FormControl(storage.subprograma),
-                avala: new FormControl(storage.avala),
-                centroDeInvestigacion: new FormControl(storage.centroDeInvestigacion),
-            });
-            this.UserIns = storage.gestor;
-        }
+    private builder(): void {
+        this.iniciarProyecto = this.form.group({
+            nombreProyecto: new FormControl('', [Validators.required]),
+            dependencia: new FormControl('', [Validators.required]),
+            email: new FormControl('', [Validators.required, Validators.email]),
+            telefonoGestor: new FormControl('', [Validators.required]),
+            gestor: new FormControl('', [Validators.required]),
+            comandante: new FormControl('', [Validators.required]),
+            lugar: new FormControl('', [Validators.required]),
+            duracion: new FormControl('', [Validators.required]),
+            linea: new FormControl('', [Validators.required]),
+            modelo: new FormControl('', [Validators.required]),
+            programa: new FormControl('', [Validators.required]),
+            subprograma: new FormControl('', [Validators.required]),
+            avala: new FormControl('', [Validators.required]),
+            centroDeInvestigacion: new FormControl('', [Validators.required]),
+        });
     }
 
-    guardar() {
-        const datainiciar = this.iniciarProyecto.value;
+    public guardar(): void {
         this.updateState();
-        localStorage.setItem('iniciarProyecto', JSON.stringify(datainiciar));
     }
 
-    CambiaTexto(texto: string) {
+    public CambiaTexto(texto: string): void {
         this.textoCambiado.emit(texto);
     }
 
-    getAll() {
+    public getAll(): void {
         let cv = this.rutaActiva.snapshot.params;
         this.Convocatoria = cv.id;
-        this.investigationProgramService.getIdConv(this.Convocatoria).subscribe(r => {
-            this.ProgamIns = r;
+        this.investigationProgramService.getIdConv(this.Convocatoria).subscribe(responseProgram => {
+            this.ProgamIns = responseProgram;
         });
-        this.investigationSubProgramService.getIdConv(this.Convocatoria).subscribe(r => {
-            this.ProgamSubIns = r;
+        this.investigationSubProgramService.getIdConv(this.Convocatoria).subscribe(responseSubProgram => {
+            this.ProgamSubIns = responseSubProgram;
         });
-        this.investigationTypesService.getIdConv(this.Convocatoria).subscribe(r => {
-            this.typeIns = r;
+        this.investigationTypesService.getIdConv(this.Convocatoria).subscribe(responseTypes => {
+            this.typeIns = responseTypes;
         });
-        this.investigationLinesService.getIdConv(this.Convocatoria).subscribe(r => {
-            this.LinesIns = r;
+        this.investigationLinesService.getIdConv(this.Convocatoria).subscribe(responseLines => {
+            this.LinesIns = responseLines;
         });
-        this.usersService.getAllCommanders().subscribe(r => {
-            this.ComandIns = r;
+        this.usersService.getAllCommanders().subscribe(responseCommand => {
+            this.ComandIns = responseCommand;
         });
-        this.invEndorsersService.getIdConv(this.Convocatoria).subscribe(r => {
-            this.EndorIns = r;
+        this.invEndorsersService.getIdConv(this.Convocatoria).subscribe(responseEndors => {
+            this.EndorIns = responseEndors;
         });
-        this.invCenterService.getAll().subscribe(r => {
+        this.invCenterService.getAll().subscribe(responseInvCenters => {
             // @ts-ignore
-            this.invCenters = r.invCenters;
+            this.invCenters = responseInvCenters.invCenters;
         });
     }
 
-    Correo(e) {
+    public correo(e): void {
         const regex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         const correo = e.target.value.toLowerCase();
         if (regex.test(correo)) {
@@ -159,9 +136,11 @@ export class InformacionGeneralComponent implements OnInit {
                 .pipe(finalize(() => this.isLoadingEmail = false))
                 .subscribe(response => {
                     if (response.length !== 0) {
-                        this.UserIns = `${response[0].profile.names} ${response[0].profile.surname}`;
+                        const {profile, _id} = response[0];
+                        this.UserIns = `${profile.names} ${profile.surname}`;
                         this.validador = true;
                         this.hasErrorACTI = false;
+                        this.gestorActiId = _id;
                     } else {
                         this.email.setErrors({'incorrect': true});
                         this.hasErrorACTI = true;
@@ -181,25 +160,26 @@ export class InformacionGeneralComponent implements OnInit {
         const {avala, centroDeInvestigacion, comandante, dependencia, duracion, email, gestor, linea,
             lugar, modelo, nombreProyecto, programa, subprograma, telefonoGestor} = this.iniciarProyecto.value;
         const primerPaso: PrimerPaso = {
-            nombreProyecto,
-            unidadDependencia: dependencia,
-            correoGestor: email,
-            telefonoGestor,
-            nombreGestor: gestor,
             comandante,
-            lugarDeEjecucion: lugar,
-            duracionEnMeses: duracion,
-            lineaDeInvestigacion: linea,
-            modeloDeInvestigacion: modelo,
-            programaDeInvestigacion: programa,
-            subProgramaDeInvestigacion: subprograma,
-            quienAvalaInvestigacion: avala,
+            nombreProyecto,
+            telefonoGestor,
+            dependencia,
+            email,
+            gestor,
+            lugar,
+            duracion,
+            linea,
+            modelo,
+            programa,
+            subprograma,
+            avala,
             centroDeInvestigacion,
+            gestorId: this.gestorActiId
         };
         this.state = {
             ...this.saveStateService.getState(),
             primerPaso
         };
-        this.saveStateService.setState({primerPaso: this.state.primerPaso});
+        this.saveStateService.setState(this.state);
     }
 }

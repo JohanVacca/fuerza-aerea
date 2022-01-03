@@ -12,7 +12,10 @@ export class RequestService {
         private memoryStorageService: MemoryStorageService) { }
 
     getJsonHeader = (headers?: HttpHeaders): HttpHeaders =>
-        new HttpHeaders({ ...headers, 'Content-Type': 'application/json' });
+        new HttpHeaders({ ...headers, 'Content-Type': 'application/json' })
+
+    getJsonHeaderFirmas = (headers?: HttpHeaders): HttpHeaders =>
+        new HttpHeaders({ ...headers, 'Content-Type': 'multipart/form-data' })
 
     getBearerHeader(headers?: HttpHeaders): HttpHeaders {
         const token = this.authStorageService.getToken();
@@ -20,6 +23,19 @@ export class RequestService {
 
         if (token) {
           headersWithToken = new HttpHeaders({ ...headers, 'Authorization': `Bearer ${token}` });
+
+        }
+        return headersWithToken;
+    }
+
+    getBearerHeaderFirma(headers?: HttpHeaders): HttpHeaders {
+        const token = this.authStorageService.getToken();
+        let headersWithToken: HttpHeaders = new HttpHeaders({...headers});
+
+        if (token) {
+          headersWithToken = new HttpHeaders(
+              { ...headers, 'Authorization': `Bearer ${token}`, 'Content-Type': 'multipart/form-data'  }
+          );
 
         }
         return headersWithToken;

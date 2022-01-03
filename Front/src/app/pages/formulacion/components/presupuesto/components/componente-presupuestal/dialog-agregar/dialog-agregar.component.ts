@@ -1,5 +1,5 @@
-import {Component, Inject, OnInit} from '@angular/core';
-import {MatDialog, MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {Component, OnInit} from '@angular/core';
+import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {SaveStateService} from '../../../../../../../shared/services/saveStateService/save-state.service';
 import {Entidad, StateInterface} from '../../../../../../../shared/services/saveStateService/StateInterface';
@@ -12,17 +12,17 @@ import {Entidad, StateInterface} from '../../../../../../../shared/services/save
 })
 export class DialogAgregarComponent implements OnInit {
 
-    Entidad: FormGroup;
-    EntidadLis = [];
-    valid;
+    public Entidad: FormGroup;
+    public valid;
 
     private state: StateInterface;
     private entidades: Entidad[] = [];
 
-    constructor(public dialog: MatDialog,
-                private form: FormBuilder,
-                private saveStateService: SaveStateService,
-                public dialogRef: MatDialogRef<DialogAgregarComponent>) {
+    constructor(
+        public dialog: MatDialog,
+        private form: FormBuilder,
+        private saveStateService: SaveStateService,
+        public dialogRef: MatDialogRef<DialogAgregarComponent>) {
     }
 
     ngOnInit(): void {
@@ -47,8 +47,7 @@ export class DialogAgregarComponent implements OnInit {
         }
     }
 
-    Register() {
-        let storage = JSON.parse(localStorage.getItem('Entidades'));
+    public agregarEntidad(): void {
         if (this.Entidad.value.correo === this.Entidad.value.correo2) {
             const nuevaEntidad: Entidad = {
                 nombre: this.Entidad.value.Institucion,
@@ -59,30 +58,13 @@ export class DialogAgregarComponent implements OnInit {
             };
             this.entidades.push(nuevaEntidad);
             this.updateState();
-
-            var objEnt = {
-                Institucion: this.Entidad.value.Institucion,
-                Nit: this.Entidad.value.Nit,
-                Persona: this.Entidad.value.Persona,
-                numero: this.Entidad.value.numero,
-                correo: this.Entidad.value.correo
-            };
-            this.EntidadLis.push(this.Entidad.value);
-            if (storage == null) {
-                localStorage.setItem('Entidades', JSON.stringify(this.EntidadLis));
-            } else {
-                storage.forEach(element => {
-                    this.EntidadLis.push(element);
-                });
-                localStorage.setItem('Entidades', JSON.stringify(this.EntidadLis));
-            }
             this.dialogRef.close(true);
         } else {
             this.valid = true;
         }
     }
 
-    builder() {
+    private builder(): void {
         this.Entidad = this.form.group({
             Institucion: new FormControl('', [Validators.required]),
             Nit: new FormControl('', [Validators.required]),
@@ -93,17 +75,12 @@ export class DialogAgregarComponent implements OnInit {
         });
     }
 
-    CloseAlert() {
+    public closeAlert(): void {
         this.valid = false;
     }
 
     private updateState(): void {
         this.state.tercerPaso.componentePresupuestal.entidades = this.entidades;
         this.saveStateService.setState(this.state);
-        console.log('ENTIDADES ESTADO ;;', this.state);
     }
 }
-
-// export interface DialogAgregarData {
-
-// }

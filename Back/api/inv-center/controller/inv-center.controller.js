@@ -1,6 +1,6 @@
 'use strict';
 
-const {check, validationResult} = require('express-validator/check');
+const {validationResult} = require('express-validator/check');
 const InvCenterDao = require('../dao/inv-center.dao');
 
 /**
@@ -51,7 +51,41 @@ function create(req, res, next) {
     }
 }
 
+/**
+ * Método para eliminar invCenter
+ * @param req
+ * @param res
+ * @param next
+ */
+function remove(req, res, next) {
+    try {
+        validationResult(req).throw();
+
+        let {id} = req.body;
+        let idObj = JSON.parse(JSON.stringify(id));
+
+        InvCenterDao['remove'](idObj)
+            .then(async invCenter => {
+                if (!invCenter) {
+                    res.status(404).json({message: 'invCenter not found.'});
+                } else {
+                    res.status(200).json({message: 'invCenter deleted.'});
+                }
+            })
+            .catch(err => res.status(500).json({message: err}));
+    } catch (err) {
+        const errorFormatter = ({msg, param}) => {
+            return `The value: ${param} ${msg}`;
+        };
+        const result = validationResult(req).formatWith(errorFormatter);
+        if (!result.isEmpty()) {
+            return res.status(422).json({errors: result.array()});
+        }
+    }
+}
+
 module.exports = {
     create,
-    getAll
+    getAll,
+    remove
 }

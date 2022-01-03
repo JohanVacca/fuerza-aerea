@@ -1,27 +1,22 @@
-import { Component, OnInit } from '@angular/core';
-import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import { ChangeEvent } from '@ckeditor/ckeditor5-angular/ckeditor.component';
+import {Component, OnInit} from '@angular/core';
 
 @Component({
-  selector: 'app-resumen',
-  templateUrl: './resumen.component.html',
-  styleUrls: ['../../detalles-generales.component.scss']
+    selector: 'app-resumen',
+    templateUrl: './resumen.component.html',
+    styleUrls: ['../../detalles-generales.component.scss']
 })
 export class ResumenComponent implements OnInit {
-  dataResumen: string;
-  public Editor = ClassicEditor;
+    public dataResumen: string;
 
-  constructor() { }
+    ngOnInit(): void {
+        this.cargarData();
+    }
 
-  ngOnInit(): void {
-    this.cargarData();
-  }
-  cargarData() {
-    this.dataResumen = localStorage.getItem("resumen")
-  }
-  public onChange({ editor }: ChangeEvent) {
-    const data = editor.getData();
+    public onChange(value): void {
+        localStorage.setItem('resumen', value);
+    }
 
-    localStorage.setItem("resumen", data);
-  }
+    private cargarData(): void {
+        this.dataResumen = localStorage.getItem('resumen');
+    }
 }

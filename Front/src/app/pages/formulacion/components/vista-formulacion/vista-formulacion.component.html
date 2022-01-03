@@ -93,7 +93,7 @@
                         </td>
                         <td style="width: 25%">Desarrollo tecnológico</td>
                         <td style="width: 8%">
-                            <div *ngIf="modelo==='Desarrollo tecnológico'">
+                            <div *ngIf="modelo==='Desarrollo Tecnológico'">
                                 <label>X</label>
                             </div>
                         </td>
@@ -113,7 +113,7 @@
                         </td>
                         <td style="width: 25%">Nombre del Programa Académico</td>
                         <td style="width: 25%" colspan="3">
-                            <div *ngIf="modelo==='Nombre del Programa Academico'">
+                            <div *ngIf="modelo==='Nombre del Programa Académico'">
                                 <label>X</label>
                             </div>
                         </td>
@@ -151,7 +151,8 @@
                                 <table *ngFor="let grupo of grupos">
                                     <thead>
                                     <tr>
-                                        <td class="title-table-grupo" style="width: 25%"><label>Nombre Grupo</label></td>
+                                        <td class="title-table-grupo" style="width: 25%"><label>Nombre Grupo</label>
+                                        </td>
                                         <td style="width: 75%" colspan="3">{{grupo.nombreGrupo}}</td>
                                     </tr>
                                     <tr>
@@ -163,7 +164,8 @@
                                         <td style="width: 75%" colspan="3">{{grupo.lider}}</td>
                                     </tr>
                                     <tr>
-                                        <td class="title-table-grupo" style="width: 25%"><label>Código GrupLAC</label></td>
+                                        <td class="title-table-grupo" style="width: 25%"><label>Código GrupLAC</label>
+                                        </td>
                                         <td style="width: 75%" colspan="3">{{grupo.codigo}}</td>
                                     </tr>
                                     <tr>
@@ -171,7 +173,8 @@
                                         <td style="width: 75%" colspan="3">{{grupo.entidad}}</td>
                                     </tr>
                                     <tr>
-                                        <td class="title-table-grupo" style="width: 25%"><label>VoBo Líder del Grupo</label></td>
+                                        <td class="title-table-grupo" style="width: 25%"><label>VoBo Líder del
+                                            Grupo</label></td>
                                         <td style="width: 75%" colspan="3">{{grupo.lider}}</td>
                                     </tr>
                                     </thead>
@@ -218,7 +221,7 @@
                     </tr>
                     <tr>
                         <td style="width: 25%">Planteamiento del Problema</td>
-                        <td style="width: 75%" colspan="3"></td>
+                        <td style="width: 75%" colspan="3">{{planteamiento?.planteamiento}}</td>
                     </tr>
                     <tr>
                         <td style="width: 25%">Justificación, Pertinencia y Oportunidad del Proyecto</td>
@@ -228,27 +231,32 @@
                                     <tbody>
                                     <tr>
                                         <td class="title-table-justificacion"><label>En qué consiste?</label></td>
-                                        <td style="width: 100%"></td>
+                                        <td style="width: 100%">{{planteamiento?.enQueConsiste}}</td>
                                     </tr>
                                     <tr>
                                         <td class="title-table-justificacion"><label>Por qué se requiere?</label></td>
-                                        <td style="width: 100%"></td>
+                                        <td style="width: 100%">{{planteamiento?.porQueSeRequiere}}</td>
                                     </tr>
                                     <tr>
-                                        <td class="title-table-justificacion"><label>Para qué desarrollarlo?</label></td>
-                                        <td style="width: 100%"></td>
+                                        <td class="title-table-justificacion"><label>Para qué desarrollarlo?</label>
+                                        </td>
+                                        <td style="width: 100%">{{planteamiento?.paraQueDesarrollarlo}}</td>
                                     </tr>
                                     <tr>
-                                        <td class="title-table-justificacion"><label>Beneficions para la FAC</label></td>
-                                        <td style="width: 100%"></td>
+                                        <td class="title-table-justificacion"><label>Beneficions para la FAC</label>
+                                        </td>
+                                        <td style="width: 100%">{{planteamiento?.beneficiosFAC}}</td>
                                     </tr>
                                     <tr>
-                                        <td class="title-table-justificacion"><label></label>Indicador ROI</td>
+                                        <td class="title-table-justificacion"><label>Indicador ROI</label></td>
                                         <td style="width: 100%"></td>
                                     </tr>
                                     <tr>
                                         <td class="title-table-justificacion"><label>VoBo Proceso</label></td>
-                                        <td style="width: 100%"></td>
+                                        <td class="firma-imagen-center" style="width: 100%">
+                                            <img class="firma-imagen-pdf" *ngIf="firmaInvestigadorPrincipal"
+                                                 src="data:image/png;base64,{{firmaInvestigadorPrincipal.data}}" alt="Imagen De Firma">
+                                        </td>
                                     </tr>
                                     </tbody>
                                 </table>
@@ -308,7 +316,8 @@
                                 <table>
                                     <thead>
                                     <tr>
-                                        <th rowspan="2" class="title-table-productos"><label>Tipo de producto</label></th>
+                                        <th rowspan="2" class="title-table-productos"><label>Tipo de producto</label>
+                                        </th>
                                         <th rowspan="2" class="title-table-productos"><label>Descripción</label></th>
                                         <th colspan="2" class="title-table-productos"><label>Participación*</label></th>
                                     </tr>
@@ -334,8 +343,10 @@
                                 <label>
                                     *Porcentaje de titularidad de la Propiedad Intelectual de las instituciones
                                     participantes del proyecto para cada uno de los productos esperados. Cuando los
-                                    resultados del proyecto de investigación a desarrollar se consideren temas de Defensa y
-                                    Seguridad Nacional, los derechos de Propiedad Intelectual serán exclusivamente del Ministerio de Defensa.
+                                    resultados del proyecto de investigación a desarrollar se consideren temas de
+                                    Defensa y
+                                    Seguridad Nacional, los derechos de Propiedad Intelectual serán exclusivamente del
+                                    Ministerio de Defensa.
                                 </label>
                             </div>
                         </td>
@@ -379,12 +390,12 @@
                             <div>
                                 <table>
                                     <thead>
-                                        <tr>
-                                            <td class="title-table-riesgos"><label>id</label></td>
-                                            <td class="title-table-riesgos"><label>Descipción</label></td>
-                                            <td class="title-table-riesgos"><label>Consecuencias</label></td>
-                                            <td class="title-table-riesgos"><label>Accieon sugerida</label></td>
-                                        </tr>
+                                    <tr>
+                                        <td class="title-table-riesgos"><label>id</label></td>
+                                        <td class="title-table-riesgos"><label>Descipción</label></td>
+                                        <td class="title-table-riesgos"><label>Consecuencias</label></td>
+                                        <td class="title-table-riesgos"><label>Accieon sugerida</label></td>
+                                    </tr>
                                     </thead>
                                 </table>
                             </div>
@@ -414,114 +425,40 @@
                                     <thead>
                                     <tr>
                                         <th class="title-table-costos" rowspan="2"><label>Rubro</label></th>
-                                        <th class="title-table-costos" colspan="2"><label>FAC</label></th>
-                                        <th class="title-table-costos" colspan="2"><label>Entidad</label></th>
+                                        <th *ngFor="let entidad of entidades" class="title-table-costos" colspan="2">
+                                            <label>{{entidad.nombre}}</label></th>
                                     </tr>
                                     <tr>
-                                        <th class="title-table-costos" colspan="1"><label>Financiado</label></th>
-                                        <th class="title-table-costos" colspan="1"><label>Especie</label></th>
-                                        <th class="title-table-costos" colspan="1"><label>Efectivo</label></th>
-                                        <th class="title-table-costos" colspan="1"><label>Especie</label></th>
+                                        <ng-container *ngFor="let entidad of entidades">
+                                            <th class="title-table-costos" colspan="1"><label>Efectivo</label></th>
+                                            <th class="title-table-costos" colspan="1"><label>Especie</label></th>
+                                        </ng-container>
                                     </tr>
                                     </thead>
 
                                     <tbody>
-                                    <tr>
-                                        <td class="title-table-costos"><label>Personal Cientifico*</label></td>
-                                        <td>{{facPersonalCientifico.efectivo | currency}}</td>
-                                        <td>{{facPersonalCientifico.especie | currency}}</td>
-                                        <td>{{personalCientifico.efectivo | currency}}</td>
-                                        <td>{{personalCientifico.especie | currency}}</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="title-table-costos"><label>Personal de apoyo**</label></td>
-                                        <td>{{facPersonalDeApoyo.efectivo | currency}}</td>
-                                        <td>{{facPersonalDeApoyo.especie | currency}}</td>
-                                        <td>{{personalDeApoyo.efectivo | currency}}</td>
-                                        <td>{{personalDeApoyo.especie | currency}}</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="title-table-costos"><label>Servicios técnicos</label></td>
-                                        <td>{{facServiciosTecnicos.efectivo | currency}}</td>
-                                        <td>{{facServiciosTecnicos.especie | currency}}</td>
-                                        <td>{{serviciosTecnicos.efectivo | currency}}</td>
-                                        <td>{{serviciosTecnicos.especie | currency}}</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="title-table-costos"><label>Equipos</label></td>
-                                        <td>{{facEquiposRubro.efectivo | currency}}</td>
-                                        <td>{{facEquiposRubro.especie | currency}}</td>
-                                        <td>{{equiposRubro.efectivo | currency}}</td>
-                                        <td>{{equiposRubro.especie | currency}}</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="title-table-costos"><label>Materiales e insumos</label></td>
-                                        <td>{{facMaterialesEInsumos.efectivo | currency}}</td>
-                                        <td>{{facMaterialesEInsumos.especie | currency}}</td>
-                                        <td>{{materialesEInsumos.efectivo | currency}}</td>
-                                        <td>{{materialesEInsumos.especie | currency}}</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="title-table-costos"><label>Software</label></td>
-                                        <td>{{facSoftware.efectivo | currency}}</td>
-                                        <td>{{facSoftware.especie | currency}}</td>
-                                        <td>{{software.efectivo | currency}}</td>
-                                        <td>{{software.especie | currency}}</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="title-table-costos"><label>Salidas de campo</label></td>
-                                        <td>{{facSalidasDeCampo.efectivo | currency}}</td>
-                                        <td>{{facSalidasDeCampo.especie | currency}}</td>
-                                        <td>{{salidasDeCampo.efectivo | currency}}</td>
-                                        <td>{{salidasDeCampo.especie | currency}}</td>
-                                    </tr>
-                                    <tr>
+                                    <tr *ngFor="let rubroOpc of rubroOpcion; let i = index">
                                         <td class="title-table-costos">
-                                            <label>Eventos académicos (organización y/o asistencia)</label>
-                                        </td>
-                                        <td>{{facEventosAcademicos.efectivo | currency}}</td>
-                                        <td>{{facEventosAcademicos.especie | currency}}</td>
-                                        <td>{{eventosAcademicos.efectivo | currency}}</td>
-                                        <td>{{eventosAcademicos.especie | currency}}</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="title-table-costos"><label>Publicaciones y patentes</label></td>
-                                        <td>{{facPublicacionesPatentesRubro.efectivo | currency}}</td>
-                                        <td>{{facPublicacionesPatentesRubro.especie | currency}}</td>
-                                        <td>{{publicacionesPatentesRubro.efectivo | currency}}</td>
-                                        <td>{{publicacionesPatentesRubro.especie | currency}}</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="title-table-costos"><label>Bibliografia</label></td>
-                                        <td>{{facBibliografiaRubro.efectivo | currency}}</td>
-                                        <td>{{facBibliografiaRubro.especie | currency}}</td>
-                                        <td>{{bibliografiaRubro.efectivo | currency}}</td>
-                                        <td>{{bibliografiaRubro.especie | currency}}</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="title-table-costos"><label>Adecuación de infraestructura</label></td>
-                                        <td>{{facAdecuacionDeInfraestructura.efectivo | currency}}</td>
-                                        <td>{{facAdecuacionDeInfraestructura.especie | currency}}</td>
-                                        <td>{{adecuacionDeInfraestructura.efectivo | currency}}</td>
-                                        <td>{{adecuacionDeInfraestructura.especie | currency}}</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="title-table-costos">
-                                            <label>Gastos operativos*** (Incluye seguimiento por DICTI)</label>
-                                        </td>
-                                        <td>{{facGastosOperativos.efectivo | currency}}</td>
-                                        <td>{{facGastosOperativos.especie | currency}}</td>
-                                        <td>{{gastosOperativos.efectivo | currency}}</td>
-                                        <td>{{gastosOperativos.especie | currency}}</td>
+                                            <label>{{rubroOpc.descr}}
+                                                <span *ngIf="i === 0">*</span>
+                                                <span *ngIf="i === 1">**</span>
+                                                <span *ngIf="rubroOpc.descr.toLowerCase().includes('gastos operativos')">***</span>
+                                            </label></td>
+                                        <ng-container *ngFor="let entidad of entidades">
+                                            <td>{{getAmount(entidad.nombre, 'Efectivo', rubroOpc.descr) | currency}}</td>
+                                            <td>{{getAmount(entidad.nombre, 'Especie', rubroOpc.descr) | currency}}</td>
+                                        </ng-container>
                                     </tr>
                                     <tr>
                                         <td class="title-table-costos">
                                             <label> <b>Subtotal por Tipo de Recurso</b></label>
                                         </td>
-                                        <td>{{facSubTotalEfectivo | currency}}</td>
-                                        <td>{{facSubTotalEspecie | currency}}</td>
-                                        <td>{{subTotalEfectivo | currency}}</td>
-                                        <td>{{subTotalEspecie | currency}}</td>
+                                        <ng-container *ngFor="let entidad of entidades">
+                                            <td><b>{{getTotalSubTypeAmount(entidad.nombre, 'Efectivo') | currency}}</b>
+                                            </td>
+                                            <td><b>{{getTotalSubTypeAmount(entidad.nombre, 'Especie') | currency}}</b>
+                                            </td>
+                                        </ng-container>
                                     </tr>
                                     <tr>
                                         <td class="title-table-costos" colspan="1">
@@ -554,19 +491,31 @@
                     </tr>
                     <tr>
                         <td style="width: 25%">Investigador</td>
-                        <td style="width: 75%" colspan="3"></td>
+                        <td style="width: 75%" colspan="3" class="firma-imagen-center">
+                            <img class="firma-imagen-pdf" *ngIf="firmaInvestigador"
+                                 src="data:image/png;base64,{{firmaInvestigador.data}}" alt="Imagen De Firma">
+                        </td>
                     </tr>
                     <tr>
                         <td style="width: 25%">Investigador Principal Titular</td>
-                        <td style="width: 75%" colspan="3"></td>
+                        <td style="width: 75%" colspan="3" class="firma-imagen-center">
+                            <img class="firma-imagen-pdf" *ngIf="firmaInvestigadorPrincipal"
+                                 src="data:image/png;base64,{{firmaInvestigadorPrincipal.data}}" alt="Imagen De Firma">
+                        </td>
                     </tr>
                     <tr>
                         <td style="width: 25%">Gestor ACTI</td>
-                        <td style="width: 75%" colspan="3"></td>
+                        <td style="width: 75%" colspan="3" class="firma-imagen-center">
+                            <img class="firma-imagen-pdf" *ngIf="firmaComandante"
+                                 src="data:image/png;base64,{{firmaComandante.data}}" alt="Imagen De Firma">
+                        </td>
                     </tr>
                     <tr>
                         <td style="width: 25%">Comandante Unidad/Jefe Dependencia</td>
-                        <td style="width: 75%" colspan="3"></td>
+                        <td style="width: 75%" colspan="3" class="firma-imagen-center">
+                            <img class="firma-imagen-pdf" *ngIf="firmaGestorActi"
+                                 src="data:image/png;base64,{{firmaGestorActi.data}}" alt="Imagen De Firma">
+                        </td>
                     </tr>
                     </thead>
                 </table>
@@ -653,7 +602,7 @@
                 <button mat-button (click)="evaluar()" [disabled]="!evaluacion.valid" cdkFocusInitial>Evaluar</button>
             </div>
             <button (click)="downloadPDF()" mat-button [mat-dialog-close]="true" cdkFocusInitial>Generar PDF</button>
-            <button mat-button mat-dialog-close [routerLink]="['/pages/formulacion']">Cancel</button>
+            <button mat-button mat-dialog-close (click)="closeModal()">Cerrar</button>
         </mat-dialog-actions>
 
     </div>

@@ -6,9 +6,8 @@
         <div class="col-6 lg-6 md-6 sm-3">
           <mat-card>
             <mat-form-field class="full-width" appearance="fill">
-              <mat-label>Number</mat-label>
               <input type="text"
-                     placeholder="Seleccione un investigador"
+                     placeholder="Líder de investigación"
                      aria-label="Number"
                      matInput
                      [matAutocomplete]="auto">
@@ -45,9 +44,8 @@
             <mat-form-field class="full-width" appearance="fill">
               <mat-label>Rol-Funcion</mat-label>
               <mat-select formControlName="cargo" [(ngModel)]="cargo" name="PersonPosis">
-                <!-- <option [value]="cargo"></option> -->
-                <mat-option *ngFor="let PersonPosi of PersonPosis" [value]="PersonPosi.descr">
-                  {{PersonPosi.descr}}
+                <mat-option *ngFor="let rol of RolFuncion" [value]="rol.descr">
+                  {{rol.descr}}
                 </mat-option>
               </mat-select>
             </mat-form-field>

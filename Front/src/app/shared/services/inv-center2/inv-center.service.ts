@@ -16,4 +16,12 @@ export class InvCenterService {
   getAll() {
     return this.http.get(`${this.endpoint}`, null, true);
   }
+
+  crearCentro(name: string) {
+    return this.http.post(`${this.endpoint}`, {name}, true);
+  }
+
+  removeCenter(id: string) {
+    return this.http.delete(`${this.endpoint}`, {body: {id}}, true);
+  }
 }
