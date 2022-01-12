@@ -107,7 +107,6 @@ export class AgregarActividadComponent implements OnInit {
             }
         });
         this.PredecesoraACT = predecesoraAux;
-        console.log(this.PredecesoraACT);
     }
 
     builder() {
@@ -121,7 +120,6 @@ export class AgregarActividadComponent implements OnInit {
                 fechaFinal: new FormControl('', [Validators.required]),
             });
         } else {
-            console.log(this.Prede);
             this.registroCronograma = this.form.group({
                 nombreAct: new FormControl(this.nombreActEdit, [Validators.required]),
                 Predecesora: new FormControl(this.Prede, [Validators.required]),
@@ -157,7 +155,6 @@ export class AgregarActividadComponent implements OnInit {
             });
             this.agregoSub = true;
         }
-        console.log('registroCronograma::', this.registroCronograma);
     }
 
     obSubEdit() {
@@ -226,11 +223,7 @@ export class AgregarActividadComponent implements OnInit {
 
     onSub() {
         var valores = this.registroCronograma.value;
-
-        console.log(valores);
-
         let cronograma: actividad[] = JSON.parse(localStorage.getItem('cronograma'));
-        console.log(cronograma);
         if (cronograma == null) {
             cronograma = [];
         }
@@ -243,7 +236,6 @@ export class AgregarActividadComponent implements OnInit {
         };
         cronograma.push(cronocramaObj);
         localStorage.setItem('cronograma', JSON.stringify(cronograma));
-        console.log('cronograma:::: ', cronograma);
     }
 
     private initializeData(): void {

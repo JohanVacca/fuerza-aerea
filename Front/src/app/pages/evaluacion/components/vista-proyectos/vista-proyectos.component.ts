@@ -4,12 +4,16 @@ import {Router} from '@angular/router';
 import {ProjectService} from 'src/app/shared/services/Proyect/project.service';
 import {
     VistaFormulacionComponent,
-    VistaFormulacionData
 } from '../../../formulacion/components/vista-formulacion/vista-formulacion.component';
 import {AuthStorageService} from '../../../../@core/services/storage/auth-storage/auth-storage.service';
-import {ConfirmDialogComponent, ConfirmacionDialogData} from '../../../admin/Dialog/confirm-dialog/confirm-dialog.component';
-import {SucessDialogComponent, SucessDialogData} from '../../../admin/Dialog/sucess-dialog/sucess-dialog.component';
-import {VerFormulariosComponent, VerFormulariosData} from './ver-formularios/ver-formularios.component';
+import {
+    ConfirmDialogComponent,
+} from '../../../admin/Dialog/confirm-dialog/confirm-dialog.component';
+import {SucessDialogComponent} from '../../../admin/Dialog/sucess-dialog/sucess-dialog.component';
+import {VerFormulariosComponent} from './ver-formularios/ver-formularios.component';
+import {EvaluateProjectComponent} from '../../../formulacion/components/evaluate-project/evaluate-project.component';
+import {finalize} from 'rxjs/operators';
+import {SaveStateService} from '../../../../shared/services/saveStateService/save-state.service';
 
 @Component({
     selector: 'app-vista-proyectos',
@@ -17,69 +21,50 @@ import {VerFormulariosComponent, VerFormulariosData} from './ver-formularios/ver
     styleUrls: ['./vista-proyectos.component.scss']
 })
 export class VistaProyectosComponent implements OnInit {
-    Rol;
-    objetos;
-    Bloqueo;
-    loading = false;
-
-    displayedColumns: string[] = ['Titulo', 'Puntaje', 'HabilitarSeg', 'HabilitarEdicion', 'acciones'];
-    dataSource;
+    public Rol;
+    public Bloqueo;
+    public loading = false;
+    public displayedColumns: string[] = ['Titulo', 'Puntaje', 'HabilitarSeg', 'HabilitarEdicion', 'acciones'];
+    public dataSource;
 
     constructor(
         @Inject(MAT_DIALOG_DATA) public data: VistaProyectosData,
         private projectService: ProjectService,
         private router: Router,
-        public dialogo: MatDialog,
         private authStorageService: AuthStorageService,
         public dialogRef: MatDialogRef<VistaProyectosComponent>,
-        public dialog: MatDialog
+        public dialog: MatDialog,
+        public saveStateService: SaveStateService
     ) {
     }
 
     ngOnInit(): void {
         this.getAll(this.data.idC);
-        this.Rol = this.tipoDeEvaluacion(localStorage.getItem('Role'));
+        this.Rol = this.tipoDeEvaluacion();
     }
 
-    upDate(e, Convocatoria) {
+    public editProject(e, convocatoriaId): void {
         this.loading = true;
-        this.projectService.getById(e).subscribe(r => {
-            this.objetos = r['Proyecto'];
-            if (this.objetos.ProyectoBloqueado) {
-                localStorage.setItem('objetivosEspecificos', JSON.stringify(this.objetos.objetivosEspecificos));
-                localStorage.setItem('Entidades', JSON.stringify(this.objetos.Entidades));
-                localStorage.setItem('equipoInvestigacion', JSON.stringify(this.objetos.EquipoInvestigaciones));
-                localStorage.setItem('AgregarDetallesRubros', JSON.stringify(this.objetos.AgregarDetallesRubros));
-                localStorage.setItem('resultadosPrevios', this.objetos.resultadosPrevios);
-                localStorage.setItem('iniciarProyecto', JSON.stringify(this.objetos.iniciarProyecto[0]));
-                localStorage.setItem('metodologia', this.objetos.metodologia);
-                localStorage.setItem('marcoConceptual', this.objetos.marcoConceptual);
-                localStorage.setItem('resumen', this.objetos.resumen);
-                localStorage.setItem('informacion', JSON.stringify(this.objetos.informaciones[0]));
-                localStorage.setItem('estadoArte', this.objetos.estadoArte);
-                localStorage.setItem('bibliografia', JSON.stringify(this.objetos.bibliografias));
-                localStorage.setItem('palabraClaves', JSON.stringify(this.objetos.palabraClaves));
-                localStorage.setItem('resultadosEsperados', this.objetos.resultadosEsperados);
-                localStorage.setItem('objetivoGeneral', JSON.stringify(this.objetos.objetivoGeneral));
-                localStorage.setItem('productosEsperados', JSON.stringify(this.objetos.productosEsperados));
-                localStorage.setItem('grupos', JSON.stringify(this.objetos.grupos));
-                localStorage.setItem('IdProyec', this.objetos._id);
-                this.router.navigate([`pages/formulacion/formular/${Convocatoria._id}`]);
-                this.dialogRef.close(true);
-            } else {
-                this.loading = false;
-                this.Bloqueo = true;
-            }
-
-        });
+        this.projectService.getById(e)
+            .subscribe(response => {
+                const {Proyecto: project} = response;
+                if (project.ProyectoBloqueado) {
+                    this.router.navigate([`pages/formulacion/formular/${convocatoriaId}`]);
+                    this.dialogRef.close(true);
+                } else {
+                    this.loading = false;
+                    this.Bloqueo = true;
+                }
+            });
     }
 
-    CloseAlert() {
+    public closeAlert(): void {
         this.Bloqueo = false;
     }
 
-    tipoDeEvaluacion(localStorage) {
-        if (localStorage === 'Investigador') {
+    private tipoDeEvaluacion(): boolean {
+        const role = localStorage.getItem('Role');
+        if (role === 'Investigador') {
             this.displayedColumns = ['Titulo', 'Puntaje', 'acciones'];
             return true;
         } else {
@@ -87,192 +72,174 @@ export class VistaProyectosComponent implements OnInit {
         }
     }
 
-    Delete(e) {
-        this.projectService.delete(e).subscribe(r => {
-
-        });
-        this.getAll(this.data.idC);
+    public delete(e): void {
+        this.projectService.delete(e)
+            .pipe(finalize(() => this.getAll(this.data.idC)))
+            .subscribe(() => {});
     }
 
-    getAll(id) {
-        this.projectService.getIdConv(id).subscribe(r => {
-            if (localStorage.getItem('Role') == 'Investigador') {
-                r['Proyectos'].forEach(element => {
-                    if (r['Proyectos'][0].UserId._id == this.authStorageService.getUserId()) {
-                        this.dataSource = r['Proyectos'];
-                    }
-                });
-            } else {
-                this.dataSource = r['Proyectos'];
-            }
-        });
+    private getAll(id): void {
+        const role = localStorage.getItem('Role');
+        const userId = this.authStorageService.getUserId();
+        this.projectService.getIdConv(id)
+            .subscribe(response => {
+                const {Proyectos: projects} = response;
+                if (role === 'Investigador') {
+                    this.investigadorValidation(projects, userId);
+                    return;
+                }
+                if (role === 'Evaluador') {
+                    this.evaluadorValidation(projects, userId);
+                    return;
+                }
+                this.dataSource = projects;
+            });
+    }
+
+    private evaluadorValidation(projects, userId): void {
+        this.dataSource = projects.filter(element => (element.evaluadorId === userId || !element.evaluadorId));
+    }
+
+    private investigadorValidation(projects, userId): void {
+        this.dataSource = projects.filter(element => element.UserId._id === userId);
     }
 
 
-    verForMu(IdFor) {
-        let datos: VerFormulariosData = {
-            idForm: IdFor
-        };
-        const dialogRef = this.dialog.open(VerFormulariosComponent, {
-            data: datos
-        });
+    public verForMu(IdFor): void {
+        this.dialog.open(VerFormulariosComponent, {data: {idForm: IdFor}});
     }
 
-    HabilitarSeguimiento(id, status) {
-        let encabezado;
-        let descripcion;
-        let state;
-        if (status) {
-            encabezado = `Desactivar el Seguimiento`;
-            descripcion = `¿Se encuentra seguro de Desactivar el Seguimiento?`;
-            state = false;
-        } else {
-            encabezado = `Activar el Seguimiento`;
-            descripcion = `¿Se encuentra seguro de Activar el Seguimiento?`;
-            state = true;
-        }
-        let datos: ConfirmacionDialogData = {
-            icono: 'info',
-            severidad: 'dialog-info',
-            encabezado: encabezado,
-            descripcion: descripcion
-        };
-        const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+    public habilitarSeguimiento(element, isChecked): void {
+        const {_id: id, Seguimiento: status} = element;
+        element.Seguimiento = isChecked;
+        const encabezado = status ? 'Desactivar el Seguimiento' : 'Activar el Seguimiento';
+        const descripcion = status ? '¿Se encuentra seguro de Desactivar el Seguimiento?' : '¿Se encuentra seguro de Activar el Seguimiento?';
+        const state = status;
+
+        this.dialog.open(ConfirmDialogComponent, {
             ariaLabel: `${encabezado}  `,
             role: 'alertdialog',
             autoFocus: false,
-            data: datos
+            data: {icono: 'info', severidad: 'dialog-info', encabezado, descripcion}
 
-        });
-        dialogRef.afterClosed().subscribe(result => {
-            if (result == 'true') {
+        }).afterClosed().subscribe(result => {
+            if (result === 'true') {
                 try {
-                    this.projectService.getById(id).subscribe(r => {
-                        this.objetos = r['Proyecto'];
-                        this.objetos.Seguimiento = state;
-                        this.projectService.update(id, this.objetos).subscribe(r => {
-                            console.log(r);
+                    this.projectService.getById(id)
+                        .pipe(finalize((() => this.showModalSeguimiento(encabezado))))
+                        .subscribe(response => {
+                            const {Proyecto: project} = response;
+                            project.Seguimiento = state;
+                            this.projectService.update(id, project).subscribe();
                         });
-                        //inicio dialog sucess
-                        let datossucess: SucessDialogData = {
-                            icono: 'done',
-                            severidad: 'dialog-sucess',
-                            encabezado: `${encabezado}`,
-                            descripcion: `El Proceso para ${encabezado}  se ha completado Satisfactoriamente`
-
-                        };
-                        const dialogRef = this.dialog.open(SucessDialogComponent, {
-                            ariaLabel: `${encabezado}  Satisfactoriamente`,
-                            role: 'alertdialog',
-                            autoFocus: false,
-                            data: datossucess
-                        });
-                        dialogRef.afterClosed().subscribe(result => {
-
-                        });
-                        //fin del dialog sucess
-                    });
                 } catch (error) {
                 }
             } else {
+                element.Seguimiento = !isChecked;
             }
         });
 
     }
 
-    cerrardialog() {
+    private showModalSeguimiento(encabezado): void {
+        this.dialog.open(SucessDialogComponent, {
+            ariaLabel: `${encabezado}  Satisfactoriamente`,
+            role: 'alertdialog',
+            autoFocus: false,
+            data: {
+                icono: 'done',
+                severidad: 'dialog-sucess',
+                encabezado: `${encabezado}`,
+                descripcion: `El Proceso para ${encabezado}  se ha completado Satisfactoriamente`
+
+            }
+        }).afterClosed().subscribe(() => {});
+    }
+
+    public cerrardialog(): void {
         this.dialogRef.close(true);
     }
 
-    Activar(id, status) {
-        let encabezado;
-        let descripcion;
-        let state;
-        if (status) {
-            encabezado = `Desactivar Edicion`;
-            descripcion = `¿Se encuentra seguro de Desactivar la Edicion?`;
-            state = false;
-        } else {
-            encabezado = `Activar Edicion`;
-            descripcion = `¿Se encuentra seguro de Activar la Edicion?`;
-            state = true;
-        }
-        let datos: ConfirmacionDialogData = {
-            icono: 'info',
-            severidad: 'dialog-info',
-            encabezado: encabezado,
-            descripcion: descripcion
-        };
-        const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+    public activateEditionProject(element, value): void {
+        const {_id: id, ProyectoBloqueado: status} = element;
+        element.ProyectoBloqueado = !value;
+        const encabezado = status ? 'Activar Edicion' : 'Desactivar Edicion';
+        const descripcion = status ? '¿Se encuentra seguro de Activar la Edicion?' : '¿Se encuentra seguro de Desactivar la Edicion?';
+        this.dialog.open(ConfirmDialogComponent, {
             ariaLabel: `${encabezado}  `,
             role: 'alertdialog',
             autoFocus: false,
-            data: datos
+            data: {icono: 'info', severidad: 'dialog-info', encabezado, descripcion}
 
+        }).afterClosed().subscribe(result => {
+            if ((result === 'true')) {
+                this.activateProject(id, !status, encabezado, element);
+            } else {
+                element.ProyectoBloqueado = status;
+            }
         });
-        dialogRef.afterClosed().subscribe(result => {
-            if (result == 'true') {
-                try {
-                    this.projectService.getById(id).subscribe(r => {
-                        this.objetos = r['Proyecto'];
-                        this.objetos.ProyectoBloqueado = state;
-                        this.projectService.update(id, this.objetos).subscribe(r => {
-                        });
-                        //inicio dialog sucess
-                        let datossucess: SucessDialogData = {
+    }
+
+    private activateProject(id: string, state: boolean, encabezado: string, element): void {
+        try {
+            this.projectService.getById(id)
+                .subscribe(response => {
+                    const {Proyecto: project} = response;
+                    project.ProyectoBloqueado = state;
+                    const dialogRef = this.dialog.open(SucessDialogComponent, {
+                        ariaLabel: `${encabezado}  Satisfactoriamente`,
+                        role: 'alertdialog',
+                        autoFocus: false,
+                        data: {
                             icono: 'done',
                             severidad: 'dialog-sucess',
                             encabezado: `${encabezado}`,
                             descripcion: `El Proceso para ${encabezado}  se ha completado Satisfactoriamente`
 
-                        };
-                        const dialogRef = this.dialog.open(SucessDialogComponent, {
-                            ariaLabel: `${encabezado}  Satisfactoriamente`,
-                            role: 'alertdialog',
-                            autoFocus: false,
-                            data: datossucess
-                        });
-                        dialogRef.afterClosed().subscribe(result => {
-
-                        });
-                        //fin del dialog sucess
+                        }
                     });
-                } catch (error) {
-                }
-            } else {
-            }
-        });
+                    dialogRef.afterClosed().subscribe(() => {
+                        this.updateProject(id, project);
+                    });
+                });
+        } catch (error) {
+            console.error('Error modificando proyecto => ', error);
+        }
     }
 
-    CargarFor(idPr, bol): void {
-        let Valor = [];
-        let Calificado;
-        let idProject = idPr;
-        this.projectService.getById(idPr).subscribe(r => {
-            r.Proyecto.calificaciones.forEach(element => {
-                if (element.idEv._id == this.authStorageService.getUserId()) {
-                    Valor = element.Valores;
-                    Calificado = element.Evaluado;
-                }
+    private updateProject(id, project): void {
+        this.projectService.update(id, project)
+            .subscribe(() => {});
+    }
+
+    public showProjectSummary(idProyecto, evaluar): void {
+        let valor = [];
+        let Evaluado;
+        this.projectService.getById(idProyecto)
+            .subscribe(response => {
+                response.Proyecto.calificaciones.forEach(element => {
+                    if (element.idEv._id === this.authStorageService.getUserId()) {
+                        valor = element.Valores;
+                        Evaluado = element.Evaluado;
+                    }
+                });
+                this.dialog.open(VistaFormulacionComponent, {
+                    data: {idProyecto, evaluar, valor, Evaluado}
+                }).afterClosed().subscribe(() => {
+                    this.getAll(this.data.idC);
+                    this.Rol = this.tipoDeEvaluacion();
+                });
             });
-            let datos: VistaFormulacionData = {
-                idProyecto: idProject,
-                evaluar: bol,
-                valor: Valor,
-                Evaluado: Calificado
-            };
-            const dialogRef = this.dialogo.open(VistaFormulacionComponent, {
-                data: datos
-            });
-            dialogRef.afterClosed().subscribe(response => {
-                this.getAll(this.data.idC);
-                this.Rol = this.tipoDeEvaluacion(localStorage.getItem('Role'));
-            });
-        });
+    }
+
+    public evaluateProject(projectId: string): void {
+        this.dialog.open(EvaluateProjectComponent, {
+            data: {projectId}
+        }).afterClosed().subscribe(() => {});
     }
 }
 
 
 export interface VistaProyectosData {
-    idC: String;
+    idC: string;
 }

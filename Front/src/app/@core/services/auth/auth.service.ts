@@ -123,6 +123,7 @@ export class AuthService {
 
   private saveUserData(user: UserModel) {
     if (user._id) {
+      localStorage.setItem('user', JSON.stringify(user));
       this.authStorageService.setUserId(user._id);
     }
 

@@ -1,15 +1,12 @@
-import {Component, Inject, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
 import {ProjectService} from 'src/app/shared/services/Proyect/project.service';
 import {MAT_DIALOG_DATA} from '@angular/material/dialog';
-import {FormGroup, FormBuilder, Validators, FormControl} from '@angular/forms';
-import {Proyect, Calificaciones} from '../../../../shared/models/project.model';
 import {
     DetalleRubroComponent,
     DetalleRubroData
 } from '../../../formulacion/components/presupuesto/components/componente-presupuestal/detalle-rubro/detalle-rubro.component';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {AuthStorageService} from './../../../../@core/services/storage/auth-storage/auth-storage.service';
-import {ConfirmDialogComponent, ConfirmacionDialogData} from '../../../admin/Dialog/confirm-dialog/confirm-dialog.component';
 import {SucessDialogComponent, SucessDialogData} from '../../../admin/Dialog/sucess-dialog/sucess-dialog.component';
 import * as jsPDF from 'jspdf';
 import 'jspdf-autotable';
@@ -37,7 +34,6 @@ export class VistaFormulacionComponent implements OnInit {
     constructor(
         @Inject(MAT_DIALOG_DATA) public data: VistaFormulacionData,
         private projectService: ProjectService,
-        public form: FormBuilder,
         public dialog: MatDialog,
         private auto: AuthStorageService,
         private cronogramaServic: cronogramaService,
@@ -46,7 +42,6 @@ export class VistaFormulacionComponent implements OnInit {
         public dialogRef: MatDialogRef<VistaFormulacionComponent>) {
     }
 
-    public evaluacion: FormGroup;
     public nombreProyecto: string;
     public linea: string;
     public programa: string;
@@ -67,7 +62,6 @@ export class VistaFormulacionComponent implements OnInit {
     public objetivoGeneral: string;
     public equipoInvestigacion;
     public unidadDependencia: string;
-    public ValidarEvaluar = this.data.evaluar;
     public objetivosEspecificos: [];
     public resumen: string;
     public palabrasClave: [];
@@ -79,22 +73,12 @@ export class VistaFormulacionComponent implements OnInit {
     public impactoAmbiental: string;
     public bibliografias: [];
     public Valores = [];
-    public Rvlrproyecto = 0;
-    public Rvlrunidadependencia = 0;
-    public Rvlrequipo = 0;
-    public RvlrobjGeneral = 0;
-    public RvlrobjEspecifico = 0;
-    public Rvlrresumen = 0;
-    public RvlrpalabrasClaves = 0;
-    public Rvlrmarco = 0;
-    public Rvlrestado = 0;
     public RvlrresultPrevios = 0;
     public displayedColumns: string[] = ['Grado', 'Nombres', 'Apellidos', 'Cargo', 'Dedicacion', 'Grupo'];
     public dataSource;
     public modelo;
     public grupos = [];
     public productosEsperados = [];
-    public Calificado = false;
     public pregunta;
     public date;
     public centroDeInvestigacion;
@@ -108,41 +92,10 @@ export class VistaFormulacionComponent implements OnInit {
     public firmaGestorActi;
     public firmaComandante;
     public firmas = [];
-
-    public Cargar(): void {
-        if (this.data.evaluar) {
-            this.Rvlrproyecto = this.data.valor.vlrproyecto || 0;
-            this.Rvlrunidadependencia = this.data.valor.vlrunidadependencia || 0;
-            this.Rvlrequipo = this.data.valor.vlrequipo || 0;
-            this.RvlrobjGeneral = this.data.valor.vlrobjGeneral || 0;
-            this.RvlrobjEspecifico = this.data.valor.vlrobjEspecifico || 0;
-            this.Rvlrresumen = this.data.valor.vlrresumen || 0;
-            this.RvlrpalabrasClaves = this.data.valor.vlrpalabrasClaves || 0;
-            this.Rvlrmarco = this.data.valor.vlrmarco || 0;
-            this.Rvlrestado = this.data.valor.vlrestado || 0;
-            this.Calificado = this.data.Evaluado;
-        }
-    }
+    public listaDeRubros = [];
 
     ngOnInit(): void {
         this.getAll();
-        this.Cargar();
-        this.builder();
-    }
-
-    public builder(): void {
-        this.evaluacion = this.form.group({
-            vlrproyecto: new FormControl(this.Rvlrproyecto, [Validators.max(20), Validators.min(0)]),
-            vlrunidadependencia: new FormControl(this.Rvlrunidadependencia, [Validators.max(15), Validators.min(0)]),
-            vlrequipo: new FormControl(this.Rvlrequipo, [Validators.max(5), Validators.min(0)]),
-            vlrobjGeneral: new FormControl(this.RvlrobjGeneral, [Validators.max(5), Validators.min(0)]),
-            vlrobjEspecifico: new FormControl(this.RvlrobjEspecifico, [Validators.max(8), Validators.min(0)]),
-            vlrresumen: new FormControl(this.Rvlrresumen, [Validators.max(7), Validators.min(0)]),
-            vlrpalabrasClaves: new FormControl(this.RvlrpalabrasClaves, [Validators.max(15), Validators.min(1)]),
-            vlrmarco: new FormControl(this.Rvlrmarco, [Validators.max(5), Validators.min(1)]),
-            vlrestado: new FormControl(this.Rvlrestado, [Validators.max(20), Validators.min(0)]),
-        });
-
     }
 
     public getAll(): void {
@@ -197,11 +150,25 @@ export class VistaFormulacionComponent implements OnInit {
 
     private getRubroOpcion(): void {
         this.projectEntryService.getIdConv(this.convocatoriaId)
+            .pipe(finalize(() => this.createRubroObject()))
             .subscribe(response => {
                 response.forEach(element => {
                     this.rubroOpcion.push(element);
                 });
             });
+    }
+
+    private createRubroObject(): void {
+        this.rubroOpcion.forEach(rubro => {
+            this.entidades.forEach(entidad => {
+                const efectivo = this.getAmount(entidad.nombre, 'Efectivo', rubro.descr);
+                const especie = this.getAmount(entidad.nombre, 'Especie', rubro.descr);
+                const hasRubro = this.listaDeRubros.find(rubroSeleccionado => rubroSeleccionado.nombre === rubro.descr);
+                if (!hasRubro) {
+                    this.listaDeRubros.push({entidad, efectivo, especie, nombre: rubro.descr});
+                }
+            });
+        });
     }
 
     public getAmount(entidad: string, tipoDeRubro: string, nombreDeRubro: string): number {
@@ -251,19 +218,15 @@ export class VistaFormulacionComponent implements OnInit {
                 response => {
                     if (tipo === 'Investigador') {
                         this.firmaInvestigador = response.firma;
-                        console.log('this.firmaInvestigador ', this.firmaInvestigador);
                     }
                     if (tipo === 'Investigador Principal') {
                         this.firmaInvestigadorPrincipal = response.firma;
-                        console.log('this.firmaInvestigadorPrincipal ', this.firmaInvestigadorPrincipal);
                     }
                     if (tipo === 'Comandante') {
                         this.firmaComandante = response.firma;
-                        console.log('this.firmaComandante ', this.firmaComandante);
                     }
                     if (tipo === 'GestorACTI') {
                         this.firmaGestorActi = response.firma;
-                        console.log('this.firmaGestorActi ', this.firmaGestorActi);
                     }
                 },
                 error => console.log('error>>> ', error)
@@ -293,71 +256,6 @@ export class VistaFormulacionComponent implements OnInit {
             });
     }
 
-    evaluar() {
-
-        let encabezado;
-        let descripcion;
-
-        encabezado = `Terminar Evaluacion`;
-        descripcion = `¿Se encuentra seguro de Termianr la Evaluacion?`;
-
-        let datos: ConfirmacionDialogData = {
-            icono: 'info',
-            severidad: 'dialog-info',
-            encabezado: encabezado,
-            descripcion: descripcion
-        };
-        const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-            ariaLabel: `${encabezado}  `,
-            role: 'alertdialog',
-            autoFocus: false,
-            data: datos
-
-        });
-        dialogRef.afterClosed().subscribe(result => {
-            if (result == 'true') {
-                try {
-                    let evaluacion = this.evaluacion.value;
-                    let suma = 0;
-                    let count = 1;
-                    let Div = 0;
-                    let AuxProyec: Proyect;
-                    let auxCali: any = [];
-                    suma = parseInt(evaluacion.vlrproyecto) + parseInt(evaluacion.vlrunidadependencia) +
-                        parseInt(evaluacion.vlrequipo) + parseInt(evaluacion.vlrobjGeneral) +
-                        parseInt(evaluacion.vlrobjEspecifico) + parseInt(evaluacion.vlrresumen) +
-                        parseInt(evaluacion.vlrpalabrasClaves) + parseInt(evaluacion.vlrmarco) +
-                        parseInt(evaluacion.vlrestado);
-                    let calificaciones: Calificaciones = {
-                        idEv: this.auto.getUserId(),
-                        Evaluado: true,
-                        ValorParcial: suma,
-                        Valores: evaluacion
-                    };
-
-                    this.projectService.getById(this.data.idProyecto).subscribe(r => {
-                        AuxProyec = r['Proyecto'];
-                        r.Proyecto.calificaciones.forEach(element => {
-                            suma = suma + element.ValorParcial;
-                            if (element.idEv._id != this.auto.getUserId()) {
-                                auxCali.push(element);
-                            }
-                            count = count + 1;
-                        });
-                        AuxProyec.ValorTotal = Math.floor(suma / count);
-                        auxCali.push(calificaciones);
-                        AuxProyec.calificaciones = auxCali;
-                        this.projectService.update(this.data.idProyecto, AuxProyec).subscribe(r => {
-                        });
-                        this.dialogRef.close(true);
-                    });
-                } catch (error) {
-                }
-            } else {
-            }
-        });
-    }
-
     Mostrar(idRubro) {
 
         let datos: DetalleRubroData = {
@@ -374,7 +272,6 @@ export class VistaFormulacionComponent implements OnInit {
     }
 
     downloadPDF(): void {
-
         let datossucess: SucessDialogData = {
             icono: 'done',
             severidad: 'dialog-sucess',
@@ -415,7 +312,6 @@ export class VistaFormulacionComponent implements OnInit {
             while (heightLeft >= 0) {
 
                 position = (heightLeft - imgHeight);
-                // console.log(position)
                 pdf.addPage();
                 pdf.addImage(contentDataURL, 'PNG', margin, position, imgWidth, imgHeight - 10, options);
                 heightLeft -= pageHeight;
@@ -430,24 +326,24 @@ export class VistaFormulacionComponent implements OnInit {
 }
 
 export interface iniciarProyecto {
-    avala: string,
-    comandante: string,
-    dependencia: string,
-    duracion: number,
-    email: string,
-    gestor: string,
-    linea: string,
-    lugar: string,
-    modelo: string,
-    nombreProyecto: string,
-    Programa: string,
-    subprograma: string,
-    telefonoGestor: number,
+    avala: string;
+    comandante: string;
+    dependencia: string;
+    duracion: number;
+    email: string;
+    gestor: string;
+    linea: string;
+    lugar: string;
+    modelo: string;
+    nombreProyecto: string;
+    Programa: string;
+    subprograma: string;
+    telefonoGestor: number;
 }
 
 export interface VistaFormulacionData {
-    idProyecto: string
-    evaluar: boolean,
-    valor?: any,
-    Evaluado?: boolean
+    idProyecto: string;
+    evaluar: boolean;
+    valor?: any;
+    Evaluado?: boolean;
 }

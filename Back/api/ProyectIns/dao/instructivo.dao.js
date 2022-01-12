@@ -10,9 +10,7 @@ const mongoose = require("mongoose");
  */
 
 ProyectInsSchema.static('getAll', async (query) => {
-    // try{ 
-        console.log(ProyectInsSchema.find(query))
-        console.log('llego')
+    // try{
         //return await ProyectInsSchema.find()
         return "h"
     // }catch(err){

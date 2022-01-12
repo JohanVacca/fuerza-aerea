@@ -55,6 +55,7 @@ import { AgregarActividadComponent } from './components/presupuesto/components/c
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {SharedModule} from '../../shared/shared.module';
 import { PlanteamientoDeProblemaComponent } from './components/detalles-generales/components/planteamiento-de-problema/planteamiento-de-problema.component';
+import { EvaluateProjectComponent } from './components/evaluate-project/evaluate-project.component';
 
 
 @NgModule({
@@ -121,7 +122,8 @@ import { PlanteamientoDeProblemaComponent } from './components/detalles-generale
     ComplementosComponent,
     AddComplementsComponent,
     AgregarActividadComponent,
-    PlanteamientoDeProblemaComponent
+    PlanteamientoDeProblemaComponent,
+    EvaluateProjectComponent
   ],
   entryComponents: [],
   providers: []

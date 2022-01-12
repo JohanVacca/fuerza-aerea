@@ -33,6 +33,7 @@ export interface Proyect {
     resultadosEsperados?: string;
     resultadosPrevios?: string;
     resumen?: string;
+    evaluadorId?: string;
 }
 
 export interface productosEsperados {

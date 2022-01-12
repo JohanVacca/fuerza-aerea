@@ -38,7 +38,6 @@ export class ListaSeguimientoComponent implements OnInit {
     this.dataSource1 = this.temp;
   }
   view(id) {
-    console.log(`funciona el id es ${id}`)
     let datos: VistaProyectosData = {
       idConvocatoria: id,
     }

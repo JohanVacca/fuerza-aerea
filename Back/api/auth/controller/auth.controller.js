@@ -80,9 +80,6 @@ function login(req, res, next) {
                         res.status(403).json({"err": 'Account not active.'});
                     }else {
                         bcrypt.compare(password, user.password, (err,respuesta) => {
-                            // bcrypt.compare(password,user,password, (err) =>{
-                            //     console.log(err)
-                            // }) 
                             if(!respuesta){
                                 res.status(400).json({"err": 'Invalid credentials.'});
                             }else {

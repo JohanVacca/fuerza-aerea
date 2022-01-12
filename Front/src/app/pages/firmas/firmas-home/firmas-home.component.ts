@@ -18,7 +18,10 @@ export class FirmasHomeComponent implements OnInit {
     public LIST = 'Listado por firmar';
     public MESSAGE_WITHOUT_SIGNATURE = 'No tiene ninguna firma relacionada.';
     public MESSAGE_WITH_SIGNATURE = 'Firma agregada';
+    public UPDATE_SIGNATURE = 'Actualizar Firma';
+    public ADD_SIGNATURE = 'Agregar Firma';
     public FORMAT_ERROR_MESSAGE = 'Solo son permitidas imagenes en formato PNG o JPG';
+    public LABEL_WITHOUT_SIGNATURE = 'Para firmar es necesario agregar una firma';
     public hasSignature = false;
     public formatError = false;
     public loadingUserId = true;
@@ -26,6 +29,7 @@ export class FirmasHomeComponent implements OnInit {
     public fileToUpload;
     public convocatorias;
     public displayedColumns1: string[] = ['name', 'Descripcion', 'acciones'];
+    public selectedImage = false;
 
     private userId = '';
 
@@ -41,30 +45,27 @@ export class FirmasHomeComponent implements OnInit {
         this.getConvocatorias();
     }
 
-    public agregarFirma(): void {
+    public addSignature(): void {
         this.firmaService.saveFirma(this.fileToUpload, this.userId)
             .subscribe(
                 response => {
                     this.hasSignature = true;
                     this.signature = response.firma;
+                    this.fileToUpload = null;
                 },
                 error => console.log('error>>> ', error));
     }
 
-    public eliminarFirma(): void {
+    public updateSignature(): void {
         this.firmaService.removeFirma(this.userId)
-            .subscribe(response => {
-                console.log('Se elimino !', response);
-                this.signature = null;
-                this.fileToUpload = null;
-                this.hasSignature = false;
-            });
+            .pipe(finalize(() => this.addSignature()))
+            .subscribe(() => {});
     }
 
     public saveSignature(files: FileList): void {
+        this.selectedImage = true;
         const fileToUpload = files.item(0);
         if (fileToUpload.type.includes('image')) {
-            console.log('fileToUpload:: ', fileToUpload);
             this.fileToUpload = fileToUpload;
             this.formatError = false;
         } else {
@@ -75,20 +76,18 @@ export class FirmasHomeComponent implements OnInit {
     public viewConvocatorias(id): void {
         const data: VistaProyectosData = {idC: id};
         const dialogRef = this.dialog.open(ListaProyectosModalComponent, {data});
-        dialogRef.afterClosed().subscribe(r => {
-
-        });
+        dialogRef.afterClosed().subscribe(r => {});
     }
 
     private getUserId(): void {
         this.authService.getUserId()
-            .pipe(finalize(() => this.getFirma()))
+            .pipe(finalize(() => this.getSignature()))
             .subscribe(
                 userId => this.userId = userId,
                 error => console.log('error>>> ', error));
     }
 
-    private getFirma(): void {
+    private getSignature(): void {
         this.firmaService.getFirma(this.userId)
             .pipe(finalize(() => this.loadingUserId = false))
             .subscribe(

@@ -101,7 +101,6 @@ function create(req, res, next) {
 function update(req, res, next) {
   try {
     validationResult(req).throw();
-
     let cronograma = req.body;
     let objObj = JSON.parse(JSON.stringify(cronograma));
     let objId = req.params.id;

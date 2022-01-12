@@ -39,6 +39,7 @@ import { SeguimientoRubroComponent } from './Lista_Seguimiento/components/seguim
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { ReportesComponent } from './Lista_Seguimiento/components/reportes/reportes.component';
+import { ShowCalendarComponent } from './Lista_Seguimiento/components/show-calendar/show-calendar.component';
 
 
 
@@ -92,6 +93,7 @@ const PAGES_COMPONENTS = [
     CronogramaNewComponent,
     SeguimientoRubroComponent,
     ReportesComponent,
+    ShowCalendarComponent,
 
   ], exports:[CronogramaNewComponent]
 })

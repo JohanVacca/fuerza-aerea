@@ -104,14 +104,6 @@ export class CreateProyectComponent implements OnInit {
         };
     }
 
-    private cleanLocalStorage(): void {
-        const token = localStorage.getItem('token');
-        const role = localStorage.getItem('Role');
-        localStorage.clear();
-        localStorage.setItem('token', token);
-        localStorage.setItem('Role', role);
-    }
-
     public crearProyecto(): void {
         try {
             this.state = this.saveStateService.getState();
@@ -149,40 +141,40 @@ export class CreateProyectComponent implements OnInit {
                         const cronograma: cronogramaObj = {ConvocatoriaId, proyectId, actividades};
 
                         this.cronogramaService.add(cronograma)
-                            .subscribe(responseCronograma => console.log('responseCronograma: ', responseCronograma));
+                            .pipe(finalize(() => {
+                                this.auth.getFile().forEach(element => {
+                                    const formData = new FormData();
+                                    const fileSelected = element.file;
+                                    formData.append('CodigoPr', proyectId);
+                                    formData.append('NombreTipo', element.name);
+                                    formData.append('file', fileSelected, element.name);
+                                    formData.append('NombreDoc', element.NombreDoc);
+                                    formData.append('NombreArchivo', Api.api + element.name + proyectId + '.' + fileSelected.type.split('/')[1]);
 
-                        this.auth.getFile().forEach(element => {
-                            const formData = new FormData();
-                            const fileSelected = element.file;
-                            formData.append('CodigoPr', proyectId);
-                            formData.append('NombreTipo', element.name);
-                            formData.append('file', fileSelected, element.name);
-                            formData.append('NombreDoc', element.NombreDoc);
-                            formData.append('NombreArchivo', Api.api + element.name + proyectId + '.' + fileSelected.type.split('/')[1]);
-
-                            this.instructivosService.uploadFile(formData)
-                                .subscribe(responseUpdateFile => console.log('responseUpdateFile: ', responseUpdateFile));
-                        });
-
-                        const datos: VistaFormulacionData = {
-                            idProyecto: proyectId,
-                            evaluar: false
-                        };
-                        const dialogRef = this.dialog.open(VistaFormulacionComponent, {
-                            data: datos
-                        });
+                                    this.instructivosService.uploadFile(formData)
+                                        .pipe(finalize(() => {
+                                            this.dialog.open(VistaFormulacionComponent, {
+                                                data: {
+                                                    idProyecto: proyectId,
+                                                    evaluar: false
+                                                }
+                                            });
+                                        }))
+                                        .subscribe(responseUpdateFile => console.log('responseUpdateFile: ', responseUpdateFile));
+                                });
+                            }))
+                            .subscribe(() => {
+                            });
                     });
             }
+        } catch (error) {
+            this.messageError = 'Falta información, revisa el formulario';
+            this.hasError = true;
         }
-         catch (error) {
-             this.messageError = 'Falta información, revisa el formulario';
-             this.hasError = true;
-         }
     }
 
     public upDate(): void {
         this.state = this.saveStateService.getState();
-        console.log('estado ultimo paso:: ', this.state);
         const cv = this.rutaActiva.snapshot.params;
         const Convocatoria = cv.id;
         this.AgregarDetalles = JSON.parse(localStorage.getItem('AgregarDetallesRubros'));
@@ -243,11 +235,7 @@ export class CreateProyectComponent implements OnInit {
                     data: datos
                 });
             });
-            const token = localStorage.getItem('token');
-            const role = localStorage.getItem('Role');
-            localStorage.clear();
-            localStorage.setItem('token', token);
-            localStorage.setItem('Role', role);
+            this.cleanLocalStorage();
         }
     }
 
@@ -284,5 +272,15 @@ export class CreateProyectComponent implements OnInit {
     private getInvestigadorId(): string {
         return this.state.segundoPaso.equipoDeInvestigacion
             .find(investigador => investigador.cargo === 'Investigador principal').investigadorId;
+    }
+
+    private cleanLocalStorage(): void {
+        const token = localStorage.getItem('token');
+        const role = localStorage.getItem('Role');
+        const user = localStorage.getItem('user');
+        localStorage.clear();
+        localStorage.setItem('token', token);
+        localStorage.setItem('Role', role);
+        localStorage.setItem('user', user);
     }
 }

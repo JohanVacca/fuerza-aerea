@@ -28,7 +28,7 @@
                                 <th scope="col" mat-header-cell *matHeaderCellDef>Acciones</th>
                                 <td mat-cell *matCellDef="let row">
                                     <ul class="table-action-list">
-                                        <li *ngIf="row.nombre !== 'FAC'">
+                                        <li *ngIf="row.nombre !== 'Fuerza Aérea Colombiana'">
                                             <button mat-icon-button aria-label="Example icon-button with a heart icon"
                                                     matTooltipClass="tooltip-white" matTooltip="eliminar Entidad"
                                                     matTooltipPosition="above"
@@ -80,13 +80,17 @@
                                     <td class="font-title"><b>Especie</b></td>
                                 </ng-container>
                             </tr>
-                            <tr *ngFor="let rubroOpcion of rubro">
-                                <td>{{rubroOpcion.descr}}</td>
-                                <ng-container *ngFor="let entidad of dataSource">
-                                    <td>{{getAmount(entidad.nombre, 'Efectivo', rubroOpcion.descr) | currency}}</td>
-                                    <td>{{getAmount(entidad.nombre, 'Especie', rubroOpcion.descr) | currency}}</td>
+
+                            <tr *ngFor="let rubroActual of listaDeRubros">
+                                <ng-container *ngIf="rubroActual.efectivo || rubroActual.especie">
+                                    <td>{{rubroActual.nombre}}</td>
+                                    <ng-container *ngFor="let entidad of dataSource">
+                                        <td>{{getAmount(entidad.nombre, 'Efectivo', rubroActual.nombre) | currency}}</td>
+                                        <td>{{getAmount(entidad.nombre, 'Especie', rubroActual.nombre) | currency}}</td>
+                                    </ng-container>
                                 </ng-container>
                             </tr>
+
                             <tr>
                                 <td class="font-title"><b>Total por tipo</b></td>
                                 <ng-container *ngFor="let entidad of dataSource">

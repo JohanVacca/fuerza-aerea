@@ -9,6 +9,5 @@ import { Component } from '@angular/core';
 export class InvitedComponent {
 
   constructor() {
-    // console.log('InvitedComponent loaded!');
   }
 }

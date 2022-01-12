@@ -56,6 +56,15 @@ td {
       margin: 20px 0;
     }
 
+    &__label {
+      margin: 20px 0;
+      text-align: center;
+
+      label {
+        font-size: 20px;
+      }
+    }
+
     &__input {
       input {
         width: 100%;
@@ -72,9 +81,9 @@ td {
 
     &__img {
       align-self: center;
-      margin: 20px 0;
       width: 510px;
       height: 270px;
+      margin: 20px 0 50px;
 
       img {
         width: 500px;
@@ -84,7 +93,6 @@ td {
 
     &__buttons {
       align-self: center;
-      padding-top: 50px;
 
       button {
         width: fit-content;

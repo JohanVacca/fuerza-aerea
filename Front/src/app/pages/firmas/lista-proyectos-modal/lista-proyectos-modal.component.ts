@@ -41,9 +41,7 @@ export class ListaProyectosModalComponent implements OnInit {
     public firmar(firma): void {
         const {idFirma, idProyecto} = firma;
         this.firmaService.firmar(idFirma, idProyecto)
-            .subscribe(response => {
-                console.log('response!!! ', response);
-            });
+            .subscribe(() => {});
     }
 
     private getAll(id): void {

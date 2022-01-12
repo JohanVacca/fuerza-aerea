@@ -7,9 +7,6 @@ const multer = require('multer');
 const endpoint = '/instructivos';
 const Image = require('../model/intructivo.model')
 const mongoose = require("mongoose");
-const fs = require('fs');
-const { count } = require('../dao/instructivo.dao');
-const { nextTick } = require('process');
 
 const storage = multer.diskStorage({
   destination: (req,file,cb)=>{cb(null,path.join(__dirname,'../../instructivoPDF'))}
@@ -22,18 +19,6 @@ const storage = multer.diskStorage({
 const uploader = multer({
   storage
 })
-
-// api.get(`${endpoint}/:id`, (req,res)=>{
-//   console.log(req.params.id)
-//   res.download('http://localhost:8080'+'../../subidas/'+req.params.id,
-//   req.params.id,function(err){
-//     if(err){
-//       console.log(err)
-//     }else{
-//       console.log("listo")
-//     }
-//   });
-// })
 
 api.get(endpoint, async (req,res)=>{
   const images = await instructivoDao.find().populate('User');

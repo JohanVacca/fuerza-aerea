@@ -435,18 +435,14 @@
                                         </ng-container>
                                     </tr>
                                     </thead>
-
                                     <tbody>
-                                    <tr *ngFor="let rubroOpc of rubroOpcion; let i = index">
-                                        <td class="title-table-costos">
-                                            <label>{{rubroOpc.descr}}
-                                                <span *ngIf="i === 0">*</span>
-                                                <span *ngIf="i === 1">**</span>
-                                                <span *ngIf="rubroOpc.descr.toLowerCase().includes('gastos operativos')">***</span>
-                                            </label></td>
-                                        <ng-container *ngFor="let entidad of entidades">
-                                            <td>{{getAmount(entidad.nombre, 'Efectivo', rubroOpc.descr) | currency}}</td>
-                                            <td>{{getAmount(entidad.nombre, 'Especie', rubroOpc.descr) | currency}}</td>
+                                    <tr *ngFor="let rubroActual of listaDeRubros">
+                                        <ng-container *ngIf="rubroActual.efectivo || rubroActual.especie">
+                                            <td>{{rubroActual.nombre}}</td>
+                                            <ng-container *ngFor="let entidad of entidades">
+                                                <td>{{getAmount(entidad.nombre, 'Efectivo', rubroActual.nombre) | currency}}</td>
+                                                <td>{{getAmount(entidad.nombre, 'Especie', rubroActual.nombre) | currency}}</td>
+                                            </ng-container>
                                         </ng-container>
                                     </tr>
                                     <tr>
@@ -598,14 +594,9 @@
 
     <div class="container">
         <mat-dialog-actions align="end">
-            <div *ngIf="ValidarEvaluar">
-                <button mat-button (click)="evaluar()" [disabled]="!evaluacion.valid" cdkFocusInitial>Evaluar</button>
-            </div>
             <button (click)="downloadPDF()" mat-button [mat-dialog-close]="true" cdkFocusInitial>Generar PDF</button>
             <button mat-button mat-dialog-close (click)="closeModal()">Cerrar</button>
         </mat-dialog-actions>
 
     </div>
 </div>
-<!--  </div>
-</div> -->

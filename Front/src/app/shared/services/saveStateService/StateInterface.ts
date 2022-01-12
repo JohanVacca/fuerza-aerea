@@ -6,6 +6,11 @@ export interface StateInterface {
     tercerPaso?: TercerPaso;
     cuartoPaso?: CuartoPaso;
     quintoPaso?: QuintoPaso;
+    shared?: ShareData;
+}
+
+export interface SharedData {
+    isEdition?: false;
 }
 
 export interface PrimerPaso {

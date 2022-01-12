@@ -149,7 +149,8 @@ let ProjectSchema = new Schema({
     beneficiosFAC: String,
     utilidad: Number,
     inversion: Number,
-  }
+  },
+  evaluadorId: String,
 });
 
 module.exports = ProjectSchema;

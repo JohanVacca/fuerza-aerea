@@ -10,15 +10,9 @@ const mongoose = require("mongoose");
  */
 
 instructivoSchema.static('getAll', async (query) => {
-    // try{ 
-        console.log(instructivoSchema.find(query))
-        console.log('llego')
-        //return await instructivoSchema.find()
-        return "h"
-    // }catch(err){
-    //     throw err;
-    // }
+    return "h"
 });
+
 /**
  * create a instructivos
  */
@@ -28,7 +22,7 @@ instructivoSchema.static('create', async (instructivos) => {
     }
 
     let _obj = new instructivoDao(instructivos);
-    let saved = await  _obj.save();
+    let saved = await _obj.save();
     let __obj = await instructivoDao.findOne({_id: saved._id}).populate('User')
         .exec();
     return (__obj);
@@ -41,7 +35,7 @@ instructivoSchema.static('update', async (id, instructivo) => {
 
     try {
         return await instructivoDao.findOneAndUpdate({_id: id}, instructivo, {new: true}).populate('User').exec();
-    }catch (err){
+    } catch (err) {
         throw err;
     }
 });

@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { ConvocatoryService } from '../admin/convocatory/services/convocatory.service';
+import {Component, OnInit} from '@angular/core';
+import {ConvocatoryService} from '../admin/convocatory/services/convocatory.service';
 
 @Component({
   selector: 'app-formulacion',
@@ -7,39 +7,39 @@ import { ConvocatoryService } from '../admin/convocatory/services/convocatory.se
   styleUrls: ['./formulacion.component.scss']
 })
 export class FormulacionComponent implements OnInit {
-  BotonInv: boolean;
-  BotonAdm: boolean;
-  Role: string
-  ngOnInit(): void {
-    this.getAll();
-  }
-  rows = [];
-  temp = [];
-  displayedColumns: string[] = ['name', 'Descripcion', 'acciones'];
-  dataSource;
+  public BotonInv: boolean;
+  public BotonAdm: boolean;
+  public Role: string;
+  public rows = [];
+  public temp = [];
+  public displayedColumns: string[] = ['name', 'Descripcion', 'acciones'];
+  public dataSource;
+
   constructor(
     private convocatoryServece: ConvocatoryService,
   ) { }
-  getAll() {
-    this.convocatoryServece.getall()
-      .subscribe((convocatorias) => {
-        this.filtro(convocatorias);
-      });
+
+  ngOnInit(): void {
+    this.getAll();
   }
 
-  filtro(convocatorias) {
-    let convocatoriasfiltro = convocatorias.filter(r => { return r.isActive === true });
-    this.temp = convocatoriasfiltro;
-    this.dataSource = this.temp;
+  private getAll(): void {
+    this.convocatoryServece.getall().subscribe((convocatorias) => this.filtro(convocatorias));
   }
 
-  formular() {
-    let token = localStorage.getItem('token')
-    let role = localStorage.getItem('Role')
+  private filtro(convocatorias): void {
+    this.temp = convocatorias.filter(r => r.isActive === true);
+    this.dataSource = convocatorias.filter(r => r.isActive === true);
+  }
 
-    localStorage.clear()
-    localStorage.setItem('token', token)
-    localStorage.setItem('Role', role)
+  public formular(): void {
+    const token = localStorage.getItem('token');
+    const role = localStorage.getItem('Role');
+    const user = localStorage.getItem('user');
+    localStorage.clear();
+    localStorage.setItem('token', token);
+    localStorage.setItem('Role', role);
+    localStorage.setItem('user', user);
   }
 }
 

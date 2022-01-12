@@ -22,7 +22,6 @@ export class PlanteamientoDeProblemaComponent implements OnInit {
   public agregarPlanteamiento(): void {
     this.state = this.saveStateService.getState();
     const planteamiento: Planteamiento = this.planteamientoForm.value;
-    console.log('state 1 ', this.state);
     this.state = {
       ...this.state,
       cuartoPaso: {
@@ -30,9 +29,7 @@ export class PlanteamientoDeProblemaComponent implements OnInit {
         planteamiento
       }
     };
-    console.log('state 2 ', this.state);
     this.saveStateService.setState(this.state);
-    console.log('state 3 ', this.saveStateService.getState());
   }
 
   private buildForm(): void {

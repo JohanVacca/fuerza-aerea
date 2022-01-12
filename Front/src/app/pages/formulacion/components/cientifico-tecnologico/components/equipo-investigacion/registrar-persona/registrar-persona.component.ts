@@ -77,7 +77,6 @@ export class RegistrarPersonaComponent implements OnInit {
 
     getAll() {
         let val = false;
-        console.log('this.state>>> ', this.state);
         let showPrincipal = true;
         if (this.state?.segundoPaso?.equipoDeInvestigacion) {
             const hasPrincipal = this.state.segundoPaso.equipoDeInvestigacion
@@ -119,7 +118,6 @@ export class RegistrarPersonaComponent implements OnInit {
             investigadorId
         });
         this.updateState();
-        console.log('this.state::: ', this.state);
         let equipoInvestigacion = JSON.parse(localStorage.getItem('equipoInvestigacion'));
         if (equipoInvestigacion == null) {
             equipoInvestigacion = [];

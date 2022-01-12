@@ -8,6 +8,7 @@ import {FormGroup} from '@angular/forms';
 import {ActivatedRoute} from '@angular/router';
 import {Entidad, StateInterface} from '../../../../../../shared/services/saveStateService/StateInterface';
 import {SaveStateService} from '../../../../../../shared/services/saveStateService/save-state.service';
+import {finalize} from 'rxjs/operators';
 
 @Component({
     selector: 'app-componente-presupuestal',
@@ -29,16 +30,17 @@ export class ComponentePresupuestalComponent implements OnInit {
     public subtotales = [];
     public mostrarRubros = true;
     public ENTIDAD_FAC: Entidad = {
-        nombre: 'FAC',
-        nit: '0001',
-        personaACargo: 'Persona a cargo',
-        numeroDeContacto: '320',
-        email: 'emailfac@gmail.com'
+        nombre: 'Fuerza Aérea Colombiana',
+        nit: '899999102',
+        personaACargo: 'General Ramsés Rueda Rueda',
+        numeroDeContacto: '(601) 3159800 ext 60015-60016',
+        email: 'atencionusuario@fac.mil.co'
     };
     public total = 0;
     public totalEfectivo = 0;
     public totalEspecie = 0;
     public state: StateInterface;
+    public listaDeRubros = [];
 
     constructor(
         public dialog: MatDialog,
@@ -100,6 +102,7 @@ export class ComponentePresupuestalComponent implements OnInit {
         if (!state || !state.tercerPaso) {
             this.total = 0;
         }
+        this.total = 0;
         const {personalCientifico: listaDeRubros} = state.tercerPaso.componentePresupuestal;
         listaDeRubros.map(rubro => this.total = this.total + rubro.EntidadesCostos);
     }
@@ -192,12 +195,17 @@ export class ComponentePresupuestalComponent implements OnInit {
         const entidadesAux = [];
         const subTotalAux = [];
         this.rubro = [];
-        this.projectEntryService.getIdConv(this.Convocatoria)
-            .subscribe(response => {
-                response.forEach(element => {
-                    this.rubro.push(element);
+        if (this.rubro.length === 0) {
+            this.projectEntryService.getIdConv(this.Convocatoria)
+                .pipe(finalize(() => this.createRubroObject()))
+                .subscribe(response => {
+                    response.forEach(element => {
+                        this.rubro.push(element);
+                    });
                 });
-            });
+        } else {
+            this.createRubroObject();
+        }
         if (this.dataSource != null) {
             this.dataSource.forEach(element => {
                 entidadesAux.push(element.nombre);
@@ -206,6 +214,20 @@ export class ComponentePresupuestalComponent implements OnInit {
         }
         this.entid = entidadesAux;
         this.subtotales = subTotalAux;
+    }
+
+    private createRubroObject(): void {
+        this.listaDeRubros = [];
+        this.rubro.forEach(rubro => {
+            this.dataSource.forEach(entidad => {
+                const efectivo = this.getAmount(entidad.nombre, 'Efectivo', rubro.descr);
+                const especie = this.getAmount(entidad.nombre, 'Especie', rubro.descr);
+                const hasRubro = this.listaDeRubros.find(rubroSeleccionado => rubroSeleccionado.nombre === rubro.descr);
+                if (!hasRubro) {
+                    this.listaDeRubros.push({entidad, efectivo, especie, nombre: rubro.descr});
+                }
+            });
+        });
     }
 
     private updateState(): void {

@@ -23,14 +23,9 @@ export interface ConvocatoriaElement {
   templateUrl: './convocatory.component.html',
   styleUrls: ['./convocatory.component.scss']
 })
-export class ConvocatoryAdminComponent {
+export class ConvocatoryAdminComponent implements OnInit{
 
   Role: string
-  ngOnInit(): void {
-    this.Role = this.authStorageService.getRole();
-    this.getAll();
-
-  }
   rows = [];
   temp = [];
   role = Roles
@@ -46,6 +41,10 @@ export class ConvocatoryAdminComponent {
     private authStorageService: AuthStorageService,
   ) { }
 
+  ngOnInit(): void {
+    this.Role = this.authStorageService.getRole();
+    this.getAll();
+  }
 
   getAll() {
     this.convocatoryServece.getall()

@@ -5,7 +5,7 @@
     <mat-card-subtitle>En la siguiente tabla encontrará las convocatorias activas en el sistema</mat-card-subtitle>
 
     <div class="col-lg-12 col-md-12 col-xs-12 overflow-auto">
-      <table mat-table [dataSource]="dataSource1" class="mat-elevation-z8">
+      <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 
         <ng-container matColumnDef="name">
           <th mat-header-cell *matHeaderCellDef> Nombre </th>
@@ -24,7 +24,7 @@
             <ul class="table-action-list">
               <li>
                 <button mat-icon-button aria-label="Example icon-button with a heart icon"
-                  (click)="view(row._id,row.ProyectoBloqueado,row)" matTooltipClass="tooltip-white"
+                  (click)="view(row._id)" matTooltipClass="tooltip-white"
                   matTooltip="Ver Proyectos" matTooltipPosition="above">
                   <mat-icon>preview</mat-icon>
                 </button>

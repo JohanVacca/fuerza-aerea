@@ -125,30 +125,16 @@ export class AddDetalleRubroComponent implements OnInit {
 
     private DataS(): void {
 
-        const { entidades } = this.state.tercerPaso.componentePresupuestal;
+        const {entidades} = this.state.tercerPaso.componentePresupuestal;
         let cont = 0;
         this.tablaHonorariosService.getall().subscribe(r => {
-            console.log('rrrrr::: ', r);
             this.Perfil = r['honorarios'];
         });
-        console.log('entidades::: ', entidades);
-        // entidades.forEach(element => {
-        //     let azul = element.Institucion;
-        //     cont = cont + 1;
-        //     let ELEMENT_DATA = {
-        //         id: cont,
-        //         institucion: azul,
-        //         efectivo: 0,
-        //         especie: 0
-        //     };
-        //
-        //     this.dataSource.push(ELEMENT_DATA);
-        // });
     }
 
     private valid(): void {
-        this.esPersonalCientifico = this.data.desc.toLowerCase() === 'personal cientifico' || this.data.desc.toLowerCase() === 'personal científico';
-        console.log('esPersonalCientifico:>:>: ', this.esPersonalCientifico)
+        this.esPersonalCientifico = this.data.desc.toLowerCase() === 'personal cientifico'
+            || this.data.desc.toLowerCase() === 'personal científico';
     }
 
     public guardarOtro(): void {
@@ -184,7 +170,13 @@ export class AddDetalleRubroComponent implements OnInit {
     }
 
     private validateAllFields(): void {
-        const {HorasSemanales, DuracionEnMeses, PerfilDelInvestigador, tipoDeRubro, entidad} = this.AddDettalle.controls;
+        const {
+            HorasSemanales,
+            DuracionEnMeses,
+            PerfilDelInvestigador,
+            tipoDeRubro,
+            entidad
+        } = this.AddDettalle.controls;
         if (HorasSemanales.value && DuracionEnMeses.value && PerfilDelInvestigador.value) {
             this.HorasSemanalesForm = HorasSemanales.value;
             this.DuracionEnMeses = DuracionEnMeses.value;
@@ -275,7 +267,6 @@ export class AddDetalleRubroComponent implements OnInit {
     }
 
     public seleccionarInvestigador(investigador): void {
-        console.log(investigador);
         this.investigadorSeleccionado = investigador;
         this.NombreDelInvestigador = `${investigador.nombres} ${investigador.apellido}`;
         this.HorasSemanales = investigador.dedicacion;
@@ -320,7 +311,6 @@ export class AddDetalleRubroComponent implements OnInit {
             }
         };
         this.saveStateService.setState(this.state);
-        console.log('zzz2', this.saveStateService.getState());
     }
 }
 

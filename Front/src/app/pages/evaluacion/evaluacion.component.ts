@@ -1,10 +1,10 @@
 import {Component, OnInit} from '@angular/core';
 import {ProjectService} from '../../shared/services/Proyect/project.service';
 import {Router} from '@angular/router';
-import {VistaFormulacionComponent, VistaFormulacionData} from '../formulacion/components//vista-formulacion/vista-formulacion.component';
+import {VistaFormulacionComponent} from '../formulacion/components//vista-formulacion/vista-formulacion.component';
 import {MatDialog} from '@angular/material/dialog';
 import {ConvocatoryService} from '../admin/convocatory/services/convocatory.service';
-import {VistaProyectosComponent, VistaProyectosData} from './components/vista-proyectos/vista-proyectos.component';
+import {VistaProyectosComponent} from './components/vista-proyectos/vista-proyectos.component';
 
 
 @Component({
@@ -14,11 +14,11 @@ import {VistaProyectosComponent, VistaProyectosData} from './components/vista-pr
 })
 export class EvaluacionComponent implements OnInit {
 
-
-    Rol;
-    objetos;
-    dataSource2;
-    displayedColumns: string[] = ['Titulo', 'Puntaje', 'HabilitarSeg', 'acciones'];
+    public displayedColumns1: string[] = ['name', 'Descripcion', 'acciones'];
+    public dataSource = [];
+    public Rol;
+    public objetos;
+    public displayedColumns: string[] = ['Titulo', 'Puntaje', 'HabilitarSeg', 'acciones'];
 
     constructor(
         private projectService: ProjectService,
@@ -27,55 +27,39 @@ export class EvaluacionComponent implements OnInit {
         private convocatoryService: ConvocatoryService) {
     }
 
-
-    VistaPrevia(IDProyec, Value) {
-
-        this.projectService.getById(IDProyec).subscribe(r => {
-            let idProject = r.Proyecto._id;
-            let datos: VistaFormulacionData = {
-                idProyecto: idProject,
-                evaluar: Value
-            };
-            const dialogRef = this.dialog.open(VistaFormulacionComponent, {
-                data: datos
-            });
-        });
-    }
-
     ngOnInit(): void {
-
         this.getAllConv();
     }
 
-    temp = [];
-    displayedColumns1: string[] = ['name', 'Descripcion', 'acciones'];
-    dataSource1;
-
-    getAllConv() {
-        this.convocatoryService.getall()
-            .subscribe((convocatorias) => {
-                this.filtro(convocatorias);
+    public VistaPrevia(IDProyec, Value): void {
+        this.projectService.getById(IDProyec)
+            .subscribe(response => {
+                const idProyecto = response.Proyecto._id;
+                this.dialog.open(VistaFormulacionComponent, {
+                    data: {
+                        idProyecto,
+                        evaluar: Value
+                    }
+                });
             });
     }
 
-    filtro(convocatorias) {
-        let convocatoriasfiltro = convocatorias.filter(r => {
-            return r.isActive === true;
-        });
-        this.temp = convocatoriasfiltro;
-        this.dataSource1 = this.temp;
+    public filtro(convocatorias) {
+        this.dataSource = convocatorias.filter(response => response.isActive === true);
     }
 
-    view(id) {
-        let datos: VistaProyectosData = {
-            idC: id,
-        };
-        const dialogRef = this.dialog.open(VistaProyectosComponent, {
-            data: datos
-        });
-        dialogRef.afterClosed().subscribe(r => {
+    public view(id): void {
+        this.dialog.open(VistaProyectosComponent, {
+            data: {idC: id}
+        }).afterClosed().subscribe(r => {
 
         });
     }
 
+    private getAllConv(): void {
+        this.convocatoryService.getall()
+            .subscribe(convocatorias => {
+                this.filtro(convocatorias);
+            });
+    }
 }

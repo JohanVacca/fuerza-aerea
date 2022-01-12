@@ -30,9 +30,6 @@ async function create(req, res, next) {
 function remove(req, res, next) {
     try {
         validationResult(req).throw();
-
-        console.log('req.params::: ', req)
-
         let userId = req.params.id;
 
         FirmaDao['remove'](userId)
@@ -107,7 +104,6 @@ async function update(req, res, next) {
             } else {
                 project.firmas = project.firmas.map(firma => {
                     if (String(firmaId) === String(firma._id)) {
-                        console.log('firma._id')
                         firma.status = true;
                     }
                     return firma

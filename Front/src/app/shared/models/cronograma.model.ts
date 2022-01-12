@@ -10,6 +10,7 @@ export interface actividad {
     predecesora: predecesora;
     subActividad?: subAct[];
     objetivo?: string;
+    _id?: string;
 }
 
 export interface predecesora {

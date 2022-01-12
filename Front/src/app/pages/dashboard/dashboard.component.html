@@ -4,7 +4,7 @@
     </div>
 
     <div class="dashboard__sub-title">
-        <label>{{SUBTITLE}}</label>
+        <label>{{isEvaluator ? SUBTITLE_EVALUATOR : SUBTITLE}}</label>
     </div>
 
     <div class="dashboard__container">
@@ -16,7 +16,7 @@
             <app-loader *ngIf="isLoading"></app-loader>
 
             <div *ngIf="!isLoading && projectList.length === 0" class="no-active-projects">
-                <div><label>{{NO_PROJECTS}}</label></div>
+                <div><label>{{isEvaluator ? NO_PROJECTS_EVALUATOR : NO_PROJECTS}}</label></div>
                 <div class="icon-not-found"><span class="material-icons">folder_off</span></div>
             </div>
 
@@ -56,7 +56,7 @@
                                  matTooltip="Ver Seguimiento"
                                  matTooltipPosition="above"
                                  class="square-icon-default"
-                                 (click)="goToDetail(project.iniciarProyecto[0]._id)"
+                                 (click)="goToDetail(project._id)"
                             >
                                 <span class="material-icons">find_in_page</span>
                             </div>
