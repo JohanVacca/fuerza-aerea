@@ -18,7 +18,6 @@
                         <mat-card-subtitle>En este módulo se diligencia el detalle del rubro</mat-card-subtitle>
 
                         <mat-card-content>
-                            {{esPersonalCientifico}}
                             <mat-card *ngIf="esPersonalCientifico" class="tarjetaint card-rubro-form">
                                 <button
                                         mat-raised-button
@@ -152,8 +151,16 @@
 
                             <mat-card *ngIf="!esPersonalCientifico" class="tarjetaint card-rubro-form">
                                 <mat-form-field class="short-width" appearance="fill">
+                                    <mat-label>Valor unitario</mat-label>
+                                    <input type="number" matInput formControlName="valorUnitario" (keyup)="calculateAmountWithUnitValue($event.target.value)">
+                                </mat-form-field>
+                                <mat-form-field class="short-width" appearance="fill">
+                                    <mat-label>Cantidad</mat-label>
+                                    <input type="number" matInput formControlName="cantidad" (keyup)="calculateAmountWithUnitCount($event.target.value)">
+                                </mat-form-field>
+                                <mat-form-field class="short-width" appearance="fill">
                                     <mat-label>Monto</mat-label>
-                                    <input type="number" [(value)]="monto" matInput formControlName="monto">
+                                    <input readonly type="number" [(value)]="monto" matInput formControlName="monto">
                                 </mat-form-field>
                                 <mat-form-field class="short-width" appearance="fill">
                                     <mat-label>Tipo de Rubro</mat-label>

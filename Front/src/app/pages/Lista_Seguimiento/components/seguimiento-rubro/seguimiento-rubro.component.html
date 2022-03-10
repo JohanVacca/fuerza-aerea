@@ -1,84 +1,52 @@
 <mat-card class="card">
-  <mat-card-title>CUMPLIMIENTO PLAN DE INVERSIÓN DEL PROYECTO</mat-card-title>
-  <mat-card-subtitle>En esta sección podrá realizar el seguimiento del presupuesto ejecutado a la fecha de los rubros
-    del proyectos</mat-card-subtitle>
-  <div class="container">
-    <table mat-table [dataSource]="proyect" class="mat-elevation-z8">
+    <mat-card-title>CUMPLIMIENTO PLAN DE INVERSIÓN DEL PROYECTO</mat-card-title>
+    <mat-card-subtitle>En esta sección podrá realizar el seguimiento del presupuesto ejecutado a la fecha de los rubros
+        del proyectos
+    </mat-card-subtitle>
 
-      <ng-container matColumnDef="Rubros">
-        <th mat-header-cell *matHeaderCellDef> Rubros </th>
-        <td mat-cell *matCellDef="let element"> {{element.NombreRubro}} </td>
-      </ng-container>
-
-
-      <ng-container matColumnDef="PresupuestoAsignado">
-        <th mat-header-cell *matHeaderCellDef> Presupuesto Asignado </th>
-        <td mat-cell *matCellDef="let element">{{element.TotalEfectivo}}</td>
-      </ng-container>
-
-      <ng-container matColumnDef="PresupuestoEjecutado">
-        <th mat-header-cell *matHeaderCellDef> Presupuesto Ejecutado </th>
-        <td mat-cell *matCellDef="let element">
-          <input matInput [ngModel]="element.PresupuestoEjecutado" (change)="SeguimientoRubro($event,element)"
-            type="number">
-        </td>
-      </ng-container>
-
-      <ng-container matColumnDef="Cumplimiento">
-        <th scope="col" mat-header-cell *matHeaderCellDef>% Cumplimiento</th>
-        <td mat-cell *matCellDef="let element" step="0.01">{{element.Cumplimiento}} %</td>
-      </ng-container>
-
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-
-    </table>
-
-
-  </div>
-  <mat-card-actions class="botonera">
-    <button mat-flat-button color="primary" (click)="GuardarSeguimiento()">Guardar Seguimiento</button>
-  </mat-card-actions>
-
+    <div class="lista-rubros__container">
+        <div class="lista-rubros__container--table">
+            <table>
+                <thead>
+                <tr>
+                    <td class="table-border-left">{{RUBRO}}</td>
+                    <td>{{TIPO_DE_RUBRO}}</td>
+                    <td>{{PRESUPUESTO_ASIGNADO}}</td>
+                    <td>{{PRESUPUESTO_EJECUTADO}}</td>
+                    <td>{{CUMPLIMIENTO}}</td>
+                    <td class="table-border-right">{{ACTIONS}}</td>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let rubro of listaDeRubros">
+                    <td>{{rubro.NombreRubro}}</td>
+                    <td>{{rubro.tipoDeRubro}}</td>
+                    <td>{{rubro.EntidadesCostos | currency}}</td>
+                    <td>{{getPresupuestoEjecutado(rubro.listaRubros) | currency}}</td>
+                    <td>{{calculateCumplimiento(rubro.EntidadesCostos, rubro.listaRubros)}}</td>
+                    <td class="lista-rubro-acciones">
+                        <div class="{{'square-green-icon'}}">
+                            <span
+                                class="material-icons"
+                                matTooltip="{{ADD_PRESUPUESTO}}"
+                                (click)="setPresupuesto(rubro.NombreRubro, rubro._id, rubro.EntidadesCostos, rubro.listaRubros)"
+                            >
+                                {{'edit_calendar'}}
+                            </span>
+                        </div>
+                        <div *ngIf="getPresupuestoEjecutado(rubro.listaRubros)" class='square-orange-icon'>
+                            <span
+                                    class="material-icons"
+                                    matTooltip="Ver documentos"
+                                    (click)="viewDocuments(rubro._id)"
+                            >
+                                list_alt
+                            </span>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </mat-card>
-
-
-
-<!-- 
-<div class= "container">
-
-  <table class="table">
-
-  <thead>
-    <tr>
-
-      <th scope="col">Rubro</th>
-      <th scope="col">Presupuesto Asignado</th>
-      <th scope="col">Presupuesto Ejecutado</th>
-      <th scope="col">% Cumplimiento</th>
-
-
-      
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let proyecto of proyect">
-      <td> {{proyecto.NombreRubro}}</td>
-      <td> efectivo </td>
-      <td >PresupuestoEjecutado</td>
-      <td >%Cumplimiento</td>
-
-     
-
-
-  </tr >
-  </tbody>
-
-
-
-  </table>
-
-  </div>
-
- 
- -->

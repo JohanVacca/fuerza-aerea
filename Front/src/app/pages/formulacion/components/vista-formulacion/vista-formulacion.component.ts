@@ -13,8 +13,9 @@ import 'jspdf-autotable';
 import html2canvas from 'html2canvas';
 import {cronogramaService} from '../../../../shared/services/cronograma/cronograma.service';
 import {
+    Actividad,
     Entidad,
-    MetodologiaObjetivo, Planteamiento,
+    MetodologiaObjetivo, Planteamiento, Riesgo,
     RubrosPorEntidades
 } from '../../../../shared/services/saveStateService/StateInterface';
 import {finalize} from 'rxjs/operators';
@@ -57,7 +58,7 @@ export class VistaFormulacionComponent implements OnInit {
     public ComandanteCorreo: string;
     public ComandanteNumber: string;
     public dataSourceRubro = [];
-    public entidades: Entidad[];
+    public entidades: Entidad[] = [];
     public planteamiento: Planteamiento;
     public objetivoGeneral: string;
     public equipoInvestigacion;
@@ -91,11 +92,41 @@ export class VistaFormulacionComponent implements OnInit {
     public firmaInvestigadorPrincipal;
     public firmaGestorActi;
     public firmaComandante;
+    public fechaFirmaInvestigador;
+    public fechaFirmaInvestigadorPrincipal;
+    public fechaFirmaGestorActi;
+    public fechaFirmaComandante;
     public firmas = [];
     public listaDeRubros = [];
+    public riesgos: Riesgo[] = [];
+    public listaDeActividades: Actividad[] = [];
+    public totalAdvance = 0;
+
+    public LIMIT_RUBROS = 2;
+    public FECHA_FIRMA = 'Fecha de firma: ';
 
     ngOnInit(): void {
         this.getAll();
+    }
+
+    public calculateAdvance(firstDate: string, secondDate: string): number {
+        const startDate = new Date(firstDate);
+        const endDate = new Date(secondDate);
+        const today = new Date();
+
+        if (startDate > today) {
+            return 0;
+        }
+
+        if (endDate < today) {
+            return 100;
+        }
+
+        if (startDate < today && today < endDate) {
+            const totalDays = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 3600 * 24));
+            const actualDay = Math.ceil((today.getTime() - startDate.getTime()) / (1000 * 3600 * 24));
+            return Math.ceil((actualDay * 100) / totalDays);
+        }
     }
 
     public getAll(): void {
@@ -145,7 +176,21 @@ export class VistaFormulacionComponent implements OnInit {
                 this.dataSourceRubro = r.Proyecto.AgregarDetallesRubros;
                 this.entidades = r.Proyecto.Entidades;
                 this.planteamiento = r.Proyecto.planteamiento;
+                this.riesgos = r.Proyecto.riesgos ? r.Proyecto.riesgos : [];
             });
+    }
+
+    private calculateTotalAdvance(): void {
+        let count = 0;
+        let totalPercentage = 0;
+        this.listaDeActividades.map(activity => {
+            activity.subActividad.map(subActividad => {
+                count += 1;
+                totalPercentage += this.calculateAdvance(String(subActividad.fechaInicio), String(subActividad.fechaFinal));
+            });
+        });
+        const total = 100 * count;
+        this.totalAdvance = totalPercentage * 100 / total;
     }
 
     private getRubroOpcion(): void {
@@ -164,11 +209,34 @@ export class VistaFormulacionComponent implements OnInit {
                 const efectivo = this.getAmount(entidad.nombre, 'Efectivo', rubro.descr);
                 const especie = this.getAmount(entidad.nombre, 'Especie', rubro.descr);
                 const hasRubro = this.listaDeRubros.find(rubroSeleccionado => rubroSeleccionado.nombre === rubro.descr);
-                if (!hasRubro) {
+                if (!hasRubro && (efectivo || especie)) {
                     this.listaDeRubros.push({entidad, efectivo, especie, nombre: rubro.descr});
                 }
             });
         });
+    }
+
+    public getProductosEsperados(subActividadNombre: string): string {
+        const productoEsperado = this.productosEsperados.find(producto => producto.subActividad === subActividadNombre);
+        return productoEsperado ? productoEsperado.tipoProducto : '---';
+    }
+
+    public calculatePercentage(name): string {
+        const newList = this.listaDeRubros.filter(rubro => rubro.nombre === name);
+        const total = newList.reduce((acc, actual) => {
+            return acc + actual.efectivo + actual.especie;
+        }, 0);
+        const percentage = ((total * 100) / this.totalDelProyecto).toFixed(2);
+        return `${percentage} %`;
+    }
+
+    public calculatePercentageByEntity(entidad): string {
+        const newList = this.listaDeRubros.filter(rubro => rubro.entidad.nombre === entidad);
+        const total = newList.reduce((acc, actual) => {
+            return acc + actual.efectivo + actual.especie;
+        }, 0);
+        const percentage = ((total * 100) / this.totalDelProyecto).toFixed(2);
+        return `${percentage} %`;
     }
 
     public getAmount(entidad: string, tipoDeRubro: string, nombreDeRubro: string): number {
@@ -198,35 +266,39 @@ export class VistaFormulacionComponent implements OnInit {
     private getFirmas(): void {
         this.firmas.map(firma => {
             if (firma.name === 'Investigador' && firma.status) {
-                this.getFirma(firma.idQuienFirma, 'Investigador');
+                this.getFirma(firma.idQuienFirma, 'Investigador', firma.date);
             }
             if (firma.name === 'Investigador Principal' && firma.status) {
-                this.getFirma(firma.idQuienFirma, 'Investigador Principal');
+                this.getFirma(firma.idQuienFirma, 'Investigador Principal', firma.date);
             }
             if (firma.name === 'Comandante' && firma.status) {
-                this.getFirma(firma.idQuienFirma, 'Comandante');
+                this.getFirma(firma.idQuienFirma, 'Comandante', firma.date);
             }
             if (firma.name === 'GestorACTI' && firma.status) {
-                this.getFirma(firma.idQuienFirma, 'GestorACTI');
+                this.getFirma(firma.idQuienFirma, 'GestorACTI', firma.date);
             }
         });
     }
 
-    private getFirma(userId: string, tipo: string): void {
+    private getFirma(userId: string, tipo: string, fecha): void {
         this.firmaService.getFirma(userId)
             .subscribe(
                 response => {
                     if (tipo === 'Investigador') {
                         this.firmaInvestigador = response.firma;
+                        this.fechaFirmaInvestigador = fecha;
                     }
                     if (tipo === 'Investigador Principal') {
                         this.firmaInvestigadorPrincipal = response.firma;
+                        this.fechaFirmaInvestigadorPrincipal = fecha;
                     }
                     if (tipo === 'Comandante') {
                         this.firmaComandante = response.firma;
+                        this.fechaFirmaComandante = fecha;
                     }
                     if (tipo === 'GestorACTI') {
                         this.firmaGestorActi = response.firma;
+                        this.fechaFirmaGestorActi = fecha;
                     }
                 },
                 error => console.log('error>>> ', error)
@@ -244,11 +316,14 @@ export class VistaFormulacionComponent implements OnInit {
         });
 
         this.cronogramaServic.getByProjectId(this.data.idProyecto)
+            .pipe(finalize(() => this.calculateTotalAdvance()))
             .subscribe(response => {
-                response.cronogramas.actividades.map(actividad => {
+                // @ts-ignore
+                this.listaDeActividades = response.cronogramas.actividades;
+                response.cronogramas.actividades.map(actividadActual => {
                     listaDeMetodologia.map(metodologia => {
-                        if (metodologia.objetivo === actividad.objetivo) {
-                            metodologia.actividades.push(actividad.nombreAct);
+                        if (metodologia.objetivo === actividadActual.objetivo) {
+                            metodologia.actividades.push(actividadActual.nombreAct);
                         }
                     });
                     this.listaDeMetodologia = listaDeMetodologia;

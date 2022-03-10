@@ -1,22 +1,16 @@
-import { Component, OnInit } from '@angular/core';
-import { cronogramaService } from 'src/app/shared/services/cronograma/cronograma.service';
-import { ActivatedRoute, Params } from '@angular/router';
-import { actividad, cronogramaObj, subAct } from '../../../../shared/models/cronograma.model'
-import { ProjectService } from 'src/app/shared/services/Proyect/project.service';
+import {Component} from '@angular/core';
+import {ActivatedRoute} from '@angular/router';
+import {ProjectService} from 'src/app/shared/services/Proyect/project.service';
+import {Actividad} from '../../../../shared/services/saveStateService/StateInterface';
 
 @Component({
-  selector: 'app-seguimiento',
-  templateUrl: './seguimiento.component.html',
-  styleUrls: ['./seguimiento.component.scss']
+    selector: 'app-seguimiento',
+    templateUrl: './seguimiento.component.html',
+    styleUrls: ['./seguimiento.component.scss']
 })
-export class SeguimientoComponent implements OnInit {
-  cronograma: actividad[]
-  constructor(private rutaActiva: ActivatedRoute, private projectService: ProjectService) { }
+export class SeguimientoComponent {
+    public cronograma: Actividad[];
 
-  ngOnInit(): void {
-
-
-  }
-
-
+    constructor(private rutaActiva: ActivatedRoute, private projectService: ProjectService) {
+    }
 }

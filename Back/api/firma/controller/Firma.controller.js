@@ -1,9 +1,9 @@
 'use strict';
 
-const {validationResult} = require("express-validator/check");
 const FirmaDao = require("../dao/firma.dao");
 const ProyectoDao = require("../../project/dao/project.dao");
 
+const {validationResult} = require("express-validator/check");
 
 /**
  * create a firma
@@ -11,20 +11,28 @@ const ProyectoDao = require("../../project/dao/project.dao");
  * @param res
  * @param next
  */
-async function create(req, res, next) {
-    const {file} = req.files;
-    const {userId} = req.body;
-    const _firma = new FirmaDao();
-    _firma.userId = userId;
-    _firma.name = file.name;
-    _firma.data = file.data;
-    _firma.path = '/img/uploads/' + file.name;
-    _firma.mimetype = file.mimetype;
-    _firma.size = file.size;
+async function create(req, res) {
+    try {
+        validationResult(req).throw();
+        console.clear();
+        console.log('********************');
+        console.log('******************** req.file', req);
+        const {file} = req.files;
+        const {userId} = req.body;
+        const _firma = new FirmaDao();
+        _firma.userId = userId;
+        _firma.name = file.name;
+        _firma.data = file.data;
+        _firma.path = '/img/uploads/' + file.name;
+        _firma.mimetype = file.mimetype;
+        _firma.size = file.size;
 
-    let saved = await _firma.save();
-    let _newFirma = await FirmaDao.findOne({_id: saved._id})
-    res.status(200).json({"firma": _newFirma});
+        let saved = await _firma.save();
+        let _newFirma = await FirmaDao.findOne({_id: saved._id})
+        res.status(200).json({"firma": _newFirma});
+    } catch (e) {
+
+    }
 }
 
 function remove(req, res, next) {
@@ -105,6 +113,7 @@ async function update(req, res, next) {
                 project.firmas = project.firmas.map(firma => {
                     if (String(firmaId) === String(firma._id)) {
                         firma.status = true;
+                        firma.date = new Date();
                     }
                     return firma
                 });

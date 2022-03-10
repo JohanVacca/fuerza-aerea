@@ -6,7 +6,7 @@
                     <thead>
                     <tr>
                         <td class="image-table" colspan="3" rowspan="3">
-                            <img src="../../../../../assets/images/logo.png">
+                            <img src="assets/images/logo.png" alt="Logo FAC">
                         </td>
                         <td class="cssencabezado" colspan="5">FUERZA AÉREA COLOMBIANA</td>
                         <td class="cssencabezado" colspan="1">Código</td>
@@ -255,7 +255,8 @@
                                         <td class="title-table-justificacion"><label>VoBo Proceso</label></td>
                                         <td class="firma-imagen-center" style="width: 100%">
                                             <img class="firma-imagen-pdf" *ngIf="firmaInvestigadorPrincipal"
-                                                 src="data:image/png;base64,{{firmaInvestigadorPrincipal.data}}" alt="Imagen De Firma">
+                                                 src="data:image/png;base64,{{firmaInvestigadorPrincipal.data}}"
+                                                 alt="Imagen De Firma">
                                         </td>
                                     </tr>
                                     </tbody>
@@ -370,10 +371,38 @@
                                     </tr>
                                     </thead>
                                     <tbody>
+                                    <ng-container *ngFor="let activity of listaDeActividades; let i = index">
+                                        <tr *ngFor="let sub of activity.subActividad; let j = index">
+                                            <td *ngIf="j===0"
+                                                [attr.rowspan]="activity.subActividad.length">
+                                                <b>{{i + 1}}</b>
+                                            </td>
+                                            <td *ngIf="j===0"
+                                                [attr.rowspan]="activity.subActividad.length">
+                                                <b>{{activity.nombreAct}}</b>
+                                            </td>
+                                            <td>
+                                                <label>
+                                                    {{calculateAdvance(sub.fechaInicio.toString(), sub.fechaFinal.toString())}}
+                                                    %
+                                                </label>
+                                            </td>
+                                            <td>{{activity.objetivo}}</td>
+                                            <td>-</td>
+                                            <td>{{ sub.fechaInicio | date: 'shortDate' }}</td>
+                                            <td>{{ sub.fechaFinal | date: 'shortDate' }}</td>
+                                            <td>
+                                                {{resultadosEsperados}}
+                                            </td>
+                                            <td>
+                                                {{getProductosEsperados(sub.nombreSub)}}
+                                            </td>
+                                        </tr>
+                                    </ng-container>
                                     <tr>
                                         <td class="title-table-estructura" colspan="2"><label>Total</label></td>
-                                        <td class="title-table-estructura" colspan="1"><label>100%</label></td>
-                                        <td class="title-table-estructura" colspan="6"><label>%</label></td>
+                                        <td class="title-table-estructura" colspan="7"><label>{{totalAdvance}} %</label>
+                                        </td>
                                     </tr>
                                     </tbody>
                                 </table>
@@ -388,15 +417,23 @@
                         <td style="width: 25%">Riesgos del Proyecto</td>
                         <td style="width: 75%" colspan="3">
                             <div>
-                                <table>
+                                <table class="table-riesgos">
                                     <thead>
                                     <tr>
                                         <td class="title-table-riesgos"><label>id</label></td>
                                         <td class="title-table-riesgos"><label>Descipción</label></td>
                                         <td class="title-table-riesgos"><label>Consecuencias</label></td>
-                                        <td class="title-table-riesgos"><label>Accieon sugerida</label></td>
+                                        <td class="title-table-riesgos"><label>Acción sugerida</label></td>
                                     </tr>
                                     </thead>
+                                    <tbody>
+                                    <tr *ngFor="let riesgo of riesgos; let i = index">
+                                        <td><label>{{i + 1}}</label></td>
+                                        <td><label>{{riesgo.descripcion}}</label></td>
+                                        <td><label>{{riesgo.consecuencia}}</label></td>
+                                        <td><label>{{riesgo.accion}}</label></td>
+                                    </tr>
+                                    </tbody>
                                 </table>
                             </div>
                         </td>
@@ -412,7 +449,7 @@
                     </thead>
                 </table>
 
-                <table class="table table-pdf-form">
+                <table class="table table-pdf-form" style="width: 100%">
                     <thead>
                     <tr class="table-title">
                         <td style="width: 100%" colspan="4">COMPONENTE PRESUPUESTAL</td>
@@ -421,46 +458,72 @@
                         <td style="width: 25%">Costos del Proyecto</td>
                         <td style="width: 75%" colspan="3">
                             <div>
-                                <table>
+                                <table style="width: 100%">
                                     <thead>
                                     <tr>
-                                        <th class="title-table-costos" rowspan="2"><label>Rubro</label></th>
-                                        <th *ngFor="let entidad of entidades" class="title-table-costos" colspan="2">
-                                            <label>{{entidad.nombre}}</label></th>
+                                        <th class="title-table-costos" rowspan="3"><label>Rubro</label></th>
+                                        <th class="title-table-costos center-row-table" rowspan="3"><label>Porcentaje</label></th>
+                                        <ng-container *ngFor="let entidad of entidades; let i = index">
+                                            <th *ngIf="i < 2" class="title-table-costos" colspan="2">
+                                                <label>{{entidad.nombre}}</label>
+                                            </th>
+                                        </ng-container>
                                     </tr>
                                     <tr>
-                                        <ng-container *ngFor="let entidad of entidades">
-                                            <th class="title-table-costos" colspan="1"><label>Efectivo</label></th>
-                                            <th class="title-table-costos" colspan="1"><label>Especie</label></th>
+                                        <ng-container *ngFor="let entidad of entidades; let i = index">
+                                            <th *ngIf="i < 2" colspan="2" class="porcentaje">
+                                                <label>{{calculatePercentageByEntity(entidad.nombre)}}</label>
+                                            </th>
+                                        </ng-container>
+                                    </tr>
+                                    <tr>
+                                        <ng-container *ngFor="let entidad of entidades; let i = index">
+                                            <ng-container *ngIf="i < 2">
+                                                <th class="title-table-costos" colspan="1"><label>Efectivo</label></th>
+                                                <th class="title-table-costos" colspan="1"><label>Especie</label></th>
+                                            </ng-container>
                                         </ng-container>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr *ngFor="let rubroActual of listaDeRubros">
+                                    <ng-container *ngFor="let rubroActual of listaDeRubros">
+<!--                                        validar que la primera o segunda entidad este en el rubro actual sino no se muestra-->
                                         <ng-container *ngIf="rubroActual.efectivo || rubroActual.especie">
-                                            <td>{{rubroActual.nombre}}</td>
-                                            <ng-container *ngFor="let entidad of entidades">
-                                                <td>{{getAmount(entidad.nombre, 'Efectivo', rubroActual.nombre) | currency}}</td>
-                                                <td>{{getAmount(entidad.nombre, 'Especie', rubroActual.nombre) | currency}}</td>
-                                            </ng-container>
+                                            <tr>
+                                                <td>{{rubroActual.nombre}}</td>
+                                                <td>{{calculatePercentage(rubroActual.nombre)}}</td>
+                                                <ng-container *ngFor="let entidad of entidades; let j = index">
+                                                    <ng-container *ngIf="j < 2">
+                                                        <td>{{getAmount(entidad.nombre, 'Efectivo', rubroActual.nombre) | currency}}</td>
+                                                        <td>{{getAmount(entidad.nombre, 'Especie', rubroActual.nombre) | currency}}</td>
+                                                    </ng-container>
+                                                </ng-container>
+                                            </tr>
                                         </ng-container>
-                                    </tr>
+                                    </ng-container>
                                     <tr>
                                         <td class="title-table-costos">
                                             <label> <b>Subtotal por Tipo de Recurso</b></label>
                                         </td>
-                                        <ng-container *ngFor="let entidad of entidades">
-                                            <td><b>{{getTotalSubTypeAmount(entidad.nombre, 'Efectivo') | currency}}</b>
-                                            </td>
-                                            <td><b>{{getTotalSubTypeAmount(entidad.nombre, 'Especie') | currency}}</b>
-                                            </td>
+                                        <td class="title-table-costos">
+                                            <label>  </label>
+                                        </td>
+                                        <ng-container *ngFor="let entidad of entidades; let j = index">
+                                            <ng-container *ngIf="j < 2">
+                                                <td>
+                                                    <b>{{getTotalSubTypeAmount(entidad.nombre, 'Efectivo') | currency}}</b>
+                                                </td>
+                                                <td>
+                                                    <b>{{getTotalSubTypeAmount(entidad.nombre, 'Especie') | currency}}</b>
+                                                </td>
+                                            </ng-container>
                                         </ng-container>
                                     </tr>
                                     <tr>
                                         <td class="title-table-costos" colspan="1">
                                             <label><b>Total Proyecto</b></label>
                                         </td>
-                                        <td colspan="4">{{totalDelProyecto | currency}}</td>
+                                        <td [attr.colspan]="entidades.length * 2">{{totalDelProyecto | currency}}</td>
                                     </tr>
                                     </tbody>
                                 </table>
@@ -470,6 +533,10 @@
                                 <label>*Monto máximo a financiar hasta el 30% del valor aportado en efectivo.</label>
                                 <label>** Monto máximo a financiar hasta el 25% del valor aportado en efectivo.</label>
                                 <label>*** Monto máximo a financiar hasta el 5% del valor aportado en efectivo.</label>
+                                <label *ngIf="entidades.length > LIMIT_RUBROS">
+                                    <b>EL TOTAL SE SUMA CON EL COMPONENTE PRESUPUESTAL ANEXO. POR FAVOR REVISAR LOS
+                                        DOCUMENTOS ANEXOS</b>
+                                </label>
                             </div>
                         </td>
                     </tr>
@@ -490,6 +557,7 @@
                         <td style="width: 75%" colspan="3" class="firma-imagen-center">
                             <img class="firma-imagen-pdf" *ngIf="firmaInvestigador"
                                  src="data:image/png;base64,{{firmaInvestigador.data}}" alt="Imagen De Firma">
+                            <div *ngIf="fechaFirmaInvestigador">{{FECHA_FIRMA}}{{fechaFirmaInvestigador | date: 'shortDate' }}</div>
                         </td>
                     </tr>
                     <tr>
@@ -497,6 +565,7 @@
                         <td style="width: 75%" colspan="3" class="firma-imagen-center">
                             <img class="firma-imagen-pdf" *ngIf="firmaInvestigadorPrincipal"
                                  src="data:image/png;base64,{{firmaInvestigadorPrincipal.data}}" alt="Imagen De Firma">
+                            <div *ngIf="fechaFirmaInvestigadorPrincipal">{{FECHA_FIRMA}}{{fechaFirmaInvestigadorPrincipal| date: 'shortDate' }}</div>
                         </td>
                     </tr>
                     <tr>
@@ -504,6 +573,7 @@
                         <td style="width: 75%" colspan="3" class="firma-imagen-center">
                             <img class="firma-imagen-pdf" *ngIf="firmaComandante"
                                  src="data:image/png;base64,{{firmaComandante.data}}" alt="Imagen De Firma">
+                            <div *ngIf="fechaFirmaComandante">{{FECHA_FIRMA}}{{fechaFirmaComandante| date: 'shortDate' }}</div>
                         </td>
                     </tr>
                     <tr>
@@ -511,6 +581,7 @@
                         <td style="width: 75%" colspan="3" class="firma-imagen-center">
                             <img class="firma-imagen-pdf" *ngIf="firmaGestorActi"
                                  src="data:image/png;base64,{{firmaGestorActi.data}}" alt="Imagen De Firma">
+                            <div *ngIf="fechaFirmaGestorActi">{{FECHA_FIRMA}}{{fechaFirmaGestorActi| date: 'shortDate' }}</div>
                         </td>
                     </tr>
                     </thead>
@@ -588,6 +659,96 @@
                     </tr>
                     </thead>
                 </table>
+
+                <table class="table table-pdf-form" *ngIf="entidades.length > LIMIT_RUBROS" style="width: 100%">
+                    <thead>
+                    <tr class="table-title">
+                        <td style="width: 100%">DOCUMENTOS ANEXOS</td>
+                    </tr>
+                    <tr>
+                        <td style="width: 100%">
+                            <div>
+                                <table style="width: 100%">
+                                    <thead>
+                                    <tr>
+                                        <th class="title-table-costos" rowspan="3"><label>Rubro</label></th>
+                                        <th class="title-table-costos center-row-table" rowspan="3"><label>Porcentaje</label></th>
+                                        <ng-container *ngFor="let entidad of entidades; let i = index">
+                                            <th *ngIf="i > 1"
+                                                class="title-table-costos" colspan="2">
+                                                <label>{{entidad.nombre}}</label>
+                                            </th>
+                                        </ng-container>
+                                    </tr>
+                                    <tr>
+                                        <ng-container *ngFor="let entidad of entidades; let i = index">
+                                            <th *ngIf="i > 1" colspan="2" class="porcentaje">
+                                                <label>{{calculatePercentageByEntity(entidad.nombre)}}</label>
+                                            </th>
+                                        </ng-container>
+                                    </tr>
+                                    <tr>
+                                        <ng-container *ngFor="let entidad of entidades; let i = index">
+                                            <ng-container *ngIf="i > 1">
+                                                <th class="title-table-costos" colspan="1"><label>Efectivo</label></th>
+                                                <th class="title-table-costos" colspan="1"><label>Especie</label></th>
+                                            </ng-container>
+                                        </ng-container>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <ng-container *ngFor="let rubroActual of listaDeRubros">
+                                        <tr>
+                                            <ng-container *ngIf="rubroActual.efectivo || rubroActual.especie">
+                                                <td>{{rubroActual.nombre}}</td>
+                                                <td>{{calculatePercentage(rubroActual.nombre)}}</td>
+                                                <ng-container *ngFor="let entidad of entidades; let j = index">
+                                                    <ng-container *ngIf="j > 1">
+                                                        <td>{{getAmount(entidad.nombre, 'Efectivo', rubroActual.nombre) | currency}}</td>
+                                                        <td>{{getAmount(entidad.nombre, 'Especie', rubroActual.nombre) | currency}}</td>
+                                                    </ng-container>
+                                                </ng-container>
+                                            </ng-container>
+                                        </tr>
+                                    </ng-container>
+                                    <tr>
+                                        <td class="title-table-costos">
+                                            <label> <b>Subtotal por Tipo de Recurso</b></label>
+                                        </td>
+                                        <td class="title-table-costos">
+                                            <label> </label>
+                                        </td>
+                                        <ng-container *ngFor="let entidad of entidades; let i = index">
+                                            <ng-container *ngIf="i > 1">
+                                                <td>
+                                                    <b>{{getTotalSubTypeAmount(entidad.nombre, 'Efectivo') | currency}}</b>
+                                                </td>
+                                                <td>
+                                                    <b>{{getTotalSubTypeAmount(entidad.nombre, 'Especie') | currency}}</b>
+                                                </td>
+                                            </ng-container>
+                                        </ng-container>
+                                    </tr>
+                                    <tr>
+                                        <td class="title-table-costos" colspan="1">
+                                            <label><b>Total Proyecto</b></label>
+                                        </td>
+                                        <td [attr.colspan]="(entidades.length * 2)-3">{{totalDelProyecto | currency}}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div>
+                                <label>*Monto máximo a financiar hasta el 30% del valor aportado en efectivo.</label>
+                                <label>** Monto máximo a financiar hasta el 25% del valor aportado en efectivo.</label>
+                                <label>*** Monto máximo a financiar hasta el 5% del valor aportado en efectivo.</label>
+                            </div>
+                        </td>
+                    </tr>
+                    </thead>
+                </table>
+
             </div>
         </div>
     </div>

@@ -1,56 +1,54 @@
-import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
-import { InvitedComponent } from './invited.component';
-import { SignUpComponent } from './sign-up/sign-up.component';
-import { LandingPageComponent } from './landing-page/landing-page.component';
-import { SignInComponent } from './sign-in/sign-in.component';
-import { SomosComponent } from './landing-page/somos/somos.component';
+import {NgModule} from '@angular/core';
+import {Routes, RouterModule} from '@angular/router';
+import {InvitedComponent} from './invited.component';
+import {SignUpComponent} from './sign-up/sign-up.component';
+import {LandingPageComponent} from './landing-page/landing-page.component';
+import {SignInComponent} from './sign-in/sign-in.component';
+import {SomosComponent} from './landing-page/somos/somos.component';
+import {SesionGuard} from '../shared/services/sesionGuard/sesion.guard';
 
-const app_routes: Routes = [ 
-  {
-    path: '',
-    component: InvitedComponent,
-    children: [
-      {
-        path: '',component: LandingPageComponent,
-        // pathMatch: 'full',
-      },
-      {
-        path: 'somos',
-        component: SomosComponent ,
-        // pathMatch: 'full',
-      },
-      {
-        path: 'sign-in',
-        component: SignInComponent,
-      },
-      {
-        path: 'sign-up',
-        component: SignUpComponent,
-      },
-  //     {
-  //       path: '**',
-  //       redirectTo: '',
-  //     },
-    ],
+const routes: Routes = [
+    {
+        path: '',
+        component: InvitedComponent,
+        children: [
+            {
+                path: '', component: LandingPageComponent,
+            },
+            {
+                path: 'somos',
+                component: SomosComponent,
+            },
+            {
+                path: 'sign-in',
+                component: SignInComponent,
+                canActivate: [SesionGuard]
+            },
+            {
+                path: 'sign-up',
+                component: SignUpComponent,
+                canActivate: [SesionGuard]
+            },
+        ],
     }
 ];
 
 @NgModule({
-  imports: [
-    RouterModule.forChild(app_routes),
-  ],
-  exports: [
-    RouterModule,
-  ],
+    imports: [
+        RouterModule.forChild(routes),
+    ],
+    exports: [
+        RouterModule,
+    ],
+    providers: [SesionGuard]
 })
 export class InvitedRoutingModule {
 
 }
 
 export const routedComponents = [
-  InvitedComponent,
-  LandingPageComponent,
-  SignInComponent,
-  SignUpComponent,
+    InvitedComponent,
+    LandingPageComponent,
+    SignInComponent,
+    SignUpComponent,
 ];

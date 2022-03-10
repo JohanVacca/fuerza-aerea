@@ -9,6 +9,7 @@ let api = express.Router();
 
 api.get(endpoint, [mdAuth.ensureAuth],InvCenterController.getAll);
 api.post(endpoint, InvCenterController.create);
+api.post(`${endpoint}/:id`, InvCenterController.edit);
 api.delete(endpoint, InvCenterController.remove);
 
 module.exports = api;

@@ -1,18 +1,14 @@
-import {validateAndRewriteCoreSymbol} from '@angular/compiler-cli/src/ngtsc/imports';
 import {Component, Inject, OnInit} from '@angular/core';
 import {FormGroup, FormBuilder, FormControl, Validators} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import {ActivatedRoute, Params} from '@angular/router';
-import {subAct, actividad} from '../../../../../../../shared/models/cronograma.model';
-import {ObjetivoEspecifico, StateInterface} from '../../../../../../../shared/services/saveStateService/StateInterface';
+import {ActivatedRoute} from '@angular/router';
+import {
+    Actividad,
+    ObjetivoEspecifico,
+    StateInterface,
+    SubActividad
+} from '../../../../../../../shared/services/saveStateService/StateInterface';
 import {SaveStateService} from '../../../../../../../shared/services/saveStateService/save-state.service';
-
-interface Country {
-    name: string;
-    flag: string;
-    area: number;
-    population: number;
-}
 
 @Component({
     selector: 'app-agregar-actividad',
@@ -21,23 +17,18 @@ interface Country {
 })
 export class AgregarActividadComponent implements OnInit {
 
-    registroCronograma: FormGroup;
-    ObjsubAct: subAct[] = [];
-    actividad: actividad;
-    Convocatoria: string;
-    AgSub: subAct[] = [];
-    agregoSub: boolean = false;
-    editar: boolean = false;
-    nombreActEdit;
-    nombrePredecesora;
-    Prede;
-    nombreSubEdit;
-    fechaInicioEdit;
-    fechaFinalEdit;
-    ValFechas;
-    siEditoF = false;
-    PredecesoraACT = [];
-
+    public registroCronograma: FormGroup;
+    public actividad: Actividad;
+    public Convocatoria: string;
+    public AgSub: SubActividad[] = [];
+    public agregoSub = false;
+    public editar = false;
+    public nombreActEdit;
+    public Prede;
+    public nombreSubEdit;
+    public ValFechas;
+    public siEditoF = false;
+    public PredecesoraACT = [];
     public objetivosEspecificos: ObjetivoEspecifico[] = [];
     public objetivo: string;
 
@@ -52,6 +43,7 @@ export class AgregarActividadComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.initializeData();
         this.editar = this.data.SeEstaEditando;
         if (this.editar) {
             this.getAll();
@@ -61,21 +53,21 @@ export class AgregarActividadComponent implements OnInit {
         this.siEditoF = false;
         this.builder();
         this.agregoSub = false;
-        this.initializeData();
     }
 
 
-    cargarPreDec() {
-        let cronograma: actividad[] = JSON.parse(localStorage.getItem('cronograma'));
-        var predecesoraAux = [];
-        var PreBasic = {
+    cargarPreDec(): void {
+        console.log('this.state carga :: ', this.state);
+        const cronograma: Actividad[] = this.state.tercerPaso.actividades;
+        const predecesoraAux = [];
+        const PreBasic = {
             id: 1,
             name: 'No Tiene'
         };
         predecesoraAux.push(PreBasic);
-        if (cronograma != undefined) {
+        if (cronograma) {
             cronograma.forEach(element => {
-                var Prenew = {
+                const Prenew = {
                     id: element.idUnicoTare,
                     name: element.nombreAct
                 };
@@ -85,21 +77,21 @@ export class AgregarActividadComponent implements OnInit {
         this.PredecesoraACT = predecesoraAux;
     }
 
-    getAll() {
-        let cronograma: actividad[] = JSON.parse(localStorage.getItem('cronograma'));
-        var predecesoraAux = [];
-        var PreBasic = {
+    getAll(): void {
+        const cronograma: Actividad[] = this.state.tercerPaso.actividades;
+        const predecesoraAux = [];
+        const PreBasic = {
             id: 1,
             name: 'No Tiene'
         };
         predecesoraAux.push(PreBasic);
         cronograma.forEach(element => {
-            if (element.idUnicoTare == this.data.Actividad) {
+            if (element.idUnicoTare === this.data.Actividad) {
                 this.AgSub = element.subActividad;
                 this.nombreActEdit = element.nombreAct;
                 this.Prede = element.predecesora;
             } else {
-                var Prenew = {
+                const Prenew = {
                     id: element.idUnicoTare,
                     name: element.nombreAct
                 };
@@ -109,7 +101,7 @@ export class AgregarActividadComponent implements OnInit {
         this.PredecesoraACT = predecesoraAux;
     }
 
-    builder() {
+    builder(): void {
         if (!this.editar) {
             this.registroCronograma = this.form.group({
                 nombreAct: new FormControl('', [Validators.required]),
@@ -131,12 +123,12 @@ export class AgregarActividadComponent implements OnInit {
         }
     }
 
-    AgregarSub() {
-        var valores = this.registroCronograma.value;
+    AgregarSub(): void {
+        const valores = this.registroCronograma.value;
         if (this.actividad != null) {
             this.AgSub = this.actividad.subActividad;
         }
-        var subAct: subAct = {
+        const subAct: SubActividad = {
             nombreSub: valores.nombreSub,
             fechaInicio: valores.fechaInicio,
             fechaFinal: valores.fechaFinal
@@ -157,10 +149,10 @@ export class AgregarActividadComponent implements OnInit {
         }
     }
 
-    obSubEdit() {
-        var valores = this.registroCronograma.value;
-        let cronograma: actividad[] = JSON.parse(localStorage.getItem('cronograma'));
-        let cronogramaNew: actividad[] = [];
+    obSubEdit(): void {
+        const valores = this.registroCronograma.value;
+        const cronograma: Actividad[] = JSON.parse(localStorage.getItem('cronograma'));
+        const cronogramaNew: Actividad[] = [];
         cronograma.forEach(element => {
             if (element.idUnicoTare === this.data.Actividad) {
                 element.nombreAct = valores.nombreAct;
@@ -170,7 +162,7 @@ export class AgregarActividadComponent implements OnInit {
             }
             cronogramaNew.push(element);
         });
-        var aux = null;
+        let aux = null;
         this.AgSub.forEach(element => {
             if (aux == null) {
                 aux = element.fechaFinal;
@@ -180,7 +172,7 @@ export class AgregarActividadComponent implements OnInit {
                 }
             }
         });
-        var auxOb = {
+        const auxOb = {
             id: this.data.Actividad,
             dateFinal: aux,
             valor: this.siEditoF
@@ -189,8 +181,8 @@ export class AgregarActividadComponent implements OnInit {
         localStorage.setItem('cronograma', JSON.stringify(cronogramaNew));
     }
 
-    editarSub(subAct) {
-        var valores = this.registroCronograma.value;
+    editarSub(subAct): void {
+        const valores = this.registroCronograma.value;
         this.siEditoF = true;
         this.AgSub.forEach(element => {
             if (element === subAct) {
@@ -207,27 +199,24 @@ export class AgregarActividadComponent implements OnInit {
 
     }
 
-    CloseAlert() {
+    CloseAlert(): void {
         this.ValFechas = false;
     }
 
-    eliminarSub(subAct) {
-        var AgSubNew: subAct[] = [];
+    eliminarSub(subAct): void {
+        const AgSubNew: SubActividad[] = [];
         this.AgSub.forEach(element => {
-            if (element != subAct) {
+            if (element !== subAct) {
                 AgSubNew.push(element);
             }
         });
         this.AgSub = AgSubNew;
     }
 
-    onSub() {
-        var valores = this.registroCronograma.value;
-        let cronograma: actividad[] = JSON.parse(localStorage.getItem('cronograma'));
-        if (cronograma == null) {
-            cronograma = [];
-        }
-        var cronocramaObj: actividad = {
+    public saveCronograma(): void {
+        const valores = this.registroCronograma.value;
+        const cronograma: Actividad[] = this.state.tercerPaso.actividades ? this.state.tercerPaso.actividades : [];
+        const cronocramaObj: Actividad = {
             idUnicoTare: Math.round(Math.random() * 10000000),
             nombreAct: valores.nombreAct,
             predecesora: valores.Predecesora,
@@ -235,14 +224,27 @@ export class AgregarActividadComponent implements OnInit {
             subActividad: this.AgSub
         };
         cronograma.push(cronocramaObj);
-        localStorage.setItem('cronograma', JSON.stringify(cronograma));
+        this.state.tercerPaso.actividades = cronograma;
+        this.updateState();
     }
 
     private initializeData(): void {
+        console.log('ini!');
         this.state = this.saveStateService.getState();
         if (this.state?.cuartoPaso?.objetivo?.objetivosEspecificos) {
             this.objetivosEspecificos = this.state.cuartoPaso.objetivo.objetivosEspecificos;
         }
+        if (!this.state?.tercerPaso) {
+            this.state.tercerPaso = {};
+        }
+    }
+
+    private updateState(): void {
+        this.state = {
+            ...this.saveStateService.getState(),
+            tercerPaso: this.state.tercerPaso
+        };
+        this.saveStateService.setState(this.state);
     }
 }
 

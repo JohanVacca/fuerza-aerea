@@ -56,24 +56,25 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {SharedModule} from '../../shared/shared.module';
 import { PlanteamientoDeProblemaComponent } from './components/detalles-generales/components/planteamiento-de-problema/planteamiento-de-problema.component';
 import { EvaluateProjectComponent } from './components/evaluate-project/evaluate-project.component';
+import { RiesgosComponent } from './components/detalles-generales/components/riesgos/riesgos.component';
+import { AgregarInvestigadorComponent } from './components/cientifico-tecnologico/components/equipo-investigacion/agregar-investigador/agregar-investigador.component';
 
 
 @NgModule({
     imports: [
         FormulacionRoutingModule,
         MatDialogModule,
+        FormsModule,
         CommonModule,
         MatSlideToggleModule,
         MatIconModule,
         MatInputModule,
-        FormsModule,
         MatStepperModule,
         ReactiveFormsModule,
         AdminModule,
         MatTableModule,
         MatInputModule,
         MatButtonModule,
-        FormsModule,
         ReactiveFormsModule,
         MatCardModule,
         MatTooltipModule,
@@ -123,7 +124,9 @@ import { EvaluateProjectComponent } from './components/evaluate-project/evaluate
     AddComplementsComponent,
     AgregarActividadComponent,
     PlanteamientoDeProblemaComponent,
-    EvaluateProjectComponent
+    EvaluateProjectComponent,
+    RiesgosComponent,
+    AgregarInvestigadorComponent
   ],
   entryComponents: [],
   providers: []

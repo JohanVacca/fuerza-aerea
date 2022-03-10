@@ -2,7 +2,7 @@
   <mat-horizontal-stepper labelPosition="bottom" #stepper>
     <mat-step>
       <ng-template matStepLabel><label>Iniciar Proyecto</label></ng-template>
-      <app-informacion-general (textoCambiado)="textoHijo1 = $event"></app-informacion-general>
+      <app-informacion-general [stepper]="stepper" (textoCambiado)="textoHijo1 = $event"></app-informacion-general>
     </mat-step>
     <mat-step>
       <ng-template matStepLabel><label>Componente Científico</label></ng-template>

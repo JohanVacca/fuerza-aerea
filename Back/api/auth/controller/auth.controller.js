@@ -76,7 +76,7 @@ function login(req, res, next) {
                 if(!user){
                     res.status(404).json({"err": 'User not found.'});
                 }else {
-                    if (!user.isActive) {
+                    if (!user.isActive || !user.isUser) {
                         res.status(403).json({"err": 'Account not active.'});
                     }else {
                         bcrypt.compare(password, user.password, (err,respuesta) => {

@@ -12,6 +12,7 @@ const UserSchema = new Schema({
     email: { type: String, unique: true},
     password: String,
     isActive: { type: Boolean, default: false },
+    isUser: Boolean,
     phoneNumber: { type: String },
     dependency: { type: String },
     codeNumber: { type: String },

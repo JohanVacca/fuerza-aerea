@@ -407,3 +407,22 @@ button {
     }
   }
 }
+
+::ng-deep {
+  .palabras-clave-table {
+    width: 100%;
+
+    tbody tr td {
+      text-align: center;
+    }
+  }
+}
+
+.mensaje-sin-grupos {
+  text-align: center;
+
+  label {
+    font-size: 18px;
+    font-weight: bold;
+  }
+}

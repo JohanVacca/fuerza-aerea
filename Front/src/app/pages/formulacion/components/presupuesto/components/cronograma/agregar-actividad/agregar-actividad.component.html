@@ -135,7 +135,7 @@
             <button mat-raised-button color="" disabled>Guardar</button>
         </mat-card-actions>
         <mat-card-actions *ngIf="registroCronograma.value.nombreAct != '' && !editar">
-            <button mat-raised-button color="primary" (click)="onSub()" [mat-dialog-close]="true">Guardar</button>
+            <button mat-raised-button color="primary" (click)="saveCronograma()" [mat-dialog-close]="true">Guardar</button>
         </mat-card-actions>
         <mat-card-actions *ngIf="registroCronograma.value.nombreAct != '' && editar">
             <button mat-raised-button color="primary" (click)="obSubEdit()" [mat-dialog-close]="true">Editar</button>

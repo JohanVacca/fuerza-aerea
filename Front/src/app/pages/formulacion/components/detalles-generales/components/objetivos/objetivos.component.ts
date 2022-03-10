@@ -1,20 +1,7 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FormGroup, FormBuilder, FormControl, Validators} from '@angular/forms';
-import {Objetivo} from '../../../../../../@core/old-models/objetivo';
-import {filter} from 'rxjs/operators';
 import {SaveStateService} from '../../../../../../shared/services/saveStateService/save-state.service';
 import {StateInterface} from '../../../../../../shared/services/saveStateService/StateInterface';
-
-export interface PeriodicElement {
-    descripcion: string;
-}
-
-const ELEMENT_DATA: PeriodicElement[] = [
-    {descripcion: 'Hydrogen'},
-    {descripcion: 'Helium'},
-    {descripcion: 'Lithium'},
-    {descripcion: 'Beryllium'},
-];
 
 @Component({
     selector: 'app-objetivos',
@@ -24,7 +11,6 @@ const ELEMENT_DATA: PeriodicElement[] = [
 export class ObjetivosComponent implements OnInit {
     objetivoGeneral: string;
     objetivoEspecificos: FormGroup;
-    objEspecificoslist = [];
     displayedColumns: string[] = ['descripcion', 'acciones'];
     dataSource;
 

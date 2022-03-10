@@ -317,3 +317,19 @@ button {
   margin-top: 7rem;
   margin-bottom: 6.7rem;
 }
+
+.tabla-responsive-x {
+  table {
+    width: 100%;
+  }
+}
+
+@media only screen and (max-width: 900px) {
+  .tabla-responsive-x {
+    table {
+      display: block;
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+  }
+}

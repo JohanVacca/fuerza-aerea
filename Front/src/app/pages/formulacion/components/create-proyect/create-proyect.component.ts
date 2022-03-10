@@ -9,15 +9,15 @@ import {
 } from '../../../../shared/models/project.model';
 import {ProjectService} from '../../../../shared/services/Proyect/project.service';
 import {AuthStorageService} from '../../../../@core/services/storage/auth-storage/auth-storage.service';
-import {ActivatedRoute, Params} from '@angular/router';
+import {ActivatedRoute, Params, Router} from '@angular/router';
 import {MatDialog} from '@angular/material/dialog';
 import {VistaFormulacionComponent, VistaFormulacionData} from '../vista-formulacion/vista-formulacion.component';
 import {InstructivosService} from '../../../../@core/services/instructivos/FormIns.service';
 import {Api} from '../../../../../environments/environment';
-import {cronogramaObj, actividad} from '../../../../shared/models/cronograma.model';
+import {cronogramaObj} from '../../../../shared/models/cronograma.model';
 import {cronogramaService} from '../../../../shared/services/cronograma/cronograma.service';
 import {SaveStateService} from '../../../../shared/services/saveStateService/save-state.service';
-import {Entidad, Grupo, StateInterface} from '../../../../shared/services/saveStateService/StateInterface';
+import {Actividad, Entidad, Grupo, StateInterface} from '../../../../shared/services/saveStateService/StateInterface';
 import {finalize} from 'rxjs/operators';
 
 // tslint:disable-next-line:class-name
@@ -44,7 +44,7 @@ export class CreateProyectComponent implements OnInit {
     public iniciarProyecto: iniciarProyecto;
     public bibliografia: bibliografia[];
     public UserId;
-    public Actividades: actividad[];
+    public Actividades: Actividad[];
     public hasError = false;
     public messageError = '';
     public firmas: FirmasInterface[];
@@ -58,6 +58,7 @@ export class CreateProyectComponent implements OnInit {
         private rutaActiva: ActivatedRoute,
         private instructivosService: InstructivosService,
         private saveStateService: SaveStateService,
+        private router: Router,
         private cronogramaService: cronogramaService) {
     }
 
@@ -74,7 +75,7 @@ export class CreateProyectComponent implements OnInit {
         const {id} = this.rutaActiva.snapshot.params;
         const {primerPaso, segundoPaso, tercerPaso, cuartoPaso} = this.state;
         const UserId = this.auth.getUserId();
-        this.Actividades = JSON.parse(localStorage.getItem('cronograma'));
+        this.Actividades = tercerPaso.actividades;
 
         return {
             Convocatoria: id,
@@ -100,7 +101,8 @@ export class CreateProyectComponent implements OnInit {
             resumen: localStorage.getItem('resumen'),
             ValorTotal: 0,
             firmas: this.createFirmasInterface(UserId, this.getInvestigadorId(), primerPaso.comandante, primerPaso.gestorId),
-            planteamiento: cuartoPaso.planteamiento
+            planteamiento: cuartoPaso.planteamiento,
+            riesgos: cuartoPaso.riesgos
         };
     }
 
@@ -108,7 +110,7 @@ export class CreateProyectComponent implements OnInit {
         try {
             this.state = this.saveStateService.getState();
             const {primerPaso, segundoPaso, tercerPaso, cuartoPaso, quintoPaso} = this.state;
-            const actividades = JSON.parse(localStorage.getItem('cronograma'));
+            const actividades = this.state.tercerPaso.actividades;
             const proyectoNuevo = this.crearObjetoProyectoNuevo();
 
             if (!primerPaso) {
@@ -134,7 +136,6 @@ export class CreateProyectComponent implements OnInit {
 
             if (!this.hasError) {
                 this.projectService.add(proyectoNuevo)
-                    .pipe(finalize(() => this.cleanLocalStorage()))
                     .subscribe(responseCreateProject => {
                         const proyectId = responseCreateProject.Proyecto._id;
                         const {Convocatoria: ConvocatoriaId} = proyectoNuevo;
@@ -150,18 +151,17 @@ export class CreateProyectComponent implements OnInit {
                                     formData.append('file', fileSelected, element.name);
                                     formData.append('NombreDoc', element.NombreDoc);
                                     formData.append('NombreArchivo', Api.api + element.name + proyectId + '.' + fileSelected.type.split('/')[1]);
-
                                     this.instructivosService.uploadFile(formData)
-                                        .pipe(finalize(() => {
-                                            this.dialog.open(VistaFormulacionComponent, {
-                                                data: {
-                                                    idProyecto: proyectId,
-                                                    evaluar: false
-                                                }
-                                            });
-                                        }))
                                         .subscribe(responseUpdateFile => console.log('responseUpdateFile: ', responseUpdateFile));
                                 });
+                                this.dialog.open(VistaFormulacionComponent, {
+                                    data: {
+                                        idProyecto: proyectId,
+                                        evaluar: false
+                                    }
+                                }).afterClosed().subscribe(
+                                    () => this.cleanLocalStorage()
+                                );
                             }))
                             .subscribe(() => {
                             });
@@ -282,5 +282,6 @@ export class CreateProyectComponent implements OnInit {
         localStorage.setItem('token', token);
         localStorage.setItem('Role', role);
         localStorage.setItem('user', user);
+        this.router.navigate(['/pages']);
     }
 }

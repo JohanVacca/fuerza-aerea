@@ -14,10 +14,12 @@ import {MatDialogModule} from '@angular/material/dialog';
 import {MatCardModule} from '@angular/material/card';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
+import {MatSelectModule} from '@angular/material/select';
+import { ModalCentrosComponent } from './modal-centros/modal-centros.component';
 
 
 @NgModule({
-    declarations: [CentrosDeInvestigacionHomeComponent],
+    declarations: [CentrosDeInvestigacionHomeComponent, ModalCentrosComponent],
     imports: [
         CommonModule,
         MatFormFieldModule,
@@ -32,7 +34,8 @@ import {MatInputModule} from '@angular/material/input';
         MatProgressSpinnerModule,
         MatDialogModule,
         MatCardModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        MatSelectModule
     ]
 })
 export class CentrosDeInvestigacionModule {

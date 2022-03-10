@@ -2,26 +2,9 @@ import {Component, OnInit} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {RegistrarPersonaComponent} from './registrar-persona/registrar-persona.component';
 import {EquipoInvestigacion} from './registrar-persona/registrar-persona.component';
-import {ActivatedRoute, Params} from '@angular/router';
-import {filter} from 'rxjs/operators';
+import {ActivatedRoute} from '@angular/router';
 import {SaveStateService} from '../../../../../../shared/services/saveStateService/save-state.service';
 import {StateInterface} from '../../../../../../shared/services/saveStateService/StateInterface';
-
-export interface PeriodicElement {
-    Name: string;
-    Apellido: string;
-    Id: number;
-    Grado: string;
-    Cargo: string;
-    Grupo: string;
-}
-
-const ELEMENT_DATA: PeriodicElement[] = [
-    {Id: 1541612, Name: 'Hydrogen', Apellido: 'perez', Grado: 'coronel', Cargo: 'empleado', Grupo: '4'},
-    {Id: 2458264, Name: 'Helium', Apellido: 'cardenas', Grado: 'coronel', Cargo: 'empleado', Grupo: '4'},
-    {Id: 3458264, Name: 'Lithium', Apellido: 'moreno', Grado: 'coronel', Cargo: 'empleado', Grupo: '4'},
-    {Id: 4458264, Name: 'Beryllium', Apellido: 'sanchez', Grado: 'coronel', Cargo: 'empleado', Grupo: '4'}
-];
 
 @Component({
     selector: 'app-equipo-investigacion',
@@ -46,9 +29,7 @@ export class EquipoInvestigacionComponent implements OnInit {
         this.getEquipo();
     }
 
-
     getEquipo(): void {
-        // this.dataSource = JSON.parse(localStorage.getItem('equipoInvestigacion'));
         this.state = this.saveStateService.getState();
         if (this.state) {
             this.dataSource = [...this.state.segundoPaso.equipoDeInvestigacion];

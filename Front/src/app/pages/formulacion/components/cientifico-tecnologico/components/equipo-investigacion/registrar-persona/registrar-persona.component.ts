@@ -1,14 +1,16 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import {MatDialogRef, MAT_DIALOG_DATA, MatDialog} from '@angular/material/dialog';
 import {InvTeamPersonPositionService} from '../../../../../../../shared/services/inv-team-person-position/inv-team-person-position.service';
 import {CommonSimpleModel} from '../../../../../../../shared/models/common-simple.model';
 import {FormGroup, FormBuilder, FormControl, Validators} from '@angular/forms';
-import {identifierName} from '@angular/compiler';
 import {UsersService} from '../../../../../../../@core/services/users/users.service';
 import {SaveStateService} from '../../../../../../../shared/services/saveStateService/save-state.service';
 import {Grupo, StateInterface} from '../../../../../../../shared/services/saveStateService/StateInterface';
+import {AgregarInvestigadorComponent} from '../agregar-investigador/agregar-investigador.component';
+import {Observable} from "rxjs";
+import {finalize, map, startWith} from "rxjs/operators";
 
-let ELEMENT_DATA = {
+const ELEMENT_DATA = {
     nombreGrupo: 'Sin Grupo'
 };
 
@@ -19,7 +21,6 @@ let ELEMENT_DATA = {
 })
 export class RegistrarPersonaComponent implements OnInit {
 
-    public SinGrup: CommonSimpleModel;
     public RolFuncion: CommonSimpleModel[] = [];
     public Grupos = [];
     public registroPersona: FormGroup;
@@ -27,8 +28,11 @@ export class RegistrarPersonaComponent implements OnInit {
     public dedicacion: string;
     public vlrgrupo: string;
     public investigators = [];
-    public investigatorsNames = [];
+    public investigatorsNames: string[] = [];
     public grupos: Grupo[];
+    public myControl = new FormControl();
+    filteredOptions: Observable<string[]>;
+
 
     private state: StateInterface;
     private selectedInvestigator;
@@ -39,6 +43,7 @@ export class RegistrarPersonaComponent implements OnInit {
         public form: FormBuilder,
         private usersService: UsersService,
         private saveStateService: SaveStateService,
+        public dialog: MatDialog,
         public dialogRef: MatDialogRef<RegistrarPersonaComponent>) {
     }
 
@@ -50,8 +55,21 @@ export class RegistrarPersonaComponent implements OnInit {
         this.getGroups();
     }
 
-    builder() {
-        if (this.data.actualizar == false) {
+    private initAutoComplete(): void {
+        this.filteredOptions = this.myControl.valueChanges.pipe(
+            startWith(''),
+            map(value => this._filter(value)),
+        );
+    }
+
+    private _filter(name: string): string[] {
+        const filterValue = name.toLowerCase();
+
+        return this.investigatorsNames.filter(option => option.toLowerCase().includes(filterValue));
+    }
+
+    private builder(): void {
+        if (!this.data.actualizar) {
             this.registroPersona = this.form.group({
                 nombres: new FormControl('', [Validators.required]),
                 apellido: new FormControl('', [Validators.required]),
@@ -75,7 +93,7 @@ export class RegistrarPersonaComponent implements OnInit {
         }
     }
 
-    getAll() {
+    private getAll(): void {
         let val = false;
         let showPrincipal = true;
         if (this.state?.segundoPaso?.equipoDeInvestigacion) {
@@ -101,6 +119,13 @@ export class RegistrarPersonaComponent implements OnInit {
                 this.Grupos.push(ELEMENT_DATA);
             }
         }
+    }
+
+    public agregarInvestigador(): void {
+        this.dialog.open(AgregarInvestigadorComponent, {})
+            .afterClosed().subscribe(result => {
+                this.dialogRef.close();
+            });
     }
 
     public guardarPersona(): void {
@@ -144,10 +169,12 @@ export class RegistrarPersonaComponent implements OnInit {
 
     getAllInvestigators(): void {
         this.usersService.getAllInvestigators()
+            .pipe(finalize(() => this.initAutoComplete()))
             .subscribe(response => {
                 this.investigators = response;
-                this.investigatorsNames = response
+                const investigadores = response
                     .map(investigator => `${investigator.profile.names} ${investigator.profile.surname}`);
+                this.investigatorsNames = investigadores.sort();
             });
     }
 

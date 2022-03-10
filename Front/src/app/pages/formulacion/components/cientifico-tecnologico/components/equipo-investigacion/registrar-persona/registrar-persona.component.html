@@ -10,9 +10,10 @@
                      placeholder="Líder de investigación"
                      aria-label="Number"
                      matInput
+                     [formControl]="myControl"
                      [matAutocomplete]="auto">
               <mat-autocomplete #auto="matAutocomplete" (optionSelected)="seleccionarInvestigador($event.option.value)">
-                <mat-option *ngFor="let option of investigatorsNames " [value]="option">
+                <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
                   {{option}}
                 </mat-option>
               </mat-autocomplete>
@@ -63,6 +64,14 @@
                 </mat-option>
               </mat-select>
             </mat-form-field>
+            <div>
+              <button
+                (click)="agregarInvestigador()"
+                mat-raised-button color="primary"
+                mat-dialog-close="false">
+                Agregar Investigador
+              </button>
+            </div>
           </mat-card>
         </div>
       </div>

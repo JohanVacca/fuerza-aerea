@@ -9,15 +9,15 @@ const mongoose = require("mongoose");
  * getAll users
  */
 ProyectoSchema.static('getAll', async (query) => {
-  try{
+    try {
         return await ProyectoDao
-          .find(query)
-          .populate('UserId')
-          .populate('Convocatoria')
-          .populate('iniciarProyecto.comandante')
-          .populate('calificaciones.idEv')
-          .exec();
-    }catch(err){
+            .find(query)
+            .populate('UserId')
+            .populate('Convocatoria')
+            .populate('iniciarProyecto.comandante')
+            .populate('calificaciones.idEv')
+            .exec();
+    } catch (err) {
         throw err;
     }
 });
@@ -27,15 +27,15 @@ ProyectoSchema.static('getAll', async (query) => {
  */
 ProyectoSchema.static('getById', async (id) => {
 
-    try{
+    try {
         return await ProyectoDao
-          .findOne({_id: id})
-          .populate('UserId')
-          .populate('Convocatoria')
-          .populate('iniciarProyecto.comandante')
-          .populate('calificaciones.idEv')
-          .exec();
-    }catch (err){
+            .findOne({_id: id})
+            .populate('UserId')
+            .populate('Convocatoria')
+            .populate('iniciarProyecto.comandante')
+            .populate('calificaciones.idEv')
+            .exec();
+    } catch (err) {
         throw err;
     }
 });
@@ -45,15 +45,15 @@ ProyectoSchema.static('getById', async (id) => {
  */
 ProyectoSchema.static('getByEmail', async (email) => {
 
-    try{
+    try {
         return await ProyectoDao
-          .findOne({email: email})
-          .populate('UserId')
-          .populate('Convocatoria')
-          .populate('comandante')
-          .populate('idEv')
-          .exec();
-    }catch (err){
+            .findOne({email: email})
+            .populate('UserId')
+            .populate('Convocatoria')
+            .populate('comandante')
+            .populate('idEv')
+            .exec();
+    } catch (err) {
         throw err;
     }
 });
@@ -77,24 +77,24 @@ ProyectoSchema.static('create', async (project) => {
     }
 
     let _user = new ProyectoDao(user);
-    let saved = await  _user.save();
+    let saved = await _user.save();
     let __user = await ProyectoDao.findOne({_id: saved._id})
-                        .populate('UserId')
-                        .populate('Convocatoria')
-                        .populate('comandante')
-                        .populate('idEv')
-    return (__user);
-});
-
-ProyectoSchema.static('getAllId', async (id) => {
-    try{
-        return await ProyectoDao.find({Convocatoria: id})
         .populate('UserId')
         .populate('Convocatoria')
         .populate('comandante')
         .populate('idEv')
-        .exec();
-    }catch (err){
+    return (__user);
+});
+
+ProyectoSchema.static('getAllId', async (id) => {
+    try {
+        return await ProyectoDao.find({Convocatoria: id})
+            .populate('UserId')
+            .populate('Convocatoria')
+            .populate('comandante')
+            .populate('idEv')
+            .exec();
+    } catch (err) {
         throw err;
     }
 });
@@ -102,19 +102,21 @@ ProyectoSchema.static('getAllId', async (id) => {
 /**
  * Update User
  */
-ProyectoSchema.static('update', async (id, user) => {
-    if (typeof user !== 'object') {
+ProyectoSchema.static('update', async (id, project) => {
+
+    if (typeof project !== 'object') {
         throw new TypeError('User is not a valid object.');
     }
 
     try {
         return await ProyectoDao
-          .findOneAndUpdate({_id: id}, user, {new: true})
-          .populate('UserId')
-          .populate('Convocatoria')
-          .populate('iniciarProyecto.comandante')
-          .exec();
-    }catch (err){
+            .findOneAndUpdate({_id: id}, project,
+                {new: true})
+            .populate('UserId')
+            .populate('Convocatoria')
+            .populate('iniciarProyecto.comandante')
+            .exec();
+    } catch (err) {
         throw err;
     }
 });
@@ -123,14 +125,14 @@ ProyectoSchema.static('update', async (id, user) => {
 /**
  * Remove User
  */
-ProyectoSchema.static('remove', async (id) =>{
-    try{
+ProyectoSchema.static('remove', async (id) => {
+    try {
         return await ProyectoDao.findOneAndRemove({_id: id})
-        .populate('UserId')
-        .populate('Convocatoria')
-        .populate('comandante')
-        .exec();
-    }catch (err){
+            .populate('UserId')
+            .populate('Convocatoria')
+            .populate('comandante')
+            .exec();
+    } catch (err) {
         throw err;
     }
 });

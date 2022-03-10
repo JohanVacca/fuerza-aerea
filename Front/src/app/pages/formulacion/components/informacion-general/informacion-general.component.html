@@ -12,9 +12,9 @@
                 </div>
             </div>
         </mat-card-content>
-        <div class="container">
+        <div class="container form-iniciar-proyecto">
             <div class="row">
-                <div class="col-lg-6 col-sm-3">
+                <div class="col-md-6 col-sm-12 card-form">
                     <mat-card>
                         <mat-card-subtitle>Información General</mat-card-subtitle>
                         <mat-card-content>
@@ -55,12 +55,10 @@
                                 <mat-label>Duración en meses</mat-label>
                                 <input type="number" formControlName="duracion" matInput>
                             </mat-form-field>
-
-
                         </mat-card-content>
                     </mat-card>
                 </div>
-                <div class="col-lg-6 col-sm-3">
+                <div class="col-md-6 col-sm-12 card-form">
                     <mat-card>
                         <mat-card-subtitle>Tipo de Investigacion a Desarrollar</mat-card-subtitle>
                         <mat-form-field class="full-width" appearance="fill">
@@ -105,11 +103,31 @@
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field>
-                            <mat-form-field class="full-width" appearance="fill">
+                            <div class="full-width" appearance="fill">
+                                <div>
+                                    <label>Ingresar Unidad o Centro de investigación</label>
+                                </div>
+                                <mat-slide-toggle
+                                        color="primary" [checked]="isCentroDeInvestigacion"
+                                        matTooltipClass="tooltip-white"
+                                        matTooltip="Ingresar Centro de investifación"
+                                        (change)="habilitarUnidad($event.checked)">
+                                </mat-slide-toggle>
+                            </div>
+                            <mat-form-field *ngIf="isCentroDeInvestigacion" class="full-width" appearance="fill">
                                 <mat-label> Centro de Investigación</mat-label>
                                 <mat-select formControlName="centroDeInvestigacion" name="centroDeInvestigacion">
                                     <mat-option *ngFor="let invCenter of invCenters" [value]="invCenter.name">
                                         {{invCenter.name}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+
+                            <mat-form-field *ngIf="!isCentroDeInvestigacion" class="full-width" appearance="fill">
+                                <mat-label> Unidades</mat-label>
+                                <mat-select formControlName="unidades" name="unidades">
+                                    <mat-option *ngFor="let unidadActual of unidades" [value]="unidadActual.name">
+                                        {{unidadActual.name}}
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field>

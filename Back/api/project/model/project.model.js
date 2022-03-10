@@ -53,6 +53,16 @@ let ProjectSchema = new Schema({
       Descripcion: String,
       tipoDeRubro: String,
       entidad: String,
+      PresupuestoEjecutado: Number,
+      listaRubros: [{
+        rubro: Number,
+        factura: {
+          data: Object,
+          name: String,
+          path: String,
+          created_at: {type: Date, default: Date.now()}
+        }
+      }]
     },
   ],
   productosEsperados: [
@@ -62,6 +72,7 @@ let ProjectSchema = new Schema({
       partOtros: Number,
       rubroRelacionado: String,
       tipoProducto: String,
+      subActividad: String,
     },
   ],
   resultadosPrevios: String,
@@ -81,6 +92,7 @@ let ProjectSchema = new Schema({
       comandante: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
       avala: String,
       centroDeInvestigacion: String,
+      unidades: String,
     },
   ],
   metodologia: String,
@@ -140,6 +152,7 @@ let ProjectSchema = new Schema({
     name: String,
     idQuienFirma: String,
     status: Boolean,
+    date: Date,
   }],
   planteamiento: {
     planteamiento: String,
@@ -151,6 +164,12 @@ let ProjectSchema = new Schema({
     inversion: Number,
   },
   evaluadorId: String,
+  riesgos: [{
+    descripcion: String,
+    consecuencia: String,
+    accion: String,
+  }],
+  version: Number,
 });
 
 module.exports = ProjectSchema;

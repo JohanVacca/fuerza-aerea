@@ -9,25 +9,34 @@ import {ProjectService} from 'src/app/shared/services/Proyect/project.service';
 })
 export class ProyectosComponent implements OnInit {
 
-    constructor(@Inject(MAT_DIALOG_DATA) public data: VistaProyectosData,
-                private projectService: ProjectService,
-                public dialogRef: MatDialogRef<ProyectosComponent>) {
-    }
+    public displayedColumns: string[] = ['Titulo', 'Investigador', 'Gestor', 'acciones'];
+    public dataSource = [];
 
-    displayedColumns: string[] = ['Titulo', 'Investigador', 'Gestor', 'acciones'];
-    dataSource;
+    constructor(
+        @Inject(MAT_DIALOG_DATA) public data: VistaProyectosData,
+        private projectService: ProjectService,
+        public dialogRef: MatDialogRef<ProyectosComponent>) {
+    }
 
     ngOnInit(): void {
         this.getAll(this.data.idConvocatoria);
     }
 
-    getAll(id) {
-        this.projectService.getIdConv(id).subscribe(r => {
-            this.dataSource = r['Proyectos'];
-        });
+    getAll(id): void {
+        const {_id} = JSON.parse(localStorage.getItem('user'));
+        const newArray = [];
+        this.projectService.getIdConv(id)
+            .subscribe(response => {
+                response.Proyectos.forEach(project => {
+                    if (project.UserId._id === _id) {
+                        newArray.push(project);
+                        this.dataSource = [...newArray];
+                    }
+                });
+            });
     }
 
-    cerrardialog() {
+    cerrardialog(): void {
         this.dialogRef.close(true);
     }
 }

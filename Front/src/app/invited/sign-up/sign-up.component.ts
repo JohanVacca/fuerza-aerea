@@ -92,11 +92,13 @@ export class SignUpComponent implements OnInit {
     this.roleService.getDefaultRole()
       .subscribe((role) => {
         this.defaultRole = role;
+        console.log('default role :: ', role)
       });
   }
 
   onSubmit() {
     const newUser = this.getNewUserModel();
+    console.log('newUser:: ', newUser)
 
     this.authService.signUp(newUser)
       .subscribe(
@@ -113,6 +115,7 @@ export class SignUpComponent implements OnInit {
     const names = this.names().value;
     const surname = this.surname().value;
     const password = this.password().value;
+    const isUser = true;
 
     if (!this.defaultRole._id) {
       console.error('Default role not provided');
@@ -128,6 +131,7 @@ export class SignUpComponent implements OnInit {
         surname,
       },
       password,
+      isUser,
       role: this.defaultRole._id
     };
   }

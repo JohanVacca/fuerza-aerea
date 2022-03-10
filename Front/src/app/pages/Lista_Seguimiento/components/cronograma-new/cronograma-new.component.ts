@@ -1,12 +1,13 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
-import {cronogramaObj, subAct, actividad} from 'src/app/shared/models/cronograma.model';
 import {cronogramaService} from 'src/app/shared/services/cronograma/cronograma.service';
 import {FormGroup, FormBuilder} from '@angular/forms';
-import {SucessDialogComponent, SucessDialogData} from '../../../admin/Dialog/sucess-dialog/sucess-dialog.component';
+import {SucessDialogComponent} from '../../../admin/Dialog/sucess-dialog/sucess-dialog.component';
 import {MatDialog} from '@angular/material/dialog';
-import {finalize, retry} from 'rxjs/operators';
+import {finalize} from 'rxjs/operators';
 import {ShowCalendarComponent} from '../show-calendar/show-calendar.component';
+import {ProjectService} from '../../../../shared/services/Proyect/project.service';
+import {Actividad} from '../../../../shared/services/saveStateService/StateInterface';
 
 
 @Component({
@@ -16,9 +17,8 @@ import {ShowCalendarComponent} from '../show-calendar/show-calendar.component';
 })
 export class CronogramaNewComponent implements OnInit {
     public cronogramaCompleto;
-    public cronograma: actividad[];
+    public cronograma: Actividad[];
     public cronogramaId: string;
-    public SeguimientCronograma: Partial<cronogramaObj>;
     public seguimiento: FormGroup;
     public ACTIVITY = 'Actividad';
     public SUB_ACTIVITY = 'Sub Actividad';
@@ -29,14 +29,16 @@ export class CronogramaNewComponent implements OnInit {
     public ADVANCE = 'Avance estimado';
     public ACTIONS = 'Acciones';
     public NO_REAL_DATE = 'No se ha asignado fecha de cumplimiento';
-    public TITLE_TABLE = 'CUMPLIMIENTO PLAN DE INVERSIÓN DEL PROYECTO';
+    public TITLE_TABLE = 'Proyecto: ';
     public ADD_CRON = 'Agregar fecha de cumplimiento';
     public UPDATE_CRON = 'Actualizar fecha de cumplimiento';
     public DELETE_CRON = 'Eliminar fecha de cumplimiento';
+    public PROJECT_NAME = '';
 
     constructor(
         private cronogramaService: cronogramaService,
         private rutaActiva: ActivatedRoute,
+        private projectService: ProjectService,
         public form: FormBuilder,
         public dialog: MatDialog) {
     }
@@ -47,11 +49,20 @@ export class CronogramaNewComponent implements OnInit {
 
     private getAll(): void {
         const projectId = this.rutaActiva.snapshot.params.id;
-        this.cronogramaService.getByProject(projectId).subscribe(response => {
-            this.cronograma = response.cronogramas.actividades;
-            this.cronogramaId = response.cronogramas._id;
-            this.cronogramaCompleto = response;
-        });
+        this.cronogramaService.getByProject(projectId)
+            .pipe(finalize(() => this.getProject(projectId)))
+            .subscribe(response => {
+                this.cronograma = response.cronogramas.actividades;
+                this.cronogramaId = response.cronogramas._id;
+                this.cronogramaCompleto = response;
+            });
+    }
+
+    private getProject(projectId): void {
+        this.projectService.getById(projectId)
+            .subscribe(project => {
+                this.PROJECT_NAME = project.Proyecto.iniciarProyecto[0].nombreProyecto;
+            });
     }
 
     public deleteRealFinalDate(activityId: string, subActivityId: string): void {
@@ -77,12 +88,13 @@ export class CronogramaNewComponent implements OnInit {
     }
 
     public setRealFinalDate(name: string, activityId: string, id: string): void {
-        const dialogRef = this.dialog.open(ShowCalendarComponent, {data: {name}});
-        dialogRef.afterClosed().subscribe(result => {
-            if (result) {
-                this.updateRealDate(id, activityId, result);
-            }
-        });
+        this.dialog.open(ShowCalendarComponent, {data: {name}})
+            .afterClosed()
+            .subscribe(result => {
+                if (result) {
+                    this.updateRealDate(id, activityId, result);
+                }
+            });
     }
 
     private updateRealDate(subActivityId: string, activityId: string, newDate: string): void {

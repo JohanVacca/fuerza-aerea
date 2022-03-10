@@ -1,6 +1,7 @@
+$responsive-action: 1000px;
+
 .btncrear {
   text-align: right;
-
 }
 
 .example-form {
@@ -103,5 +104,12 @@
         word-break: break-word;
       }
     }
+  }
+}
+
+@media only screen and (max-width: $responsive-action) {
+  .card-form {
+    margin: 20px 0;
+    padding: 0;
   }
 }

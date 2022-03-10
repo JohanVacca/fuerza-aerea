@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {ApiService} from '../../../@core/services';
 import {map} from 'rxjs/operators';
-import {actividad, cronogramaObj} from '../../models/cronograma.model';
+import {cronogramaObj} from '../../models/cronograma.model';
 import {CronogramaResponse} from '../saveStateService/StateInterface';
 import {Observable} from 'rxjs';
 

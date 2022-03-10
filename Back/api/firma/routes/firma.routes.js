@@ -1,21 +1,22 @@
 'use strict';
 
 const express = require('express');
-const endpoint = '/firma';
 const FirmaController = require("../controller/Firma.controller");
-const mdAuth = require('../../auth/jwt/jwt.middleware');
-const multer = require('multer');
-const path = require("path");
-const upload = multer();
-const fileUpload = require('express-fileupload');
+const fileUpload = require("express-fileupload");
+const ProyectController = require("../../project/controller/project.controller");
+const endpointRubro = '/ProjectRubro';
+const endpoint = '/firma';
 
-let app = express.Router();
-app.get(`${endpoint}/:id`, FirmaController.getById);
-app.delete(`${endpoint}/:id`, FirmaController.remove);
+let api = express.Router();
 
-// Update signature
-app.use(fileUpload());
-app.post(endpoint, FirmaController.create);
-app.patch(endpoint, FirmaController.update);
+api.patch(`${endpoint}`, FirmaController.update);
+api.get(`${endpoint}/:id`, FirmaController.getById);
+api.delete(`${endpoint}/:id`, FirmaController.remove);
 
-module.exports = app;
+api.use(fileUpload());
+api.post(`${endpoint}`, FirmaController.create);
+// update file rubro
+api.post(`${endpointRubro}/:id`, ProyectController.updateRubro);
+api.delete(`${endpointRubro}`, ProyectController.removeRubro);
+
+module.exports = api;

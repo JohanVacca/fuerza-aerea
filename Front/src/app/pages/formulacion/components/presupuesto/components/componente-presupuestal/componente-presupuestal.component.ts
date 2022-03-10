@@ -41,6 +41,7 @@ export class ComponentePresupuestalComponent implements OnInit {
     public totalEspecie = 0;
     public state: StateInterface;
     public listaDeRubros = [];
+    public ENTIDADES_LIMIT = 2;
 
     constructor(
         public dialog: MatDialog,
@@ -165,17 +166,14 @@ export class ComponentePresupuestalComponent implements OnInit {
             }
         });
 
-        let datos: AddDetalleRubroData = {
-            id: id,
-            desc: desc,
-            cons: cons,
-            Val: false
-        };
-
-        const dialogref = this.dialog.open(AddDetalleRubroComponent, {
-            data: datos
-        });
-        dialogref.afterClosed().subscribe(response => {
+        this.dialog.open(AddDetalleRubroComponent, {
+            data: {
+                id: id,
+                desc: desc,
+                cons: cons,
+                Val: false
+            }
+        }).afterClosed().subscribe(response => {
             if (response) {
                 this.getAll();
                 this.updateDataSource();

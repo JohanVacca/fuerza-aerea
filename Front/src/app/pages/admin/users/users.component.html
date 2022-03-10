@@ -19,7 +19,12 @@
         </ng-container>
         <ng-container matColumnDef="symbol">
           <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>Rol</th>
-          <td mat-cell class="letra" *matCellDef="let element"> {{element.role.name}} </td>
+          <td mat-cell class="letra" *matCellDef="let element">
+            {{element.role.name}}
+            <span *ngIf="!element.isUser" matTooltip="No es usuario" matTooltipPosition="above">
+              <mat-icon style="color: darkblue">info</mat-icon>
+            </span>
+          </td>
         </ng-container>
         <ng-container matColumnDef="activo">
           <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>Estado</th>

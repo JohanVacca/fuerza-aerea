@@ -21,6 +21,37 @@ function getAll(req, res, next) {
 }
 
 /**
+ * editar un invCenter
+ * @param req
+ * @param res
+ * @param next
+ */
+function edit(req, res, next) {
+    try {
+        validationResult(req).throw();
+        let centro = req.body;
+        let centroObj = JSON.parse(JSON.stringify(centro));
+        let centroId = req.params.id;
+        InvCenterDao['update'](centroId, centroObj)
+            .then(async _centro => {
+                if (!_centro) {
+                    res.status(404).json({message: 'centro not found.'});
+                } else {
+                    res.status(200).json({"centro": _centro});
+                }
+            }).catch(err => res.status(500).json({message: err}));
+    }catch (err){
+        const errorFormatter = ({ msg, param }) => {
+            return `The value: ${param} ${msg}`;
+        };
+        const result = validationResult(req).formatWith(errorFormatter);
+        if(!result.isEmpty()){
+            return res.status(422).json({ errors: result.array() });
+        }
+    }
+}
+
+/**
  * create a invCenter
  * @param req
  * @param res
@@ -87,5 +118,6 @@ function remove(req, res, next) {
 module.exports = {
     create,
     getAll,
-    remove
+    remove,
+    edit
 }

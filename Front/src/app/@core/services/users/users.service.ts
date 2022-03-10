@@ -1,10 +1,9 @@
-import { HttpParams, HttpResponse } from '@angular/common/http';
+import { HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-//import { ApiService } from 'app/@core/services';
 import { ApiService } from '../../services'
 import { RolesService } from '../../services/roles/roles.service';
 import { RoleModel } from '../../../../app/shared/models/role.model';
-import { filter, flatMap, map, tap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -39,8 +38,8 @@ export class UsersService {
       );
   }
 
-  getUserCorreo(correo){
-    return this.http.get(`${this.endpoint}/Correo/${correo}`,null,true)
+  getUserCorreo(email){
+    return this.http.get(`${this.endpoint}/Correo/${email}`,null,true)
       .pipe(
         map((res: HttpResponse<RoleModel[]>) => {
           return res['user'] || null;

@@ -8,24 +8,17 @@ import {AlertModel} from '../../@core/old-models/alert.model';
 @Component({
     selector: 'app-sign-in',
     templateUrl: './sign-in.component.html',
-    styleUrls: ['./sign-in.component.scss'],
-    // providers:[AuthService]
+    styleUrls: ['./sign-in.component.scss']
 })
 export class SignInComponent implements OnInit {
 
-    hide = true;
-    // emailFormControl = new FormControl('', [
-    //   Validators.required,
-    //   Validators.email,
-    // ]);
-
-    CorrI = false;
-    ClaveI = false;
-    CorrCN = false;
-
-    LoginForm: FormGroup;
-    showAlertBox = false;
-    alert: AlertModel;
+    public hide = true;
+    public CorrI = false;
+    public ClaveI = false;
+    public CorrCN = false;
+    public LoginForm: FormGroup;
+    public showAlertBox = false;
+    public alert: AlertModel;
 
     constructor(
         private router: Router,
@@ -34,11 +27,11 @@ export class SignInComponent implements OnInit {
     ) {
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.buildForm();
     }
 
-    buildForm() {
+    private buildForm(): void {
         this.LoginForm = this.fb.group({
             email: ['', Validators.compose(
                 [
@@ -58,10 +51,10 @@ export class SignInComponent implements OnInit {
     email = () => this.LoginForm.controls.email;
     password = () => this.LoginForm.controls.password;
 
-    onSubmit() {
+    public onSubmit(): void {
         const datos = this.LoginForm.value;
-        var email = datos['email'].toLowerCase();
-        var password = datos['password'];
+        const email = datos['email'].toLowerCase();
+        const password = datos['password'];
         this.authService.signIn(email, password)
             .subscribe(
                 (res) => {

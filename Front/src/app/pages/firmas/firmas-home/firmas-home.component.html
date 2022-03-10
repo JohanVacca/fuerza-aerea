@@ -22,9 +22,7 @@
 
             <div class="card-firma__buttons">
                 <button *ngIf="hasSignature && selectedImage" class="button-view-table" (click)="updateSignature()">{{UPDATE_SIGNATURE}}</button>
-                <button *ngIf="!hasSignature && fileToUpload" class="button-view-table" (click)="addSignature()">
-                    {{ADD_SIGNATURE}}
-                </button>
+                <button *ngIf="!hasSignature && fileToUpload" class="button-view-table" (click)="addSignature()">{{ADD_SIGNATURE}}</button>
             </div>
         </div>
     </div>

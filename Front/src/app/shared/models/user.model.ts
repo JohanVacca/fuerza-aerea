@@ -5,6 +5,7 @@ export interface UserModel {
   _id?: string;
   role?: RoleModel | string;
   isActive?: boolean;
+  isUser?: boolean;
   docType?: string;
   identification?: number;
   email?: string;

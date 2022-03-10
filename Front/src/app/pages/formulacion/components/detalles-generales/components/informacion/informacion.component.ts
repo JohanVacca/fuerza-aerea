@@ -16,7 +16,7 @@ export class InformacionComponent implements OnInit {
     public palabra: FormControl;
     public palabrasClavelist = [];
     public Validor = false;
-    public nInve: String = '';
+    public nInve = '';
 
     @Input()
     ivNs: string;

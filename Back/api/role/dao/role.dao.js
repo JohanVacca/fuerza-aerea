@@ -92,12 +92,15 @@ RoleDao.find({name:'Administrador'}, function callback(error, a) {
         var role4 = new RoleDao({ name: 'Comandante', description:'' });
         var role5 = new RoleDao({ name: 'Sub-Director', description:'' });
         var role6 = new RoleDao({ name: 'Director', description:'' });
+        var role7 = new RoleDao({ name: 'Jefe De Centro', description:'' });
         role1.save();
         role2.save();
         role3.save();
         role4.save();
         role5.save();
         role6.save();
+        role6.save();
+        role7.save();
     }
 });
 

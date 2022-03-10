@@ -6,6 +6,7 @@ import {AuthStorageService} from '../../../@core/services';
 import {VistaProyectosData} from '../../evaluacion/components/vista-proyectos/vista-proyectos.component';
 import {finalize} from 'rxjs/operators';
 import {FirmaService} from '../../../shared/services/firma/firma.service';
+import {SucessDialogComponent} from '../../admin/Dialog/sucess-dialog/sucess-dialog.component';
 
 @Component({
     selector: 'app-lista-proyectos-modal',
@@ -25,7 +26,6 @@ export class ListaProyectosModalComponent implements OnInit {
         @Inject(MAT_DIALOG_DATA) public data: VistaProyectosData,
         private projectService: ProjectService,
         private router: Router,
-        public dialogo: MatDialog,
         private authStorageService: AuthStorageService,
         public dialogRef: MatDialogRef<ListaProyectosModalComponent>,
         public dialog: MatDialog,
@@ -41,10 +41,24 @@ export class ListaProyectosModalComponent implements OnInit {
     public firmar(firma): void {
         const {idFirma, idProyecto} = firma;
         this.firmaService.firmar(idFirma, idProyecto)
-            .subscribe(() => {});
+            .subscribe(() => {
+                this.dialog.open(SucessDialogComponent, {
+                    role: 'alertdialog',
+                    autoFocus: false,
+                    data: {
+                        icono: 'done',
+                        severidad: 'dialog-sucess',
+                        encabezado: `Documento firmado`,
+                        descripcion: `El proyecto con nombre ${firma.nombreProyecto} se ha firmado exitosamente como ${firma.name}`
+                    }
+                }).afterClosed().subscribe(() => {
+                    this.getAll(this.data.idC);
+                });
+            });
     }
 
     private getAll(id): void {
+        this.listadoDeFirma = [];
         const userId = this.auth.getUserId();
         this.loading = true;
         this.projectService.getIdConv(id)

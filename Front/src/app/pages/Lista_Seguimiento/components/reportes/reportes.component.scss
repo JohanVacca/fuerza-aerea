@@ -35,3 +35,22 @@ th {
   text-align: center;
   vertical-align: middle;
 }
+
+.seguimiento-reporte {
+  &-button {
+    margin-top: 20px;
+    text-align: center;
+  }
+}
+
+::ng-deep {
+  .firma-imagen {
+    &-center {
+      text-align: center;
+    }
+    &-pdf {
+      height: 200px;
+      width: 200px;
+    }
+  }
+}

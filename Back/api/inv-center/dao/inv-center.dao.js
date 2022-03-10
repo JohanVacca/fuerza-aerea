@@ -31,6 +31,23 @@ InvCenterSchema.static('create', async (invCenter) => {
     return (__obj);
 });
 
+/**
+ * create a InvCenter
+ */
+InvCenterSchema.static('update', async (id, invCenter) => {
+    if (typeof invCenter !== 'object') {
+        throw new TypeError('User is not a valid object.');
+    }
+
+    try {
+        return await InvCenterDao
+            .findOneAndUpdate({_id: id}, invCenter, {new: true})
+            .exec();
+    }catch (err){
+        throw err;
+    }
+});
+
 
 /**
  * remove a InvCenter

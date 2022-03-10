@@ -18,6 +18,10 @@ $border-red-button: #ED6667;
   text-align: center;
   width: 100%;
 
+  &__jefe {
+    height: auto;
+  }
+
   &__title {
     font-size: 30px;
     font-weight: bold;
@@ -52,9 +56,12 @@ $border-red-button: #ED6667;
       margin-top: 20px;
       min-height: 200px;
       min-width: 820px;
-      // width: 100%;
+      display: contents;
 
       table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
         border-collapse: collapse;
         border-top-left-radius: 20px;
         border-top-right-radius: 20px;
@@ -120,6 +127,11 @@ $border-red-button: #ED6667;
         color: $border-red-button;
       }
 
+      .square-green-icon {
+        @extend .square-icon-default;
+        background-color: $background-green-button;
+        color: $border-green-button;
+      }
 
       .view-detail-icon {
         text-align: -webkit-center;
@@ -141,6 +153,10 @@ $border-red-button: #ED6667;
     }
   }
 
+  &__container--jefe {
+    margin-bottom: 30px;
+  }
+
   .no-active-projects {
     margin-top: 100px;
     label {
@@ -150,5 +166,11 @@ $border-red-button: #ED6667;
     .icon-not-found .material-icons{
       font-size: 60px;
     }
+  }
+}
+
+@media only screen and (max-width: 900px) {
+  .dashboard__container {
+    width: auto;
   }
 }

@@ -25,11 +25,7 @@ export class AuthService {
     };
 
     return this.http.post(`${this.endpoint}/login`, body)
-        .pipe(
-            map((res) => {
-              this.saveUserInfo(res);
-            }),
-        );
+        .pipe(map((res) => {this.saveUserInfo(res); }));
   }
 
   signUp(user: Partial<UserModel>) {
@@ -70,7 +66,7 @@ export class AuthService {
     return !!this.authStorageService.getToken();
   }
 
-  signOut() {
+  signOut(): void {
     this.authStorageService.clean();
   }
 
@@ -107,7 +103,7 @@ export class AuthService {
       );
   }
 
-  private saveUserInfo(res: any) {
+  private saveUserInfo(res: any): void {
     if (res.token) {
       this.saveToken(res.token);
     }
@@ -117,18 +113,18 @@ export class AuthService {
     }
   }
 
-  private saveToken(token: string) {
+  private saveToken(token: string): void {
     this.authStorageService.setToken(token);
   }
 
-  private saveUserData(user: UserModel) {
+  private saveUserData(user: UserModel): void {
     if (user._id) {
       localStorage.setItem('user', JSON.stringify(user));
       this.authStorageService.setUserId(user._id);
     }
 
     if (user.role) {
-      const role = <RoleModel>user.role;
+      const role = user.role as RoleModel;
       this.authStorageService.setRole(role.name as Roles);
       this.authStorageService.roleId = role._id;
     }

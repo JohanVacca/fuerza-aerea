@@ -1,4 +1,5 @@
 import {FormControl, Validators} from '@angular/forms';
+import {Proyect} from '../../models/project.model';
 
 export interface StateInterface {
     primerPaso?: PrimerPaso;
@@ -28,6 +29,7 @@ export interface PrimerPaso {
     subprograma: string;
     avala: string;
     centroDeInvestigacion?: string;
+    unidades?: string;
     gestorId?: string;
 }
 
@@ -38,7 +40,7 @@ export interface SegundoPaso {
 
 export interface TercerPaso {
     componentePresupuestal?: ComponentePresupuestal;
-    cronogramaProyecto?: CronogramaProyecto;
+    actividades?: Actividad[];
     productosEsperados?: ProductosEsperados;
 }
 
@@ -54,6 +56,7 @@ export interface CuartoPaso {
     resultadosPrevios?: string;
     bibliografi?: string[];
     complementos?: string;
+    riesgos?: Riesgo[];
 }
 
 export interface QuintoPaso {
@@ -95,16 +98,28 @@ export interface Participacion {
     otros?: string;
 }
 
-export interface CronogramaProyecto {
-    actividades?: Actividad[];
+export interface Actividad {
+    _id?: string;
+    idUnicoTare?: number;
+    nombreAct?: string;
+    objetivo?: string;
+    predecesora?: Predecesora;
+    subActividad?: SubActividad[];
 }
 
-export interface Actividad {
-    nombre?: string;
-    actividadPredecesora?: string;
-    subActividad?: string;
-    fechaInicio?: string;
-    fechaFinal?: string;
+export interface Predecesora {
+    id?: string;
+    name?: string;
+}
+
+export interface SubActividad {
+    _id?: string,
+    nombreSub: string;
+    fechaInicio: Date;
+    fechaFinal: Date;
+    avance?: number;
+    fechaReal?: Date;
+    Desface?: number;
 }
 
 export interface ComponentePresupuestal {
@@ -128,6 +143,7 @@ export interface PersonalCientifico {
     idRubro: string;
     entidad: string;
     tipoDeRubro: string;
+    PresupuestoEjecutado: 0;
 }
 
 export interface PerfilInvestigador {
@@ -177,6 +193,11 @@ export interface CentroDeInvestigacion {
     name?: string;
 }
 
+export interface Unidades {
+    _id?: string;
+    name?: string;
+}
+
 export interface MetodologiaObjetivo {
     objetivo?: string;
     actividades?: string[];
@@ -210,7 +231,8 @@ export interface RubrosPDF {
 }
 
 export interface RubrosPorEntidades {
-    entidad?; string;
+    entidad?;
+    string;
     rubro?: RubrosPDF[];
 }
 
@@ -234,4 +256,32 @@ export interface Planteamiento {
     beneficiosFAC: string;
     utilidad: number;
     inversion: number;
+}
+
+export interface Riesgo {
+    descripcion: string;
+    consecuencia: string;
+    accion: string;
+}
+
+export interface InvestigadorDashboard {
+    centros: object;
+    dedicacion: number;
+    identificacion: string;
+    nombre: string;
+}
+
+export interface CentrosDashboard {
+    proyectos?: Proyect[];
+    centro?: {
+        jefe?: {
+            _id?: string;
+            profile?: {
+                names?: string;
+                surname?: string;
+            }
+        };
+        _id?: string;
+        name?: string;
+    };
 }

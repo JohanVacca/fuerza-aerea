@@ -3,7 +3,7 @@ import {
     Grupo,
     ObjetivoEspecifico,
     PerfilInvestigador,
-    Planteamiento
+    Planteamiento, Riesgo
 } from '../services/saveStateService/StateInterface';
 
 export interface Proyect {
@@ -34,6 +34,7 @@ export interface Proyect {
     resultadosPrevios?: string;
     resumen?: string;
     evaluadorId?: string;
+    riesgos?: Riesgo[];
 }
 
 export interface productosEsperados {
@@ -98,6 +99,13 @@ export interface AgregarDetallesRubros {
     TotalEfectivo?: number;
     Cumplimiento?: number;
     PresupuestoEjecutado?: number;
+    _id?: string;
+    listaRubros?: ListaRubros[];
+}
+
+export interface ListaRubros {
+    rubro?: number;
+    factura?: any;
 }
 
 export interface EquipoInvestigacion {

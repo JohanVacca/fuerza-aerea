@@ -5,7 +5,8 @@ export const MENU_ADMIN_ITEMS = [
     {name: 'Instructivos', route: 'instructional', icon: 'text_snippet'},
     {name: 'Tabla de Honorarios', route: 'honorarios', icon: 'table'},
     {name: 'Firmas', route: 'firmas', icon: 'border_color'},
-    {name: 'Centros de investigacion', route: 'centros-de-investigacion', icon: 'assured_workload'}
+    {name: 'Centros de investigacion', route: 'centros-de-investigacion', icon: 'assured_workload'},
+    {name: 'Unidades', route: 'unidades', icon: 'business'}
 ];
 export const MENU_INVESTIGADOR_ITEMS = [
     {name: 'Inicio', route: '/pages', icon: 'home'},

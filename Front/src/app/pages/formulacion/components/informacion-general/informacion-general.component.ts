@@ -1,4 +1,4 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {InvEndorsersService} from '../../../../shared/services/inv-endorsers/inv-endorsers.service';
 import {InvestigationProgramService} from '../../../../shared/services/investigation-program/investigation-program.service';
 import {InvestigationSubProgramService} from '../../../../shared/services/investigation-sub-program/investigation-sub-program.service';
@@ -14,9 +14,11 @@ import {SaveStateService} from '../../../../shared/services/saveStateService/sav
 import {
     CentroDeInvestigacion,
     PrimerPaso,
-    StateInterface
+    StateInterface, Unidades
 } from '../../../../shared/services/saveStateService/StateInterface';
 import {InvCenterService} from '../../../../shared/services/inv-center2/inv-center.service';
+import {UnidadService} from '../../../../shared/services/unidad-service/unidad.service';
+import { MatStepper } from '@angular/material/stepper';
 
 @Component({
     selector: 'app-informacion-general',
@@ -24,10 +26,12 @@ import {InvCenterService} from '../../../../shared/services/inv-center2/inv-cent
     styleUrls: ['../formular-proyecto/formular-proyecto.component.scss']
 })
 export class InformacionGeneralComponent implements OnInit {
+    @Input() stepper: MatStepper;
 
     constructor(
         private invEndorsersService: InvEndorsersService,
         private invCenterService: InvCenterService,
+        private unidadService: UnidadService,
         private investigationLinesService: InvestigationLinesService,
         private investigationProgramService: InvestigationProgramService,
         private investigationSubProgramService: InvestigationSubProgramService,
@@ -41,6 +45,7 @@ export class InformacionGeneralComponent implements OnInit {
 
     public LinesIns: CommonSimpleModel[] = [];
     public invCenters: CentroDeInvestigacion[] = [];
+    public unidades: Unidades[] = [];
     public ProgamIns: CommonSimpleModel[] = [];
     public typeIns: CommonSimpleModel[] = [];
     public ProgamSubIns: CommonSimpleModel[] = [];
@@ -53,6 +58,7 @@ export class InformacionGeneralComponent implements OnInit {
     public hasErrorACTI = false;
     public messageErrorACTI = 'No se encuentra un usuario con el email ingresado';
     public isLoadingEmail = false;
+    public isCentroDeInvestigacion = true;
     public gestorActiId;
     public comandanteId;
 
@@ -88,7 +94,8 @@ export class InformacionGeneralComponent implements OnInit {
             programa: new FormControl('', [Validators.required]),
             subprograma: new FormControl('', [Validators.required]),
             avala: new FormControl('', [Validators.required]),
-            centroDeInvestigacion: new FormControl('', [Validators.required]),
+            centroDeInvestigacion: new FormControl(''),
+            unidades: new FormControl(''),
         });
     }
 
@@ -98,6 +105,11 @@ export class InformacionGeneralComponent implements OnInit {
 
     public CambiaTexto(texto: string): void {
         this.textoCambiado.emit(texto);
+    }
+
+    public habilitarUnidad(value: boolean): void {
+        console.log('value :: ', value);
+        this.isCentroDeInvestigacion = value;
     }
 
     public getAll(): void {
@@ -124,6 +136,10 @@ export class InformacionGeneralComponent implements OnInit {
         this.invCenterService.getAll().subscribe(responseInvCenters => {
             // @ts-ignore
             this.invCenters = responseInvCenters.invCenters;
+        });
+        this.unidadService.getAll().subscribe(responseUnidades => {
+            // @ts-ignore
+            this.unidades = responseUnidades.unidades;
         });
     }
 
@@ -157,7 +173,7 @@ export class InformacionGeneralComponent implements OnInit {
     }
 
     private updateState(): void {
-        const {avala, centroDeInvestigacion, comandante, dependencia, duracion, email, gestor, linea,
+        const {avala, centroDeInvestigacion, comandante, dependencia, duracion, email, gestor, linea, unidades,
             lugar, modelo, nombreProyecto, programa, subprograma, telefonoGestor} = this.iniciarProyecto.value;
         const primerPaso: PrimerPaso = {
             comandante,
@@ -173,7 +189,7 @@ export class InformacionGeneralComponent implements OnInit {
             programa,
             subprograma,
             avala,
-            centroDeInvestigacion,
+            centroDeInvestigacion: this.isCentroDeInvestigacion ? centroDeInvestigacion : unidades,
             gestorId: this.gestorActiId
         };
         this.state = {
@@ -181,5 +197,6 @@ export class InformacionGeneralComponent implements OnInit {
             primerPaso
         };
         this.saveStateService.setState(this.state);
+        this.stepper.next();
     }
 }

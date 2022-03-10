@@ -10,6 +10,7 @@ import {Observable} from 'rxjs';
 export class ProjectService {
 
     private readonly endpoint = 'Project';
+    private readonly endpointRubro = 'ProjectRubro';
 
     constructor(
         private http: ApiService,
@@ -59,6 +60,19 @@ export class ProjectService {
                     return res || null;
                 }),
             );
+    }
+
+    public updateRubro(ProjectId, id, rubro, factura): Observable<any> {
+        const formData = new FormData();
+        formData.append('ProjectId', ProjectId);
+        formData.append('file', factura);
+        formData.append('rubro', rubro);
+        formData.append('idRubro', id);
+        return this.http.postFirma(`${this.endpointRubro}/${ProjectId}`, formData);
+    }
+
+    public removeRubroPDF(ProjectId, idDetalleRubro, idRubro): Observable<any> {
+        return this.http.delete(`${this.endpointRubro}`, {body: {ProjectId, idDetalleRubro, idRubro}}, );
     }
 
     delete(ProjectId: string): Observable<any> {

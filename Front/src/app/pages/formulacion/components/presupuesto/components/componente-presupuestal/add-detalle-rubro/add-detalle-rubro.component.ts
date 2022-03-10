@@ -1,4 +1,3 @@
-import {ifStmt} from '@angular/compiler/src/output/output_ast';
 import {Component, Inject, OnInit} from '@angular/core';
 import {MatDialog, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import {TablaHonorariosComponent} from '../tabla-honorarios/tabla-honorarios.component';
@@ -54,8 +53,6 @@ export class AddDetalleRubroComponent implements OnInit {
     public DuracionEnMeses = 0;
     public Descripcion = ' ';
     public Justificacion = ' ';
-    public EntidadesCostos = 0;
-    public modificado;
     public honorarios = [];
     public numero;
     public topeMaximoPorMes;
@@ -67,7 +64,8 @@ export class AddDetalleRubroComponent implements OnInit {
     public costoTotal;
     public HorasSemanalesForm;
     public isCreate = true;
-    public especieTotal = 0;
+    public cantidad = 0;
+    public valorUnitario = 0;
     public monto = 0;
     public tiposDeRubro = ['Efectivo', 'Especie'];
     public entidades: Entidad[] = [];
@@ -83,9 +81,6 @@ export class AddDetalleRubroComponent implements OnInit {
         this.valid();
         this.initializeData();
         this.DataS();
-        if (this.data.Val) {
-            this.cargarParaAC();
-        }
         this.numeroparalasuma();
     }
 
@@ -100,33 +95,7 @@ export class AddDetalleRubroComponent implements OnInit {
         }
     }
 
-    private cargarParaAC(): void {
-        let auto = JSON.parse(localStorage.getItem('AgregarDetallesRubros'));
-        if (auto != null) {
-            auto.forEach(element => {
-                if (element.idRubro === this.data.id) {
-                    this.modificado = element.modificado;
-                    this.PerfilDelInvestigador = element.PerfilDelInvestigador;
-                    this.tipoDeRubro = element.tipoDeRubro;
-                    this.entidad = element.entidad;
-                    this.Formacion = element.Formacion;
-                    this.Experiencia = element.Experiencia;
-                    this.NombreDelInvestigador = element.NombreDelInvestigador;
-                    this.RolDelInvestigador = element.RolDelInvestigador;
-                    this.HorasSemanales = element.HorasSemanales;
-                    this.DuracionEnMeses = element.DuracionEnMeses;
-                    this.Descripcion = element.Descripcion;
-                    this.Justificacion = element.Justificacion;
-                    this.dataSource = element.EntidadesCostos;
-                }
-            });
-        }
-    }
-
     private DataS(): void {
-
-        const {entidades} = this.state.tercerPaso.componentePresupuestal;
-        let cont = 0;
         this.tablaHonorariosService.getall().subscribe(r => {
             this.Perfil = r['honorarios'];
         });
@@ -139,7 +108,7 @@ export class AddDetalleRubroComponent implements OnInit {
 
     public guardarOtro(): void {
         const otroRubro: PersonalCientifico = this.AddDettalle.value;
-        otroRubro.EntidadesCostos = this.AddDettalle.controls.monto.value;
+        otroRubro.EntidadesCostos = this.monto;
         this.state.tercerPaso.componentePresupuestal.personalCientifico.push(otroRubro);
         this.updateState();
     }
@@ -151,22 +120,14 @@ export class AddDetalleRubroComponent implements OnInit {
         this.updateState();
     }
 
-    upDate() {
-        let AgregarDetarresRubros = [];
-        let auto = JSON.parse(localStorage.getItem('AgregarDetallesRubros'));
-
-        auto.forEach(element => {
-            if (element.idRubro != this.data.id) {
-                AgregarDetarresRubros.push(element);
-            } else {
-                AgregarDetarresRubros.push(this.AddDettalle.value);
-            }
-        });
-        localStorage.setItem('AgregarDetallesRubros', JSON.stringify(AgregarDetarresRubros));
+    calculateAmountWithUnitValue(valorUnitario: number): void {
+        this.valorUnitario = valorUnitario;
+        this.monto = this.cantidad * this.valorUnitario;
     }
 
-    calculateAmount(): void {
-        this.showMaxAmount = true;
+    calculateAmountWithUnitCount(cantidad: number): void {
+        this.cantidad = cantidad;
+        this.monto = this.cantidad * this.valorUnitario;
     }
 
     private validateAllFields(): void {
@@ -215,9 +176,11 @@ export class AddDetalleRubroComponent implements OnInit {
                 }
             };
         }
+        if (this.state.segundoPaso) {
+            this.investigadores = this.state.segundoPaso.equipoDeInvestigacion;
+        }
         this.builder();
         this.setData();
-        this.investigadores = this.state.segundoPaso.equipoDeInvestigacion;
     }
 
     private builder(): void {
@@ -238,7 +201,9 @@ export class AddDetalleRubroComponent implements OnInit {
                 Justificacion: new FormControl(this.Justificacion, [Validators.required]),
                 EntidadesCostos: 0,
                 NombreRubro: this.data.desc,
-                monto: 0
+                monto: 0,
+                cantidad: 0,
+                valorUnitario: 0,
             });
         } else {
             this.AddDettalle = this.form.group({
@@ -257,13 +222,17 @@ export class AddDetalleRubroComponent implements OnInit {
                 Justificacion: new FormControl(this.Justificacion, [Validators.required]),
                 EntidadesCostos: 0,
                 NombreRubro: this.data.desc,
-                monto: 0
+                monto: 0,
+                cantidad: 0,
+                valorUnitario: 0,
             });
         }
     }
 
     private setData(): void {
-        this.AddDettalle.controls['DuracionEnMeses'].setValue(this.state.primerPaso.duracion);
+        if (this.state.primerPaso) {
+            this.AddDettalle.controls['DuracionEnMeses'].setValue(this.state.primerPaso.duracion);
+        }
     }
 
     public seleccionarInvestigador(investigador): void {
