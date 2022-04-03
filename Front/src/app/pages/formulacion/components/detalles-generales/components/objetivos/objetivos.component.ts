@@ -52,7 +52,7 @@ export class ObjetivosComponent implements OnInit {
 
     builder(): void {
         this.objetivoEspecificos = this.obj.group({
-            descr: new FormControl('', [Validators.required]),
+            descr: new FormControl('', []),
         });
     }
 
@@ -68,6 +68,7 @@ export class ObjetivosComponent implements OnInit {
 
     agregarObjEsp(): void {
         this.state.cuartoPaso.objetivo.objetivosEspecificos.push(this.objetivoEspecificos.value);
+        this.objetivoEspecificos.controls.descr.setValue('');
         this.getItem();
     }
 

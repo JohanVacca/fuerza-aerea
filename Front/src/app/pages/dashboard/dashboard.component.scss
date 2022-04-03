@@ -38,7 +38,7 @@ $border-red-button: #ED6667;
     border-radius: 20px;
     margin: 30px auto;
     padding: 30px;
-    width: fit-content;
+    width: auto !important;
 
     &--title {
       text-align: left;
@@ -139,10 +139,18 @@ $border-red-button: #ED6667;
 
       .dashboard-project-name {
         display: grid;
-        grid-template-columns: 35px 1fr;
+        grid-template-columns: 35px calc(100% - 35px);
 
         div:first-child {
           text-align: left;
+        }
+
+        div:not(first-child) {
+
+        }
+
+        label {
+          white-space: initial;
         }
       }
 

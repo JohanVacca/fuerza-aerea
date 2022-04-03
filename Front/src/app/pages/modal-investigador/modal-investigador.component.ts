@@ -34,7 +34,6 @@ export class ModalInvestigadorComponent implements OnInit {
                 proyectos: this.data.centros[key]
             });
         });
-        console.log('data ::: ', this.centros);
     }
 
     public closeModal(): void {

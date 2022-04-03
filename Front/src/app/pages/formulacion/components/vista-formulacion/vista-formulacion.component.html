@@ -249,7 +249,9 @@
                                     </tr>
                                     <tr>
                                         <td class="title-table-justificacion"><label>Indicador ROI</label></td>
-                                        <td style="width: 100%"></td>
+                                        <td style="width: 100%">
+                                            {{calculateRoiIndicator()}}
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td class="title-table-justificacion"><label>VoBo Proceso</label></td>
@@ -557,7 +559,7 @@
                         <td style="width: 75%" colspan="3" class="firma-imagen-center">
                             <img class="firma-imagen-pdf" *ngIf="firmaInvestigador"
                                  src="data:image/png;base64,{{firmaInvestigador.data}}" alt="Imagen De Firma">
-                            <div *ngIf="fechaFirmaInvestigador">{{FECHA_FIRMA}}{{fechaFirmaInvestigador | date: 'shortDate' }}</div>
+                            <div *ngIf="fechaFirmaInvestigador">{{FECHA_FIRMA}}{{fechaFirmaInvestigador | date: 'medium' }}</div>
                         </td>
                     </tr>
                     <tr>
@@ -565,7 +567,7 @@
                         <td style="width: 75%" colspan="3" class="firma-imagen-center">
                             <img class="firma-imagen-pdf" *ngIf="firmaInvestigadorPrincipal"
                                  src="data:image/png;base64,{{firmaInvestigadorPrincipal.data}}" alt="Imagen De Firma">
-                            <div *ngIf="fechaFirmaInvestigadorPrincipal">{{FECHA_FIRMA}}{{fechaFirmaInvestigadorPrincipal| date: 'shortDate' }}</div>
+                            <div *ngIf="fechaFirmaInvestigadorPrincipal">{{FECHA_FIRMA}}{{fechaFirmaInvestigadorPrincipal| date: 'medium' }}</div>
                         </td>
                     </tr>
                     <tr>
@@ -573,7 +575,7 @@
                         <td style="width: 75%" colspan="3" class="firma-imagen-center">
                             <img class="firma-imagen-pdf" *ngIf="firmaComandante"
                                  src="data:image/png;base64,{{firmaComandante.data}}" alt="Imagen De Firma">
-                            <div *ngIf="fechaFirmaComandante">{{FECHA_FIRMA}}{{fechaFirmaComandante| date: 'shortDate' }}</div>
+                            <div *ngIf="fechaFirmaComandante">{{FECHA_FIRMA}}{{fechaFirmaComandante| date: 'medium' }}</div>
                         </td>
                     </tr>
                     <tr>
@@ -581,7 +583,7 @@
                         <td style="width: 75%" colspan="3" class="firma-imagen-center">
                             <img class="firma-imagen-pdf" *ngIf="firmaGestorActi"
                                  src="data:image/png;base64,{{firmaGestorActi.data}}" alt="Imagen De Firma">
-                            <div *ngIf="fechaFirmaGestorActi">{{FECHA_FIRMA}}{{fechaFirmaGestorActi| date: 'shortDate' }}</div>
+                            <div *ngIf="fechaFirmaGestorActi">{{FECHA_FIRMA}}{{fechaFirmaGestorActi| date: 'medium' }}</div>
                         </td>
                     </tr>
                     </thead>

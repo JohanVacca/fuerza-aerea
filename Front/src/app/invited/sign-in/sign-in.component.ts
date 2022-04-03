@@ -42,8 +42,7 @@ export class SignInComponent implements OnInit {
             password: ['', Validators.compose(
                 [
                     Validators.required,
-                    Validators.minLength(6),
-                    Validators.maxLength(12),
+                    Validators.minLength(6)
                 ])],
         });
     }

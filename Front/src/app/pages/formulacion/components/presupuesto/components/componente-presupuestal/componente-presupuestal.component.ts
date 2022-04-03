@@ -72,12 +72,14 @@ export class ComponentePresupuestalComponent implements OnInit {
         if (listaDeRubros.length === 0) {
             return 0;
         }
-        const rubroActual = listaDeRubros
-            .find(rubro => rubro.entidad === entidad && rubro.tipoDeRubro === tipoDeRubro && rubro.NombreRubro === nombreDeRubro);
+        const rubroActualTemporal = listaDeRubros
+            .filter(rubro => rubro.entidad === entidad && rubro.tipoDeRubro === tipoDeRubro && rubro.NombreRubro === nombreDeRubro);
+        let rubroActual = 0;
+        rubroActualTemporal.map(rubro => rubroActual += rubro.EntidadesCostos);
         if (!rubroActual) {
             return 0;
         }
-        return rubroActual.EntidadesCostos;
+        return rubroActual;
     }
 
     public getTotalSubTypeAmount(entidad: string, tipoDeRubro: string): number {

@@ -55,7 +55,7 @@
                 <div>
                   <mat-form-field>
                     <mat-label>Contraseña</mat-label>
-                    <input minlength="6" maxlength="12" type="password" name="password" formControlName="password"
+                    <input minlength="6" type="password" name="password" formControlName="password"
                       matInput [type]="hide ? 'password' : 'text'" required>
                     <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
                       [attr.aria-pressed]="hide">
@@ -71,7 +71,7 @@
                 <div>
                   <mat-form-field>
                     <mat-label>Confirmar Contraseña</mat-label>
-                    <input minlength="6" maxlength="12" type="Password" name="confirmPassword"
+                    <input minlength="6" type="Password" name="confirmPassword"
                       formControlName="confirmPassword" matInput [type]="hide2 ? 'Password' : 'text'" required>
                     <button mat-icon-button matSuffix (click)="hide2 = !hide2" [attr.aria-label]="'Hide Password'"
                       [attr.aria-pressed]="hide">

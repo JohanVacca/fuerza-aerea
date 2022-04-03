@@ -14,9 +14,10 @@
                         <mat-label>Objetivo General</mat-label>
                         <textarea matInput (keydown)="modificandoObjetivo()" [(ngModel)]="objetivoGeneral"></textarea>
                     </mat-form-field>
-                    <button mat-icon-button (click)="agregarObjGnral()" matTooltipClass="tooltip-white"
+                    <button *ngIf="objetivoGeneral" mat-icon-button (click)="agregarObjGnral()" matTooltipClass="tooltip-white"
                             matTooltip="Agregar Objetivo General" matTooltipPosition="above">
-                        <mat-icon class="iconoadd">add_circle</mat-icon>
+                        <mat-icon *ngIf="!showObjetivoGeneral" class="iconoadd">add_circle</mat-icon>
+                        <mat-icon *ngIf="showObjetivoGeneral" class="iconoadd">edit_note</mat-icon>
                     </button>
                     <!-- </form> -->
                 </mat-card-content>
@@ -37,7 +38,7 @@
                             <mat-label>Objetivo Especifico</mat-label>
                             <input formControlName="descr" matInput>
                         </mat-form-field>
-                        <button *ngIf="objetivoEspecificos.valid" mat-icon-button matTooltipClass="tooltip-white"
+                        <button *ngIf="objetivoEspecificos.controls.descr.value" mat-icon-button matTooltipClass="tooltip-white"
                                 (click)="agregarObjEsp()" matTooltip="Agregar Objetivo Especifico"
                                 matTooltipPosition="above">
                             <mat-icon class="iconoadd">add_circle</mat-icon>

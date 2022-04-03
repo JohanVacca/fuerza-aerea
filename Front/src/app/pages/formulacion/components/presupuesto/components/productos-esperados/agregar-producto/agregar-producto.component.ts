@@ -38,12 +38,23 @@ export class AgregarProductoComponent implements OnInit {
                 this.typeIns = r;
             });
         this.projectEntryService.getIdConv(this.data.idCon)
-            .subscribe(r => {
-                this.Rubros = r;
+            .subscribe(response => {
+                const selectedRubros = this.state?.tercerPaso?.componentePresupuestal?.personalCientifico;
+                const listRubros = [];
+                if (selectedRubros?.length > 0) {
+                    selectedRubros.forEach(rubro => listRubros.push(rubro.NombreRubro));
+                    this.Rubros = response.filter(rubro => listRubros.includes(rubro.descr));
+                } else {
+                    this.Rubros = [];
+                }
             });
-        this.state.tercerPaso.actividades.map(actividad => {
-            this.subActividades = [...this.subActividades, ...actividad.subActividad];
-        });
+        if (this.state?.tercerPaso?.actividades) {
+            this.state.tercerPaso.actividades.map(actividad => {
+                this.subActividades = [...this.subActividades, ...actividad.subActividad];
+            });
+        } else {
+            this.subActividades = [];
+        }
     }
 
     builder(): void {

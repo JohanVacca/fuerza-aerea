@@ -51,7 +51,6 @@ export class RiesgosComponent implements OnInit {
       }
     };
     this.saveStateService.setState(this.state);
-    console.log('this.saveStateService.getState() ::: ', this.saveStateService.getState());
   }
 
 }

@@ -216,6 +216,15 @@ export class VistaFormulacionComponent implements OnInit {
         });
     }
 
+    public calculateRoiIndicator(): string {
+        let total = 0;
+        if (this.planteamiento) {
+            const {inversion, utilidad} = this.planteamiento;
+            total = ((utilidad - inversion) / (inversion) * 100);
+        }
+        return `Rol = ${total}%`;
+    }
+
     public getProductosEsperados(subActividadNombre: string): string {
         const productoEsperado = this.productosEsperados.find(producto => producto.subActividad === subActividadNombre);
         return productoEsperado ? productoEsperado.tipoProducto : '---';
@@ -240,10 +249,12 @@ export class VistaFormulacionComponent implements OnInit {
     }
 
     public getAmount(entidad: string, tipoDeRubro: string, nombreDeRubro: string): number {
-        const rubroActual = this.dataSourceRubro
-            .find(rubro => rubro.entidad === entidad && rubro.tipoDeRubro === tipoDeRubro && rubro.NombreRubro === nombreDeRubro);
+        const rubroActualTemporal = this.dataSourceRubro
+            .filter(rubro => rubro.entidad === entidad && rubro.tipoDeRubro === tipoDeRubro && rubro.NombreRubro === nombreDeRubro);
+        let rubroActual = 0;
+        rubroActualTemporal.map(rubro => rubroActual += rubro.EntidadesCostos);
         if (rubroActual) {
-            return rubroActual.EntidadesCostos;
+            return rubroActual;
         } else {
             return 0;
         }

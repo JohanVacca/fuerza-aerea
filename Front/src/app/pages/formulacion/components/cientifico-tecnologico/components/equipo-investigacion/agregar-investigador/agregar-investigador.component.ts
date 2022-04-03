@@ -67,8 +67,6 @@ export class AgregarInvestigadorComponent implements OnInit {
     private createUserFake(fakeUser): void {
         this.authService.signUp(fakeUser)
             .pipe(finalize(() => this.closeModal(true)))
-            .subscribe(response => {
-                console.log('response ::: ', response);
-            });
+            .subscribe(() => {});
     }
 }

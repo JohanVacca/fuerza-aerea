@@ -168,12 +168,21 @@ export class RegistrarPersonaComponent implements OnInit {
     }
 
     getAllInvestigators(): void {
+        const selectedInvestigadores = this.state?.segundoPaso?.equipoDeInvestigacion;
+        const idInvestigadores = [];
+        if (selectedInvestigadores.length > 0) {
+            selectedInvestigadores.map(inv => idInvestigadores.push(inv.identificacion));
+        }
         this.usersService.getAllInvestigators()
             .pipe(finalize(() => this.initAutoComplete()))
             .subscribe(response => {
                 this.investigators = response;
-                const investigadores = response
-                    .map(investigator => `${investigator.profile.names} ${investigator.profile.surname}`);
+                const investigadores = [];
+                response.forEach(investigator => {
+                    if (!idInvestigadores.includes(investigator.identification)) {
+                        investigadores.push(`${investigator.profile.names} ${investigator.profile.surname}`);
+                    }
+                });
                 this.investigatorsNames = investigadores.sort();
             });
     }

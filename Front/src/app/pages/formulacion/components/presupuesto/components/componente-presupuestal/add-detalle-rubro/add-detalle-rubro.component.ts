@@ -177,7 +177,15 @@ export class AddDetalleRubroComponent implements OnInit {
             };
         }
         if (this.state.segundoPaso) {
-            this.investigadores = this.state.segundoPaso.equipoDeInvestigacion;
+            const selectedInvestigadores = this.state?.tercerPaso?.componentePresupuestal?.personalCientifico;
+            if (selectedInvestigadores.length > 0) {
+                const idInvestigadores = [];
+                selectedInvestigadores.map(inv => idInvestigadores.push(inv.InvestigadorSeleccionado.identificacion));
+                this.investigadores =
+                    this.state.segundoPaso.equipoDeInvestigacion.filter(inv => !idInvestigadores.includes(inv.identificacion));
+            } else {
+                this.investigadores = this.state.segundoPaso.equipoDeInvestigacion;
+            }
         }
         this.builder();
         this.setData();

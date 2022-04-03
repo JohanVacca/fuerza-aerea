@@ -144,6 +144,9 @@ export interface PersonalCientifico {
     entidad: string;
     tipoDeRubro: string;
     PresupuestoEjecutado: 0;
+    InvestigadorSeleccionado: {
+        identificacion
+    };
 }
 
 export interface PerfilInvestigador {

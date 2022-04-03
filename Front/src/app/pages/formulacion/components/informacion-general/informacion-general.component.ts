@@ -9,7 +9,7 @@ import {UsersService} from '../../../../@core/services/users/users.service';
 import {ActivatedRoute} from '@angular/router';
 import {CommonSimpleModel} from '../../../../shared/models/common-simple.model';
 import {UserModel} from '../../../../shared/models/user.model';
-import {finalize} from 'rxjs/operators';
+import {finalize, map, startWith} from 'rxjs/operators';
 import {SaveStateService} from '../../../../shared/services/saveStateService/save-state.service';
 import {
     CentroDeInvestigacion,
@@ -19,6 +19,7 @@ import {
 import {InvCenterService} from '../../../../shared/services/inv-center2/inv-center.service';
 import {UnidadService} from '../../../../shared/services/unidad-service/unidad.service';
 import { MatStepper } from '@angular/material/stepper';
+import {Observable} from 'rxjs';
 
 @Component({
     selector: 'app-informacion-general',
@@ -27,6 +28,8 @@ import { MatStepper } from '@angular/material/stepper';
 })
 export class InformacionGeneralComponent implements OnInit {
     @Input() stepper: MatStepper;
+    public filteredOptions: Observable<string[]>;
+    public myControl = new FormControl();
 
     constructor(
         private invEndorsersService: InvEndorsersService,
@@ -99,6 +102,10 @@ export class InformacionGeneralComponent implements OnInit {
         });
     }
 
+    public seleccionarLinea(event): void {
+        this.iniciarProyecto.controls.linea.setValue(event);
+    }
+
     public guardar(): void {
         this.updateState();
     }
@@ -126,6 +133,12 @@ export class InformacionGeneralComponent implements OnInit {
         });
         this.investigationLinesService.getIdConv(this.Convocatoria).subscribe(responseLines => {
             this.LinesIns = responseLines;
+            if (responseLines.length > 0) {
+                this.LinesIns = responseLines.sort((a, b) => {
+                    return a.descr < b.descr ? -1 : 1;
+                });
+            }
+            this.initAutoComplete();
         });
         this.usersService.getAllCommanders().subscribe(responseCommand => {
             this.ComandIns = responseCommand;
@@ -141,6 +154,24 @@ export class InformacionGeneralComponent implements OnInit {
             // @ts-ignore
             this.unidades = responseUnidades.unidades;
         });
+    }
+
+    private initAutoComplete(): void {
+        this.filteredOptions = this.myControl.valueChanges.pipe(
+            startWith(''),
+            map(value => this._filter(value)),
+        );
+    }
+
+    private _filter(name: string): string[] {
+        const filterValue = name.toLowerCase();
+        const newArrayList = [];
+        this.LinesIns.map(option => {
+            if (option.descr.toLowerCase().includes(filterValue)) {
+                newArrayList.push(option.descr.toLowerCase());
+            }
+        });
+        return newArrayList;
     }
 
     public correo(e): void {

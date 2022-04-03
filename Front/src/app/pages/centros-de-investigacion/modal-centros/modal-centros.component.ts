@@ -26,7 +26,6 @@ export class ModalCentrosComponent implements OnInit{
   }
 
   ngOnInit(): void {
-    console.log('centro ::: ', this.data);
     this.builder();
   }
 
