@@ -358,24 +358,32 @@ export class VistaFormulacionComponent implements OnInit {
     }
 
     downloadPDF(): void {
-        let datossucess: SucessDialogData = {
-            icono: 'done',
-            severidad: 'dialog-sucess',
-            encabezado: `Descargando Reporte`,
-            descripcion: `Se va a descarga el reporte en un momento`
-        };
         const dialogRef = this.dialog.open(SucessDialogComponent, {
             ariaLabel: `Se va a descarga el reporte en un momento`,
             role: 'alertdialog',
             autoFocus: false,
-            data: datossucess
+            data: {
+                icono: 'done',
+                severidad: 'dialog-sucess',
+                encabezado: `Descargando Reporte`,
+                descripcion: `Se va a descarga el reporte en un momento`
+            }
         });
         dialogRef.afterClosed().subscribe(result => {
 
         });
 
-        var data = document.getElementById('PROYECTPDF');
-        html2canvas(data).then(canvas => {
+        const data = document.getElementById('PROYECTPDF');
+        const documentosAnexos = document.getElementById('DocumentosAnexos');
+        let contentDataURL2;
+
+        if (documentosAnexos) {
+            html2canvas(documentosAnexos).then( (canvas) => {
+                contentDataURL2 = canvas.toDataURL('image/png', 10);
+            });
+        }
+
+        html2canvas(data).then( (canvas) => {
             const margin = 2;
             const imgWidth = 200 - 2 * margin;
             const pageHeight = 285;
@@ -389,18 +397,24 @@ export class VistaFormulacionComponent implements OnInit {
             };
             const pdf = new jsPDF('p', 'mm'); // A4 size page of PDF
             let position = 20;
+            pdf.addImage(contentDataURL, 'PNG', margin, position, imgWidth, imgHeight - 10, options);
+            pdf.addImage(contentDataURL, 'PNG', margin, position, imgWidth, imgHeight - 10, options);
 
-            const width = pdf.internal.pageSize.width;
-            const height = pdf.internal.pageSize.height;
-            pdf.addImage(contentDataURL, 'PNG', margin, position, imgWidth, imgHeight - 10, options);
-            pdf.addImage(contentDataURL, 'PNG', margin, position, imgWidth, imgHeight - 10, options);
             heightLeft -= pageHeight;
             while (heightLeft >= 0) {
-
                 position = (heightLeft - imgHeight);
                 pdf.addPage();
                 pdf.addImage(contentDataURL, 'PNG', margin, position, imgWidth, imgHeight - 10, options);
                 heightLeft -= pageHeight;
+            }
+            if (documentosAnexos) {
+                const options2 = {
+                    size: '70px',
+                    background: '#fff',
+                    pagesplit: true,
+                };
+                pdf.addPage();
+                pdf.addImage(contentDataURL2, 'PNG', 2, 2, 200, 0, options2);
             }
             pdf.save('FormulacionDeProyecto.pdf'); // Generated PDF
         });

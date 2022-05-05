@@ -75,7 +75,7 @@ export class ReportesComponent implements OnInit {
 
     public getTotalEjecutado(): number {
         return this.rubros.reduce((acc, actual) => {
-            return acc + (this.getPresupuestoEjecutado(actual) || 0);
+            return acc + (this.getPresupuestoEjecutado(actual.listaRubros) || 0);
         }, 0);
     }
 

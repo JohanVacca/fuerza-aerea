@@ -19235,7 +19235,7 @@
 
             var ctx_r2 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"]();
 
-            return ctx_r2.downloadPDF(rubro_r1.factura);
+            return ctx_r2.downloadPDF();
           });
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](7, " picture_as_pdf ");

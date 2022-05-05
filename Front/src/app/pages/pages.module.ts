@@ -43,6 +43,8 @@ import {SharedModule} from '../shared/shared.module';
 import { ModalInvestigadorComponent } from './modal-investigador/modal-investigador.component';
 import { ModalCentrosComponent } from './modal-centros/modal-centros.component';
 import { ModalViewDocumentsRubroComponent } from './Lista_Seguimiento/components/modal-view-documents-rubro/modal-view-documents-rubro.component';
+import { EstadisticasComponent } from './Lista_Seguimiento/components/estadisticas/estadisticas.component';
+import {ChartsModule} from 'ng2-charts';
 
 const PAGES_COMPONENTS = [
     PagesComponent,
@@ -74,7 +76,8 @@ const PAGES_COMPONENTS = [
         MatTableModule,
         MatDatepickerModule,
         MatNativeDateModule,
-        SharedModule
+        SharedModule,
+        ChartsModule
     ],
     providers: [
         InstructivosService
@@ -100,6 +103,7 @@ const PAGES_COMPONENTS = [
         ModalInvestigadorComponent,
         ModalCentrosComponent,
         ModalViewDocumentsRubroComponent,
+        EstadisticasComponent,
 
     ], exports: [CronogramaNewComponent]
 })
