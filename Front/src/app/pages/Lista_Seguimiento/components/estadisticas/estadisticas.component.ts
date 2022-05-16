@@ -43,6 +43,8 @@ export class EstadisticasComponent implements OnInit {
         }
     };
 
+    private readonly FAC_NAME = 'Fuerza Aérea Colombiana';
+
     constructor(
         private rutaActivated: ActivatedRoute,
         private projectService: ProjectService,
@@ -105,14 +107,25 @@ export class EstadisticasComponent implements OnInit {
     private showCharts(): void {
         let presupuestoTotal = 0;
         let presupuestoEjecutado = 0;
+        let presupuestoFinanciado = 0;
         this.rubros.forEach(rubro => {
-            presupuestoTotal += rubro.EntidadesCostos;
-            rubro.listaRubros.forEach(lista => {
-                presupuestoEjecutado += lista.rubro;
-            });
+            if (rubro.entidad === this.FAC_NAME) {
+                presupuestoTotal += rubro.EntidadesCostos;
+                rubro.listaRubros.forEach(lista => {
+                    presupuestoEjecutado += lista.rubro;
+                });
+
+                if (rubro.tipoDeRubro === 'Efectivo') {
+                    presupuestoFinanciado += rubro.EntidadesCostos;
+                }
+            }
         });
 
         this.chartData.push(
+            {
+                data: [presupuestoFinanciado],
+                label: 'Financiado'
+            },
             {
                 data: [presupuestoTotal],
                 label: 'Comprometido'
@@ -130,30 +143,26 @@ export class EstadisticasComponent implements OnInit {
 
     private showChartsActividad(): void {
         this.cronograma.forEach(crono => {
-            const listaSubActividades = [
-                {
-                    data: [90],
-                    label: `% Avance en: test`
-                }
-            ];
-            const chartActividad = {
-                nombreActividad: crono.nombreAct,
-                objetivo: crono.objetivo,
-                listaCharts: []
-            };
-            crono.subActividad.forEach(subAct => {
-                const total = this.calculateAdvance(subAct.fechaInicio.toString(), subAct.fechaFinal.toString());
-                listaSubActividades.push(
-                    {
-                        data: [total],
-                        label: `% Avance en: ${subAct.nombreSub}`
-                    }
-                );
-            });
-            chartActividad.listaCharts.push(listaSubActividades);
-            console.log('listaSubActividades ::: ', listaSubActividades);
-            this.chartActividad.push(chartActividad);
-            this.calculatePercent();
+            if (crono.subActividad.length > 0) {
+                const listaSubActividades = [];
+                const chartActividad = {
+                    nombreActividad: crono.nombreAct,
+                    objetivo: crono.objetivo,
+                    listaCharts: []
+                };
+                crono.subActividad.forEach(subAct => {
+                    const total = this.calculateAdvance(subAct.fechaInicio.toString(), subAct.fechaFinal.toString());
+                    listaSubActividades.push(
+                        {
+                            data: [total],
+                            label: `% Avance en: ${subAct.nombreSub}`
+                        }
+                    );
+                });
+                chartActividad.listaCharts.push(listaSubActividades);
+                this.chartActividad.push(chartActividad);
+                this.calculatePercent();
+            }
         });
     }
 
