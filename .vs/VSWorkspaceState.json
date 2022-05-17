@@ -1,6 +1,13 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\Front",
+    "\\Front\\src",
+    "\\Front\\src\\app",
+    "\\Front\\src\\app\\pages",
+    "\\Front\\src\\app\\pages\\Lista_Seguimiento",
+    "\\Front\\src\\app\\pages\\Lista_Seguimiento\\components",
+    "\\Front\\src\\app\\pages\\Lista_Seguimiento\\components\\estadisticas"
   ],
   "PreviewInSolutionExplorer": false
 }

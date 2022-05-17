@@ -25,7 +25,7 @@ export class DashboardComponent implements OnInit {
     public PROJECTS = 'Proyectos Activos';
     public NAME = 'NOMBRE';
     public JEFE = 'JEFE DE CENTRO';
-    public CONVOCATORIA = 'CONVOCATORIA';
+    public CONVOCATORIA = 'CONVENIO';
     public STATUS = 'ESTADO';
     public DATE = 'FECHA DE CREACIÓN';
     public ACTIONS = 'ACCIONES';

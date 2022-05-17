@@ -22,7 +22,7 @@ export class ConvocatoryAdminComponent implements OnInit {
     temp = [];
     role = Roles
 
-    displayedColumns: string[] = ['name', 'Descripcion', 'activo', 'acciones'];
+    displayedColumns: string[] = ['name', 'Descripción', 'activo', 'acciones'];
     dataSource;
 
     constructor(
@@ -56,12 +56,12 @@ export class ConvocatoryAdminComponent implements OnInit {
         let descripcion
         let state
         if (status) {
-            encabezado = `Desactivar Convocatoria`
-            descripcion = `¿Se encuentra seguro de que quiere Desactivar la convocatoria "${name}"?`
+            encabezado = `Desactivar Convenio`
+            descripcion = `¿Se encuentra seguro de que quiere Desactivar la convenio "${name}"?`
             state = false;
         } else {
-            encabezado = `Activar Convocatoria`
-            descripcion = `¿Se encuentra seguro de que quiere Activar la convocatoria "${name}"?`
+            encabezado = `Activar Convenio`
+            descripcion = `¿Se encuentra seguro de que quiere Activar la convenio "${name}"?`
             state = true;
         }
         let datos: ConfirmacionDialogData = {
@@ -115,7 +115,7 @@ export class ConvocatoryAdminComponent implements OnInit {
         let datos: ConfirmacionDialogData = {
             icono: 'info',
             severidad: 'dialog-info',
-            encabezado: 'Eliminar Convocatoria',
+            encabezado: 'Eliminar Convenio',
             descripcion: `¿Se encuentra seguro de que quiere eliminar la ${name}?`
         }
         const dialogRef = this.dialog.open(ConfirmDialogComponent, {

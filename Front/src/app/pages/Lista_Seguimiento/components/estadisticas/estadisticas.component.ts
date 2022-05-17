@@ -110,12 +110,13 @@ export class EstadisticasComponent implements OnInit {
         let presupuestoFinanciado = 0;
         this.rubros.forEach(rubro => {
             if (rubro.entidad === this.FAC_NAME) {
-                presupuestoTotal += rubro.EntidadesCostos;
+                //presupuestoTotal += rubro.EntidadesCostos;
                 rubro.listaRubros.forEach(lista => {
                     presupuestoEjecutado += lista.rubro;
                 });
 
                 if (rubro.tipoDeRubro === 'Efectivo') {
+                    presupuestoTotal += rubro.EntidadesCostos;
                     presupuestoFinanciado += rubro.EntidadesCostos;
                 }
             }
@@ -124,18 +125,34 @@ export class EstadisticasComponent implements OnInit {
         this.chartData.push(
             {
                 data: [presupuestoFinanciado],
+                backgroundColor: 'rgb(128,128,128)',
+                bordercolor: 'rgb(128,128,128)',
+                hoverBackgroundColor: 'rgb(128,128,128)',
+                hoverBorderColor: 'rgb(128,128,128)',
                 label: 'Financiado'
             },
             {
                 data: [presupuestoTotal],
+                backgroundColor: 'rgb(22, 68, 113)',
+                bordercolor: 'rgb(22, 68, 113)',
+                hoverBackgroundColor: 'rgb(22, 68, 113)',
+                hoverBorderColor: 'rgb(22, 68, 113)',
                 label: 'Comprometido'
             },
             {
                 data: [presupuestoEjecutado],
+                backgroundColor: 'rgb(132, 151, 176)',
+                bordercolor: 'rgb(132, 151, 176)',
+                hoverBackgroundColor: 'rgb(132, 151, 176)',
+                hoverBorderColor: 'rgb(132, 151, 176)',
                 label: 'Ejecutado'
             },
             {
                 data: [presupuestoTotal - presupuestoEjecutado],
+                backgroundColor: 'rgb(141,182,0',
+                bordercolor: 'rgb(141,182,0)',
+                hoverBackgroundColor: 'rgb(141,182,0)',
+                hoverBorderColor: 'rgb(141,182,0)',
                 label: 'Disponible'
             }
         );
@@ -155,7 +172,25 @@ export class EstadisticasComponent implements OnInit {
                     listaSubActividades.push(
                         {
                             data: [total],
-                            label: `% Avance en: ${subAct.nombreSub}`
+                            label: `% Avance Estimado por Cronograma en: ${subAct.nombreSub}`,
+                            backgroundColor: 'rgb(22, 68, 113)',
+                            bordercolor: 'rgb(22, 68, 113)',
+                            hoverBackgroundColor: 'rgb(22, 68, 113)',
+                            hoverBorderColor: 'rgb(22, 68, 113)'
+                        }
+                    );
+                });
+                crono.subActividad.forEach(subAct => {
+                    //const total = this.calculateAdvance(subAct.fechaInicio.toString(), subAct.fechaFinal.toString());
+                    const d = this.calculateAdvance(subAct.fechaInicio.toString(), subAct.fechaReal.toString())
+                    listaSubActividades.push(
+                        {
+                            data: [d],
+                            label: `% Avance Real`,
+                            backgroundColor: 'rgb(141,182,0',
+                            bordercolor: 'rgb(141,182,0)',
+                            hoverBackgroundColor: 'rgb(141,182,0)',
+                            hoverBorderColor: 'rgb(141,182,0)'
                         }
                     );
                 });

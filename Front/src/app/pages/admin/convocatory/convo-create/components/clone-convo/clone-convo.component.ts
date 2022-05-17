@@ -58,7 +58,7 @@ export class CloneConvoComponent implements OnInit {
   rows = [];
   temp = [];
 
-  displayedColumns: string[] = ['name', 'Descripcion', 'activo'];
+  displayedColumns: string[] = ['name', 'Descripción', 'activo'];
   dataSource;
 
   constructor(

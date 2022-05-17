@@ -7,8 +7,8 @@
       </button>
     </div>
 
-    <div class="titulo">Listado de Convocatorias</div>
-    <div class="parrafo">En la siguiente tabla encontrará las convocatorias registrados en el sistema</div>
+    <div class="titulo">Listado de Convenios</div>
+    <div class="parrafo">En la siguiente tabla encontrará los convenios registrados en el sistema</div>
     
     <div class=" overflow-auto tabla-responsive-x">
       <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 ">
@@ -19,7 +19,7 @@
         </ng-container>
 
         <ng-container matColumnDef="Descripcion">
-          <th class="parrafo" mat-header-cell *matHeaderCellDef> Descripcion </th>
+          <th class="parrafo" mat-header-cell *matHeaderCellDef> Descripción </th>
           <td class="parrafo" mat-cell *matCellDef="let element">{{element.Descripcion}}</td>
         </ng-container>
 
@@ -45,15 +45,15 @@
               </li>
               <li>
                 <button mat-icon-button aria-label="Example icon-button with a heart icon" (click)="editar(row._id)"
-                  aria-label="Eliminar Convocatoria" matTooltip="Editar Convocatoria" matTooltipClass="tooltip-white"
+                  aria-label="Eliminar Convenio" matTooltip="Editar Convenio" matTooltipClass="tooltip-white"
                   matTooltipPosition="above" matTooltipPosition="above">
                   <mat-icon>edit</mat-icon>
                 </button>
               </li>
               <li>
                 <button mat-icon-button aria-label="Example icon-button with a heart icon"
-                  (click)="deleteConvocatoria(row._id,row.name)" aria-label="Eliminar Convocatoria"
-                  matTooltip="Eliminar Convocatoria" matTooltipClass="tooltip-red" matTooltipPosition="above"
+                  (click)="deleteConvocatoria(row._id,row.name)" aria-label="Eliminar Convenio"
+                  matTooltip="Eliminar Convenio" matTooltipClass="tooltip-red" matTooltipPosition="above"
                   matTooltipPosition="above">
                   <mat-icon>delete</mat-icon>
                 </button>

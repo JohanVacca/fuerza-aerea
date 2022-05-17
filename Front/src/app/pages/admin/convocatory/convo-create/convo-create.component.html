@@ -1,12 +1,12 @@
   <mat-horizontal-stepper linear #stepper>
     <mat-step>
       <ng-template matStepLabel>Crear</ng-template>
-      <mat-label>Crear Convocatoria</mat-label>
+      <mat-label>Crear Convenio</mat-label>
       <app-convo-new (messageEvent)="receiveMensage($event)"></app-convo-new>
       <div *ngIf="message">
         <div>
           <div>
-            <mat-label> ¿Desea importartar alguna configuracion de Convocatorias anteriores para?
+            <mat-label> ¿Desea importartar alguna configuracion de Convenios anteriores para?
             </mat-label>
           </div>
           <div>
@@ -18,7 +18,7 @@
     </mat-step>
     <mat-step>
       <ng-template matStepLabel>Clonar Terminos</ng-template>
-      <mat-label>elija que Convocatoria desea clonar</mat-label>
+      <mat-label>elija que Convenio desea clonar</mat-label>
       <app-clone-convo></app-clone-convo>
       <button mat-button mat-dialog-close="false" >Finalizar</button>
     </mat-step>
