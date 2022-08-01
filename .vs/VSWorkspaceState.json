@@ -1,13 +1,18 @@
 {
   "ExpandedNodes": [
     "",
+    "\\.idea",
+    "\\Back",
+    "\\Back\\.idea",
+    "\\Back\\database",
     "\\Front",
     "\\Front\\src",
     "\\Front\\src\\app",
-    "\\Front\\src\\app\\pages",
-    "\\Front\\src\\app\\pages\\Lista_Seguimiento",
-    "\\Front\\src\\app\\pages\\Lista_Seguimiento\\components",
-    "\\Front\\src\\app\\pages\\Lista_Seguimiento\\components\\estadisticas"
+    "\\Front\\src\\app\\invited",
+    "\\Front\\src\\app\\invited\\landing-page",
+    "\\Front\\src\\app\\invited\\landing-page\\normativity",
+    "\\Front\\src\\app\\pages"
   ],
+  "SelectedNode": "\\Back\\database\\config.js",
   "PreviewInSolutionExplorer": false
 }

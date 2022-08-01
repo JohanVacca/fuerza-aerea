@@ -6,7 +6,7 @@ import {ApiService} from '../../../@core/services';
 })
 export class UnidadService {
 
-  private readonly endpoint = 'unidad';
+  private readonly endpoint = 'unidad'; 
 
   constructor(
       private http: ApiService,

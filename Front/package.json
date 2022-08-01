@@ -73,5 +73,10 @@
   },
   "resolutions": {
     "jspdf/file-saver": "github:eligrey/FileSaver.js#e865e37af9f9947ddcced76b549e27dc45c1cb2e"
-  }
+  },
+  "description": "- En el archivo de environment local ubicado en **(src/environments/environment.ts)** indicar que las variables api_url y api serán la siguiente 'http://localhost:8080/'.\r - Instalar dependencias con **npm i**\r - Correr el comando **ng serve**",
+  "main": "karma.conf.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }

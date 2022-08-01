@@ -44,7 +44,7 @@
             _classCallCheck(this, UnidadService);
 
             this.http = http;
-            this.endpoint = 'unidad';
+            this.endpoint = 'unidad'; 
           }
 
           _createClass(UnidadService, [{

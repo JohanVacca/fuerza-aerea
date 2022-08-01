@@ -19,7 +19,7 @@ let UnidadService = /*@__PURE__*/ (() => {
     class UnidadService {
         constructor(http) {
             this.http = http;
-            this.endpoint = 'unidad';
+            this.endpoint = 'unidad'; 
         }
         getAll() {
             return this.http.get(`${this.endpoint}`, null, true);

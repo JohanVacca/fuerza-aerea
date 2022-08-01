@@ -43,5 +43,5 @@ UnidadSchema.static('remove', async (id) =>{
     }
 });
 
-let UnidadDao = mongoose.model('unidad', UnidadSchema);
+let UnidadDao = mongoose.model('unidad', UnidadSchema); 
 module.exports = UnidadDao;
