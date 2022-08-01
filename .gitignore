@@ -1,0 +1,8 @@
+./Front/node_modules
+./Back/node_modules
+./Front/package-lock.json
+./Back/package-lock.json
+/.DS_Store
+/.idea
+/.vs
+ 
